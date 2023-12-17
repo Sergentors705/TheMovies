@@ -65,3 +65,13 @@
   line-height: 36px;
   box-sizing: border-box;
 }
+
+
+.person-page__header {
+  display: flex;
+  gap: 50px;
+}
+
+.person-page__title {
+  font-size: 48px;
+}

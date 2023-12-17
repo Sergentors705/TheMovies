@@ -5,29 +5,18 @@ import { BrowserRouter, Route, RouterProvider, Routes, createBrowserRouter, useP
 import PersonPage from './pages/PersonPage';
 import Navigation from './modules/navigation';
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Navigation />,
-    children: [
-      {
-        path: `movie/:movieId`,
-        element: <MoviePage />,
-      },
-      {
-        path: 'person/:personId',
-        element: <PersonPage />,
-      }
-    ]
-  },
-]);
-
-
 function App() {
 
     return (
       <div className="App">
-        <RouterProvider router={router} />
+        <BrowserRouter>
+          <Navigation />
+          <Routes>
+            <Route path='search' element={<Search />} />
+            <Route path='movie/:movieId' element={<MoviePage />} />
+            <Route path='person/:personId' element={<PersonPage />} />
+          </Routes>
+        </BrowserRouter>
       </div>
     );
 }
