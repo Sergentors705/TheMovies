@@ -1,10 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import Crew from '../modules/crew.jsx';
+import { useParams } from 'react-router-dom';
 
-export default function MoviePage({movieId}) {
+export default function MoviePage() {
   const [movie, setMovie] = useState(null);
   const [releaseDate, setReleaseDate] = useState(null);
+  const {movieId} = useParams();
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/${movieId}`, {
@@ -19,7 +21,7 @@ export default function MoviePage({movieId}) {
           return response.json();
         }
       })
-      .then((object) => setMovie(object));  
+      .then((object) => setMovie(object));
   }, [])
 
   useEffect(() => {
@@ -35,18 +37,18 @@ export default function MoviePage({movieId}) {
           return response.json();
         }
       })
-      .then((object) => setReleaseDate(object));  
+      .then((object) => setReleaseDate(object));
   }, []);
 
   console.log(movie);
-    
+
   return (
     <div className='movie-page'>
       <div className='movie-page__header'>
         <h2 className='movie-page__title'>{movie?.title}</h2>
         <ul className='movie-page__title-info-list'>
-          <li className='movie-page__title-info-item'>{new Date(movie?.release_date).getFullYear()}</li>
-          <li className='movie-page__title-info-item'>{releaseDate?.results.find(item => item.iso_3166_1 === 'US').release_dates[0].certification}</li>
+          <li className='movie-page__title-info-item'>{new Date(movie?.release_date)?.getFullYear()}</li>
+          <li className='movie-page__title-info-item'>{releaseDate?.results.find(item => item.iso_3166_1 === 'US')?.release_dates[0].certification}</li>
           <li className='movie-page__title-info-item'>{Math.floor(movie?.runtime / 60)}h {movie?.runtime % 60}m</li>
         </ul>
       </div>

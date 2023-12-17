@@ -38,3 +38,30 @@
     transform: rotate(360deg);
   }
 }
+
+.page-navigation {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 70px;
+  background-color: beige;
+}
+
+.main-logo-link {
+  text-transform: uppercase;
+  font-size: 48px;
+  color: #333333;
+  text-decoration: none;
+}
+
+
+.search-field {
+  min-height: 40px;
+  padding: 5px 10px;
+  border: 2px solid darkblue;
+  border-radius: 4px;
+  font-size: 24px;
+  line-height: 36px;
+  box-sizing: border-box;
+}
