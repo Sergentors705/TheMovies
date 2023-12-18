@@ -1,10 +1,12 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
   const {personId} = useParams();
+  const [cast, setCast] = useState([]);
+  const [crew, setCrew] = useState([]);
 
   const getMonthName = (monthNumber) => {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -27,6 +29,25 @@ export default function PersonPage() {
     .then((object) => setPerson(object));
   }, [])
 
+  useEffect(() => {
+    fetch(`https://api.themoviedb.org/3/person/${personId}/movie_credits`, {
+      headers: {
+        Authorization:
+          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
+        Accept: "application/json",
+      },
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+    })
+    .then((object) => {
+      setCast(object.cast.sort((a, b) => a.popularity - b.popularity).reverse());
+      setCrew(object.crew);
+    });
+  })
+
   return (
     <div className='person-page'>
       <div className='person-page__header'>
@@ -41,6 +62,17 @@ export default function PersonPage() {
           </div>
         </div>
       </div>
+      <ul className='person-page__popular-movies'>
+        {
+          cast?.slice(0, 10).map((item) =>
+              <li key={item.id} className='person-page__popular-movie'>
+                <Link to={`/movie/${item.id}`} className='popular-movie__link'>
+                  <img src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
+                  <h3 className='popular-movie__title'>{item.title}</h3>
+                </Link>
+              </li>
+          )}
+      </ul>
     </div>
   )
 }

@@ -75,3 +75,27 @@
 .person-page__title {
   font-size: 48px;
 }
+
+.person-page__popular-movies,
+.starring-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  list-style-type: none;
+}
+
+.person-page__popular-movie,
+.starring-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 200px;
+  padding: 5px 10px;
+}
+
+.popular-movie__link,
+.starring-link {
+  font-size: 18px;
+  color: #333333;
+  text-decoration: none;
+}
