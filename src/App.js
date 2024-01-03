@@ -1,23 +1,29 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
+import Navigation from './modules/navigation/navigation';
 import Search from './modules/search';
-import MoviePage from './pages/MoviePage';
-import { BrowserRouter, Route, RouterProvider, Routes, createBrowserRouter, useParams } from "react-router-dom";
-import PersonPage from './pages/PersonPage';
-import Navigation from './modules/navigation';
+import PersonPage from './pages/person-page/PersonPage';
+import MoviePage from "./pages/movie-page/MoviePage";
+import AllMovies from "./pages/all-movies/AllMovies";
+import Footer from "./modules/footer/footer";
 
 function App() {
 
     return (
-      <div className="App">
+      <>
         <BrowserRouter>
           <Navigation />
-          <Routes>
-            <Route path='search' element={<Search />} />
-            <Route path='movie/:movieId' element={<MoviePage />} />
-            <Route path='person/:personId' element={<PersonPage />} />
-          </Routes>
+          <main className='page-content'>
+            <Routes>
+              <Route path='search' element={<Search />} />
+              <Route path='movie/:movieId' element={<MoviePage />} />
+              <Route path='person/:personId' element={<PersonPage />} />
+              <Route path='all-movies/:personId' element={<AllMovies />} />
+            </Routes>
+          </main>
+          <Footer />
         </BrowserRouter>
-      </div>
+      </>
     );
 }
 

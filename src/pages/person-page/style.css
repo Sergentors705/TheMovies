@@ -1,0 +1,95 @@
+.person-page {
+  max-width: 1366px;
+  padding-top: 50px;
+}
+
+.person-page__header {
+  display: flex;
+  gap: 50px;
+  margin-bottom: 40px;
+}
+
+.person-page__title {
+  margin-bottom: 30px;
+  font-size: 48px;
+  font-weight: 400;
+  text-align: left;
+}
+
+.person-page__about-title {
+  margin-bottom: 15px;
+  font-size: 20px;
+  line-height: 125%;
+  text-align: left;
+}
+
+.person-page__image {
+  border-radius: 8px;
+  margin-bottom: 30px;
+}
+
+.person-page__biography {
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+.person-page__birthday,
+.person-page__birthplace,
+.person-page__deathday {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.person-page__birthday-title,
+.person-page__birthplace-title,
+.person-page__deathday-title {
+  font-weight: 700;
+}
+
+.person-page__birthday-date,
+.person-page__birthplace-location,
+.person-page__deathday-date {
+
+}
+
+.person-page__popular-movies {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.person-page__popular-movie {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.popular-movie__link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px 10px;
+}
+
+.popular-movie__title {
+  max-width: 150px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.popular-movie__image {
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.person-page__show-all-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}

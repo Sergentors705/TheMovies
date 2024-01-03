@@ -1,0 +1,55 @@
+.movie-page {
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+}
+
+.movie-page__header {
+  display: grid;
+  grid-template-columns: 300px 1fr min-content;
+}
+
+.movie-page__header-content {
+  padding-left: 30px;
+}
+
+.movie-page__title {
+  margin: 0;
+  font-size: 36px;
+  line-height: 125%;
+  line-height: 60px;
+  text-align: left;
+}
+
+.movie-page__tagline {
+  font-size: 18px;
+  font-style: italic;
+  text-align: left;
+  color: #333333;
+}
+
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.movie-page__title-info-list {
+  display: flex;
+  gap: 10px;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 40px;
+}
+
+.movie-page__genre {
+  color: darkblue;
+  text-decoration: none;
+}
+
+.movie-page__overview {
+  max-width: 600px;
+  text-align: left;white-space: pre-wrap;
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import './style.css';
 
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
@@ -12,6 +13,8 @@ export default function PersonPage() {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     return monthNames[monthNumber];
   }
+
+  useEffect(() => console.log(person), [person])
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/person/${personId}`, {
@@ -51,27 +54,45 @@ export default function PersonPage() {
   return (
     <div className='person-page'>
       <div className='person-page__header'>
-        <img className='person-page__image' width={300} height={450} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} />
         <div className='person-page__info'>
+          <img className='person-page__image' width={300} height={450} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} />
+          <div className='person-page__birthday'>
+            <span className='person-page__birthday-title'>Birthday:</span>
+            <p className='person-page__birthday-date'>{new Date(person?.birthday).getDate()} {getMonthName(new Date(person?.birthday).getMonth())} {new Date(person?.birthday).getFullYear()}</p>
+          </div>
+          <div className='person-page__birthplace'>
+            <span className='person-page__birthplace-title'>Birthplace:</span>
+            <p className='person-page__birthplace-location'>Birthplace: {person?.place_of_birth}</p>
+          </div>
+          {
+            person?.deathday
+            ? <div className='person-page__deathday'>
+                <span className='person-page__deathday-title'>Day of death:</span>
+                <p className='person-page__deathday-date'>{new Date(person?.deathday).getDate()} {getMonthName(new Date(person?.deathday).getMonth())} {new Date(person?.deathday).getFullYear()}</p>
+              </div>
+            : <></>
+          }
+        </div>
+        <div className='person-page__about'>
           <h2 className='person-page__title'>{person?.name}</h2>
-          <div className='person-page__about'>
             <h3 className='person-page__about-title'>About</h3>
             <p className='person-page__biography'>{person?.biography}</p>
-            <p className='person-page__birthday'>Birthday: {new Date(person?.birthday).getDate()} {getMonthName(new Date(person?.birthday).getMonth())} {new Date(person?.birthday).getFullYear()}</p>
-            <p className='person-page__birthplace'>Birthplace: {person?.place_of_birth}</p>
-          </div>
         </div>
       </div>
       <ul className='person-page__popular-movies'>
         {
-          cast?.slice(0, 10).map((item) =>
+          cast?.slice(0, 9).map((item) =>
               <li key={item.id} className='person-page__popular-movie'>
                 <Link to={`/movie/${item.id}`} className='popular-movie__link'>
-                  <img src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
+                  <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} />
                   <h3 className='popular-movie__title'>{item.title}</h3>
                 </Link>
               </li>
-          )}
+          )
+        }
+        <li className='person-page__popular-movie person-page__popular-movie--show-all'>
+          <Link className='person-page__show-all-link' to={`/all-movies/${personId}`} cast={cast} crew={crew}>Show All</Link>
+        </li>
       </ul>
     </div>
   )
