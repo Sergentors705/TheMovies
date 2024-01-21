@@ -40,7 +40,6 @@
 .cast-movies-list__content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
   gap: 3px;
 }

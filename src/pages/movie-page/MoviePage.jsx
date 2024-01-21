@@ -3,6 +3,9 @@ import { useEffect, useState } from 'react';
 import Crew from '../../modules/crew/crew.jsx';
 import { useParams } from 'react-router-dom';
 import './style.css';
+import PrimaryButton from '../../components/ui/button/button.jsx';
+import Posters from '../../components/blocks/posters/posters.jsx';
+import Pagination from '../../components/ui/pagination/pagination.jsx';
 
 export default function MoviePage() {
   const [movie, setMovie] = useState(null);
@@ -22,7 +25,7 @@ export default function MoviePage() {
           return response.json();
         }
       })
-      .then((object) => {setMovie(object);console.log(object)});
+      .then((object) => setMovie(object));
   }, [])
 
   useEffect(() => {
@@ -41,8 +44,6 @@ export default function MoviePage() {
       .then((object) => setReleaseDate(object));
   }, []);
 
-  console.log(movie);
-
   return (
     <div className='movie-page'>
       <div className='movie-page__header'>
@@ -51,14 +52,14 @@ export default function MoviePage() {
           <h2 className='movie-page__title'>{movie?.title}</h2>
           <ul className='movie-page__title-info-list'>
             <li className='movie-page__title-info-item'>{new Date(movie?.release_date)?.getFullYear()}</li>
-            <li className='movie-page__title-info-item'>{releaseDate?.results.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3).certification}</li>
+            <li className='movie-page__title-info-item'>{releaseDate?.results.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3)?.certification}</li>
             <li className='movie-page__title-info-item'>{Math.floor(movie?.runtime / 60)}h {movie?.runtime % 60}m</li>
           </ul>
           <p className='movie-page__tagline'>{movie?.tagline}</p>
           <div className='genres'>
             {
               movie?.genres.map(genre => {
-                return <a className='movie-page__genre' href={`https://www.themoviedb.org/genre/${genre.id}-${genre.name}/movie`} key={genre.id}>{genre.name}</a>
+                return <PrimaryButton text={genre.name} classname='button-primary--yellow' key={genre.id}/>
               })
             }
           </div>
@@ -68,16 +69,25 @@ export default function MoviePage() {
           <div className='movie-page__rating'>
             <p className='movie-page__rating-title'>The Movie Rating</p>
             <div className='movie-page__rating-container'>
-              <p className='movie-page__rating-value'>{movie?.vote_average}/10</p>
+              <p className='movie-page__rating-value'>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
+                  <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                </svg>
+                {movie?.vote_average.toFixed(1)}/10
+              </p>
               <p className='movie-page__rating-count'>{movie?.vote_count} Votes</p>
             </div>
           </div>
+          <div className='movie-page__cash'>
+            <p className='movie-page__cash-title'>Budget</p>
+            <p className='movie-page__cash-value'>${movie?.budget}</p>
+            <p className='movie-page__cash-title'>Revenue</p>
+            <p className='movie-page__cash-value'>${movie?.revenue}</p>
+          </div>
         </div>
       </div>
-        <div className='movie-page__crew'>
-          <p className='movie-page__director'></p>
-        </div>
-        <Crew movieId={movieId} />
+      <Crew movieId={movieId} />
+      <Posters />
     </div>
   )
 }

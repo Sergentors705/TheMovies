@@ -1,0 +1,15 @@
+.page-content {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.search-field {
+  min-height: 40px;
+  padding: 5px 10px;
+  border: 2px solid darkblue;
+  border-radius: 4px;
+  font-size: 24px;
+  line-height: 36px;
+  box-sizing: border-box;
+}

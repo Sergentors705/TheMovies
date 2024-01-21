@@ -1,0 +1,57 @@
+.all-cast-page {
+  max-width: 1366px;
+  padding-top: 30px;
+}
+
+.all-cast__back-to-movie {
+  display: flex;
+  gap: 10px;
+}
+
+.all-cast__header {
+  margin-bottom: 30px;
+}
+
+.all-cast-page__content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+
+.all-cast-page__list-title {
+  margin-bottom: 10px;
+  font-size: 24px;
+  text-align: left;
+}
+
+.actors-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.actor-card {
+  display: flex;
+}
+
+.actor-card__image {
+  width: 50px;
+  height: 75px;
+}
+
+.actor-link {
+  display: flex;
+  gap: 10px;
+}
+
+.actor-card__content {
+}
+
+.actor-title {
+  font-size: 16px;
+}
+
+.actor-character-name {
+  font-size: 14px;
+}

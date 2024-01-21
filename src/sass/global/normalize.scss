@@ -41,6 +41,7 @@ h3 {
 a {
   display: block;
   text-decoration: none;
+  color: inherit;
 }
 
 img {
@@ -50,8 +51,4 @@ img {
 legend {
   margin: 0;
   padding: 0;
-}
-
-#root {
-  width: 100%;
 }

@@ -1,0 +1,30 @@
+.starring__list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+.starring__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 200px;
+  padding: 5px 10px;
+}
+
+.starring__link {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.starring__image {
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.starring__card--show-all {
+  height: 100%;
+}
