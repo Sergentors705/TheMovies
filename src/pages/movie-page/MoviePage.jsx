@@ -2,15 +2,15 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import Crew from '../../modules/crew/crew.jsx';
 import { useParams } from 'react-router-dom';
-import './style.css';
 import PrimaryButton from '../../components/ui/button/button.jsx';
 import Posters from '../../components/blocks/posters/posters.jsx';
-import Pagination from '../../components/ui/pagination/pagination.jsx';
+import Loading from '../../components/ui/loading.jsx';
 
 export default function MoviePage() {
   const [movie, setMovie] = useState(null);
   const [releaseDate, setReleaseDate] = useState(null);
   const {movieId} = useParams();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/movie/${movieId}`, {
@@ -25,7 +25,7 @@ export default function MoviePage() {
           return response.json();
         }
       })
-      .then((object) => setMovie(object));
+      .then((object) => {setMovie(object);setLoading(false)});
   }, [])
 
   useEffect(() => {
@@ -43,6 +43,8 @@ export default function MoviePage() {
       })
       .then((object) => setReleaseDate(object));
   }, []);
+
+  if (loading) return <Loading />;
 
   return (
     <div className='movie-page'>

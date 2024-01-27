@@ -2,12 +2,14 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './style.css';
+import Loading from '../../components/ui/loading';
 
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
   const {personId} = useParams();
   const [cast, setCast] = useState([]);
   const [crew, setCrew] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getMonthName = (monthNumber) => {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -29,7 +31,8 @@ export default function PersonPage() {
         return response.json();
       }
     })
-    .then((object) => setPerson(object));
+    .then((object) => {setPerson(object);
+      });
   }, [])
 
   useEffect(() => {
@@ -48,8 +51,11 @@ export default function PersonPage() {
     .then((object) => {
       setCast(object.cast.sort((a, b) => a.popularity - b.popularity).reverse());
       setCrew(object.crew);
+      setLoading(false);
     });
   })
+
+  if (loading) return <Loading />
 
   return (
     <div className='person-page'>

@@ -6,6 +6,7 @@ import MoviePage from "./pages/movie-page/MoviePage";
 import AllMovies from "./pages/all-movies/AllMovies";
 import Footer from "./modules/footer/footer";
 import AllCast from "./pages/all-cast/all-cast";
+import StartPage from "./pages/start-page";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
               <Route path='person/:personId' element={<PersonPage />} />
               <Route path='all-movies/:personId' element={<AllMovies />} />
               <Route path='all-cast/:movieId' element={<AllCast />} />
+              <Route path='/' element={<StartPage />} />
             </Routes>
           </main>
           <Footer />

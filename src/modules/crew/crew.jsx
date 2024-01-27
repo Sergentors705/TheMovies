@@ -45,7 +45,7 @@ export default function Crew({movieId}) {
               </li>
           )}
           <li className='starring__card starring__card--show-all'>
-            <PrimaryButton classname='red' text='Show all' type='button' onclick={() => navigate(`/all-cast/${movieId}`)} />
+            <PrimaryButton classname='button-primary--red' text='Show all' type='button' onclick={() => navigate(`/all-cast/${movieId}`)} />
           </li>
         </ul>
     </div>
