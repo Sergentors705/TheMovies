@@ -1,7 +1,6 @@
 import React from 'react';
+import { Loader } from '@mantine/core';
 
 export default function Loading() {
-  return (
-    <div>Loading</div>
-  )
+  return <Loader color="blue" size="xl" />
 }

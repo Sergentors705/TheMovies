@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Loading from '../components/ui/loading';
+import '@mantine/carousel/styles.css';
+import { Carousel } from '@mantine/carousel';
+
 
 export default function StartPage() {
   const [popular, setPopular] = useState([]);
@@ -31,7 +34,19 @@ export default function StartPage() {
     <>
       <section className='popular'>
         <h2 className='popular__page-title'>What to watch</h2>
-        <ul className='popular__list'>
+        <div class="popular-wrapper">
+          <Carousel slideSize="auto" withIndicators height={400} align="start" slideGap="md" dragFree>
+            {popular?.map((item) =>
+              <Carousel.Slide>
+              <Link className='popular__link' to={`/movie/${item.id}`}>
+                    <h3 className='popular__title'>{item.title}</h3>
+                    <img className='popular__image' src={`https://www.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}`} width={200} height={300} />
+                  </Link>
+              </Carousel.Slide>
+            )}
+          </Carousel>
+        </div>
+        {/* <ul className='popular__list'>
           {
             popular?.map((item) =>
               <li className='popular__item'>
@@ -42,7 +57,7 @@ export default function StartPage() {
               </li>
             )
           }
-        </ul>
+        </ul> */}
       </section>
     </>
   )

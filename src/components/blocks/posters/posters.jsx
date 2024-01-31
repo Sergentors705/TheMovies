@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PrimaryButton from '../../ui/button/button';
+import '@mantine/carousel/styles.css';
+import { Carousel } from '@mantine/carousel';
+import { Image } from '@mantine/core';
 
 export default function Posters() {
   const {movieId} = useParams();
@@ -57,7 +60,22 @@ export default function Posters() {
 
   return (
     <>
-      <div className='posters'>
+    <Carousel
+      withIndicators
+      height='min-content'
+      slideSize="33.333333%"
+      slideGap="md"
+      loop
+      align="start"
+      slidesToScroll={3}>
+      {posters?.map((item) =>
+        <Carousel.Slide>
+          <Image
+      fit="cover" src={`https://www.themoviedb.org/t/p/original/${item.file_path}`}  />
+        </Carousel.Slide>
+      )}
+    </Carousel>
+      {/* <div className='posters'>
         <div className='posters__gallery'>
           <ul className='posters__list'>
             {
@@ -109,7 +127,7 @@ export default function Posters() {
         <div className='modal__content'>
           <img className='modal__image' src={`https://www.themoviedb.org/t/p/original/${imagePath}`} width={1024} height={768} />
         </div>
-      </div>
+      </div> */}
     </>
   )
 }
