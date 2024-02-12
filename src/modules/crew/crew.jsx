@@ -1,8 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/ui/button/button';
 import './style.css';
+import { Image, Title, Text, Paper } from '@mantine/core';
+import { Carousel, CarouselSlide } from '@mantine/carousel';
 
 export default function Crew({movieId}) {
   const [crew, setCrew] = useState(null);
@@ -33,17 +35,39 @@ export default function Crew({movieId}) {
   return (
     <div className='starring'>
         <p className='director'>Director: {director?.name}</p>
-        <ul className='starring__list'>
+        <Carousel
+          slideSize='20%'
+          align='start'
+          slideGap='md'
+          containScroll='trimSnaps'
+        >
           {
             starring?.map( item =>
-              <li key={item.id} className='starring__card'>
-                <Link to={`/person/${item.id}`} className='starring__link'>
-                  <img className='starring__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`} width={150} height={225} />
-                  <h3 className='starring__title'>{item.name}</h3>
-                  <p className='starring__character-name'>{item.character}</p>
-                </Link>
-              </li>
+              <CarouselSlide
+                key={item.id}
+                flex
+                align='center'
+                onClick={() => navigate(`/person/${item.id}`)}
+              >
+                <Paper
+                  h='100%'
+                  shadow='xs'
+                  p='md'
+                >
+                  <Image
+                    w={150}
+                    h={225}
+                    radius='md'
+                    src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
+                  />
+                  <Title order={3}>{item.name}</Title>
+                  <Text size='md'>{item.character}</Text>
+                  </Paper>
+              </CarouselSlide>
           )}
+        </Carousel>
+        <ul className='starring__list'>
+
           <li className='starring__card starring__card--show-all'>
             <PrimaryButton classname='button-primary--red' text='Show all' type='button' onclick={() => navigate(`/all-cast/${movieId}`)} />
           </li>
