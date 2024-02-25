@@ -1,14 +1,16 @@
+import { Flex } from "@mantine/core";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Footer from "./modules/footer/footer";
 import Navigation from './modules/navigation/navigation';
 import Search from './modules/search';
-import PersonPage from './pages/person-page/PersonPage';
-import MoviePage from "./pages/movie-page/MoviePage";
-import AllMovies from "./pages/all-movies/AllMovies";
-import Footer from "./modules/footer/footer";
 import AllCast from "./pages/all-cast/all-cast";
+import AllMovies from "./pages/all-movies/AllMovies";
+import MoviePage from "./pages/movie-page/MoviePage";
+import PersonPage from './pages/person-page/PersonPage';
 import StartPage from "./pages/start-page";
-import { Flex } from "@mantine/core";
 import TopRatedMovies from "./pages/top-rated-page";
+import TvShowPage from "./pages/tv-show-page";
+import TopRatedTvShows from "./pages/top-rated-tv";
 
 function App() {
 
@@ -24,11 +26,13 @@ function App() {
             <Routes>
               <Route path='search' element={<Search />} />
               <Route path='movie/:movieId' element={<MoviePage />} />
+              <Route path='tv-show/:tvShowId' element={<TvShowPage />} />
               <Route path='person/:personId' element={<PersonPage />} />
               <Route path='all-movies/:personId' element={<AllMovies />} />
               <Route path='all-cast/:movieId' element={<AllCast />} />
               <Route path='/' element={<StartPage />} />
               <Route path='top-rated-movies' element={<TopRatedMovies />} />
+              <Route path='top-rated-tv-shows' element={<TopRatedTvShows />} />
             </Routes>
           </Flex>
           <Footer />

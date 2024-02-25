@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/ui/button/button';
 import './style.css';
-import { Image, Title, Text, Paper } from '@mantine/core';
+import { Image, Title, Text, Paper, Skeleton } from '@mantine/core';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
+import useLoading from '../../hooks/use-loading';
 
 export default function Crew({movieId}) {
   const [crew, setCrew] = useState(null);
@@ -12,21 +13,26 @@ export default function Crew({movieId}) {
   const [producer, setProducer] = useState(null);
   const [starring, setStarring] = useState([]);
   const navigate = useNavigate();
+  const [fetchMovies, isLoadingMovies] = useLoading(
+    async () => {
+      await fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
+          Accept: "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((object) => setCrew(object));
+    }
+  )
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-        Accept: "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((object) => setCrew(object));
+    fetchMovies();
   }, [])
 
   useEffect(() => setDirector(crew?.crew.find(item => item.job === 'Director')), [crew]);
@@ -54,15 +60,34 @@ export default function Crew({movieId}) {
                   shadow='xs'
                   p='md'
                 >
-                  <Image
-                    w={150}
-                    h={225}
-                    radius='md'
-                    src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
-                  />
-                  <Title order={3}>{item.name}</Title>
-                  <Text size='md'>{item.character}</Text>
-                  </Paper>
+                  <Skeleton
+                    visible={isLoadingMovies}
+                    mih={225}
+                    miw={150}
+                    mb={10}
+                  >
+                    <Image
+                      w={150}
+                      h={225}
+                      radius='md'
+                      src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
+                    />
+                  </Skeleton>
+                  <Skeleton
+                    visible={isLoadingMovies}
+                    mih={20}
+                    mb={6}
+                  >
+                    <Title order={3}>{item.name}</Title>
+                  </Skeleton>
+                  <Skeleton
+                    visible={isLoadingMovies}
+                    mih={20}
+                    mb={6}
+                  >
+                    <Text size='md'>{item.character}</Text>
+                  </Skeleton>
+                </Paper>
               </CarouselSlide>
           )}
         </Carousel>
