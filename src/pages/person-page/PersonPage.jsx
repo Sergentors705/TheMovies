@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './style.css';
 import Loading from '../../components/ui/loading';
+import { Title } from '@mantine/core';
 
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
@@ -15,8 +16,6 @@ export default function PersonPage() {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     return monthNames[monthNumber];
   }
-
-  useEffect(() => console.log(person), [person])
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/person/${personId}`, {
@@ -36,7 +35,7 @@ export default function PersonPage() {
   }, [])
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/person/${personId}/movie_credits`, {
+    fetch(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
@@ -49,11 +48,12 @@ export default function PersonPage() {
       }
     })
     .then((object) => {
-      setCast(object.cast.sort((a, b) => a.popularity - b.popularity).reverse());
+      console.log(object);
+      setCast(object.cast.sort((a, b) => a.vote_count - b.vote_count).reverse());
       setCrew(object.crew);
       setLoading(false);
     });
-  })
+  }, [])
 
   if (loading) return <Loading />
 
@@ -89,10 +89,18 @@ export default function PersonPage() {
         {
           cast?.slice(0, 9).map((item) =>
               <li key={item.id} className='person-page__popular-movie'>
+              {
+                item.media_type == 'movie' ?
                 <Link to={`/movie/${item.id}`} className='popular-movie__link'>
                   <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} />
                   <h3 className='popular-movie__title'>{item.title}</h3>
                 </Link>
+                :
+                <Link to={`/tv-show/${item.id}`} className='popular-movie__link'>
+                  <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} />
+                  <h3 className='popular-movie__title'>{item.name}</h3>
+                </Link>
+              }
               </li>
           )
         }

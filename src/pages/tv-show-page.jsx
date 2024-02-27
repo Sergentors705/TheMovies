@@ -1,21 +1,24 @@
-import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
+import { Carousel, CarouselSlide, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Flex, Image, Modal, SimpleGrid, Skeleton, Text } from '@mantine/core';
+import { Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { React, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PrimaryButton from '../components/ui/button/button';
 import useLoading from '../hooks/use-loading';
 
 export default function TvShowPage() {
   const {tvShowId} = useParams();
   const [tvShow, setTvShow] = useState(null);
+  const [crew, setCrew] = useState(null);
   const [path, setPath] = useState('');
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
+  const navigate = useNavigate();
   const [releaseDate, setReleaseDate] = useState(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [posters, setPosters] = useState([]);
+  const [starring, setStarring] = useState([]);
 
   const [fetchTvShow, isLoadingTvShow] = useLoading(async() => {
     await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}`, {
@@ -51,10 +54,34 @@ export default function TvShowPage() {
           });
   })
 
+  const [fetchTvShowCredits, isLoadingTvshowCredits] = useLoading(
+    async () => {
+      await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/credits`, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
+          Accept: "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json();
+          }
+        })
+        .then((object) => {
+          setCrew(object);
+          console.log(object);
+        });
+    }
+  )
+
   useEffect(() => {
     fetchTvShow();
     fetchImages();
+    fetchTvShowCredits();
   }, [])
+
+  useEffect(() => setStarring(crew?.cast.slice(0, 9)), [crew]);
 
   return (
     <Flex
@@ -237,7 +264,7 @@ export default function TvShowPage() {
                   p='md'
                 >
                   <Skeleton
-                    visible={isLoadingMovies}
+                    visible={isLoadingTvshowCredits}
                     mih={225}
                     miw={150}
                     mb={10}
@@ -250,14 +277,14 @@ export default function TvShowPage() {
                     />
                   </Skeleton>
                   <Skeleton
-                    visible={isLoadingMovies}
+                    visible={isLoadingTvshowCredits}
                     mih={20}
                     mb={6}
                   >
                     <Title order={3}>{item.name}</Title>
                   </Skeleton>
                   <Skeleton
-                    visible={isLoadingMovies}
+                    visible={isLoadingTvshowCredits}
                     mih={20}
                     mb={6}
                   >

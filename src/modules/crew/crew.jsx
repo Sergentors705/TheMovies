@@ -1,11 +1,10 @@
-import React from 'react';
-import { useEffect, useState } from 'react';
+import { Carousel, CarouselSlide } from '@mantine/carousel';
+import { Image, Paper, Skeleton, Text, Title } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../components/ui/button/button';
-import './style.css';
-import { Image, Title, Text, Paper, Skeleton } from '@mantine/core';
-import { Carousel, CarouselSlide } from '@mantine/carousel';
 import useLoading from '../../hooks/use-loading';
+import './style.css';
 
 export default function Crew({movieId}) {
   const [crew, setCrew] = useState(null);
