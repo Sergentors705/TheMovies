@@ -1,6 +1,6 @@
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Flex, Image, Modal, SimpleGrid, Skeleton, Text } from '@mantine/core';
+import { Flex, Image, Modal, SegmentedControl, SimpleGrid, Skeleton, Text } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -12,17 +12,18 @@ export default function MoviePage() {
   const [movie, setMovie] = useState(null);
   const [releaseDate, setReleaseDate] = useState(null);
   const {movieId} = useParams();
-  const [posters, setPosters] = useState([]);
+  const [images, setImages] = useState([]);
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const [opened, { open, close }] = useDisclosure(false);
   const [path, setPath] = useState('');
+  const [imageType, setImageType] = useState('posters');
 
-  const [fetchMovies, isLoadingMovies] = useLoading(async () => {
-    await fetch(`https://api.themoviedb.org/3/movie/${movieId}`, {
+  const requestMaker = async (req, setter) => {
+    await fetch(req, {
       headers: {
         Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
+          `Bearer ${process.env.TOKEN}`,
         Accept: "application/json",
       },
     })
@@ -31,42 +32,12 @@ export default function MoviePage() {
           return response.json();
         }
       })
-      .then((object) => {setMovie(object)})
-  })
+      .then((object) => setter(object))
+  }
 
-  const [fetchReleaseDates, isLoadingReleaseDates] = useLoading(async () => {
-      await fetch(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-          Accept: "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((object) => setReleaseDate(object));
-  })
-
-  const [fetchImages, isLoadingImages] = useLoading(async () => {
-    await fetch(`https://api.themoviedb.org/3/movie/${movieId}/images`, {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-            Accept: "application/json",
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((object) => {
-            setPosters(object.backdrops);
-          });
-  })
+  const [fetchMovies, isLoadingMovies] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}`, setMovie))
+  const [fetchReleaseDates, isLoadingReleaseDates] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`,setReleaseDate))
+  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/images`, setImages))
 
   useEffect(() => {
     fetchMovies();
@@ -232,6 +203,14 @@ export default function MoviePage() {
         </div>
       </SimpleGrid>
       <Crew movieId={movieId} />
+      <SegmentedControl
+        value={imageType}
+        onChange={setImageType}
+        data={[
+          { label: 'Posters', value: 'posters' },
+          { label: 'Backdrops', value: 'backdrops' },
+        ]}
+      />
       <Carousel
         getEmblaApi={setEmbla}
         dragFree
@@ -243,7 +222,7 @@ export default function MoviePage() {
         controlSize={40}
         containScroll='trimSnaps'
       >
-        {posters?.map((item) =>
+        {images[imageType]?.map((item) =>
           <Carousel.Slide key={item.file_path}>
             <Skeleton visible={isLoadingImages} height={300}>
               <Image w='100%' h='auto' fit='cover' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
@@ -253,8 +232,8 @@ export default function MoviePage() {
           </Carousel.Slide>
         )}
       </Carousel>
-      <Modal opened={opened} onClose={close} size='75%'>
-        <Image w='100%' h='auto' fit='cover' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />
+      <Modal opened={opened} onClose={close} h='75vh'>
+        <Image w='100%' h='auto' fit='contain' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />
       </Modal>
     </Flex>
   )
