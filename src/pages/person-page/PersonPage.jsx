@@ -8,6 +8,7 @@ import { Title } from '@mantine/core';
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
   const {personId} = useParams();
+  const [credits, setCredits] = useState([]);
   const [cast, setCast] = useState([]);
   const [crew, setCrew] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,8 +50,9 @@ export default function PersonPage() {
     })
     .then((object) => {
       console.log(object);
-      setCast(object.cast.sort((a, b) => a.vote_count - b.vote_count).reverse());
-      setCrew(object.crew);
+      setCast(object.cast.sort((a, b) => a.popularity - b.popularity).reverse());
+      setCrew(object.crew.sort((a, b) => a.popularity - b.popularity).reverse());
+      setCredits(credits.concat(object.cast, object.crew).sort((a, b) => a.popularity - b.popularity).reverse())
       setLoading(false);
     });
   }, [])
@@ -87,7 +89,7 @@ export default function PersonPage() {
       </div>
       <ul className='person-page__popular-movies'>
         {
-          cast?.slice(0, 9).map((item) =>
+          credits?.slice(0, 9).map((item) =>
               <li key={item.id} className='person-page__popular-movie'>
               {
                 item.media_type == 'movie' ?

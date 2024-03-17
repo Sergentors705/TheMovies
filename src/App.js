@@ -11,6 +11,7 @@ import StartPage from "./pages/start-page";
 import TopRatedMovies from "./pages/top-rated-page";
 import TvShowPage from "./pages/tv-show-page";
 import TopRatedTvShows from "./pages/top-rated-tv";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
 
@@ -33,6 +34,8 @@ function App() {
               <Route path='/' element={<StartPage />} />
               <Route path='top-rated-movies' element={<TopRatedMovies />} />
               <Route path='top-rated-tv-shows' element={<TopRatedTvShows />} />
+              <Route path='keyword/:keywordId' element={<SearchPage />} />
+              <Route path='genre/:genreId' element={<SearchPage />} />
             </Routes>
           </Flex>
           <Footer />
