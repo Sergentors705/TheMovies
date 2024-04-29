@@ -4,7 +4,6 @@ import { Box, Button, Flex, Image, List, Modal, NumberFormatter, Paper, Segmente
 import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import PrimaryButton from '../../components/ui/button/button.jsx';
 import useLoading from '../../hooks/use-loading.jsx';
 import Crew from '../../modules/crew/crew.jsx';
 import requestMaker from '../../functions/requestMaker.js';
@@ -45,7 +44,7 @@ export default function MoviePage() {
     setDirector(credits?.crew.filter(item => item.job === 'Director'))
     setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing'))
   }, [credits]);
-  // console.log(credits)
+  console.log(movie)
   return (
     <>
       <SimpleGrid

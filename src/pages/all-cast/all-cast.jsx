@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './script.css';
 import { Link, useParams } from 'react-router-dom';
+import { Flex, Image } from '@mantine/core';
 
 export default function AllCast() {
   const {movieId} = useParams();
@@ -103,16 +104,18 @@ export default function AllCast() {
       <div className='all-cast-page__content'>
         <div className='actors-container'>
           <h3 className='all-cast-page__list-title'>Cast</h3>
-          <ul className='actors-list'>
+          <ul style={{listStyleType: 'none'}}>
             {
               crew?.cast.map( item =>
-                <li key={item.id} className='actor-card'>
-                  <Link to={`/person/${item.id}`} className='actor-link'>
-                    <img className='actor-card__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`} width={100} height={150} />
-                    <div className='actor-card__content'>
-                      <h3 className='actor-title'>{item.name}</h3>
-                      <p className='actor-character-name'>As {item.character}</p>
-                    </div>
+                <li key={item.id} >
+                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
+                    <Flex gap={20}>
+                      <Image src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`} w={75} h='auto' />
+                      <div className='actor-card__content'>
+                        <h3 className='actor-title'>{item.name}</h3>
+                        <p className='actor-character-name'>As {item.character}</p>
+                      </div>
+                    </Flex>
                   </Link>
                 </li>
             )}

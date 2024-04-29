@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 import { Link, useParams } from 'react-router-dom';
+import { Text, Title } from '@mantine/core';
 
 export default function AllMovies() {
   const [person, setPerson] = useState(null);
@@ -90,11 +91,11 @@ export default function AllMovies() {
                 {
                   cast?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link' style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.character}</h3>
+                            <Title order={3}>{item.title}</Title>
+                            <Text>{item.character}</Text>
                             <p className='cast-movies__rating-date-container'>
                               <span className='cast-movies__rating'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
@@ -124,7 +125,7 @@ export default function AllMovies() {
                 {
                   art?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -152,7 +153,7 @@ export default function AllMovies() {
                 {
                   lighting?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -180,7 +181,7 @@ export default function AllMovies() {
                 {
                   sound?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -208,7 +209,7 @@ export default function AllMovies() {
                 {
                   production?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -236,7 +237,7 @@ export default function AllMovies() {
                 {
                   actors?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -264,7 +265,7 @@ export default function AllMovies() {
                 {
                   costume?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -292,7 +293,7 @@ export default function AllMovies() {
                 {
                   directing?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -320,7 +321,7 @@ export default function AllMovies() {
                 {
                   camera?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -348,7 +349,7 @@ export default function AllMovies() {
                 {
                   writting?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -376,7 +377,7 @@ export default function AllMovies() {
                 {
                   team?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -404,7 +405,7 @@ export default function AllMovies() {
                 {
                   editing?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>
@@ -432,7 +433,7 @@ export default function AllMovies() {
                 {
                   visualEffects?.map((item) =>
                       <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link'>
+                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
                           <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
                           <div className='cast-movies-list__content'>
                             <h3 className='cast-movies__title'>{item.title}</h3>

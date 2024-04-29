@@ -2,14 +2,16 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 import PrimaryButton from '../../components/ui/button/button';
-import { Menu, Button, Text, rem, UnstyledButton } from '@mantine/core';
+import { Menu, Button, Text, rem, UnstyledButton, Image } from '@mantine/core';
 
 export default function Navigation() {
   const navigate = useNavigate();
   return (
     <header className='page-header'>
       <nav className='page-navigation'>
-        <Link className='main-logo-link' to='/'>The Movie</Link>
+        <Link className='main-logo-link' to='/'>
+          <Image w={150} src='../../logo.svg' />
+        </Link>
         <Menu shadow="md" width={200}>
           <Menu.Target>
             <Button size='lg'>Movies</Button>

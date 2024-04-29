@@ -36,6 +36,7 @@ function App() {
               <Route path='top-rated-tv-shows' element={<TopRatedTvShows />} />
               <Route path='keyword/:keywordId' element={<SearchPage />} />
               <Route path='genre/:genreId' element={<SearchPage />} />
+              <Route path='companie/:companieId' element={<SearchPage />} />
             </Routes>
           </Flex>
           <Footer />
