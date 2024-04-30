@@ -3,25 +3,22 @@ import { useNavigate } from 'react-router-dom';
 import Loading from '../components/ui/loading';
 import '@mantine/carousel/styles.css';
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
-import { Flex, Paper, RangeSlider, Text, rem } from '@mantine/core';
+import { Flex, Pagination, Paper, RangeSlider, Text, rem } from '@mantine/core';
 import { Box, Container, Image, Title } from '@mantine/core';
-import { IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
-
-
 
 export default function TopRatedMovies() {
+  const [page, setPage] = useState(1);
   const [popular, setPopular] = useState([]);
   const [loading, setLoading] = useState(true);
   const [minRating, setMinRating] = useState(7);
   const [maxRating, setMaxRating] = useState(10);
   const navigate = useNavigate();
-  const [filtered, setFiltered] = useState([]);
 
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
 
   useEffect(() => {
-    fetch('https://api.themoviedb.org/3/movie/top_rated', {
+    fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=vote_average.desc&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&without_genres=99,10755&vote_count.gte=200`, {
       headers: {
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc',
         Accept: 'application/json',
@@ -34,17 +31,13 @@ export default function TopRatedMovies() {
     })
     .then((object) => {
       console.log(object);
-      setPopular(object.results);
+      setPopular(object);
       setLoading(false);
     })
-  },[])
-
-  useEffect(() => {
-    setFiltered(popular.filter(item => (item.vote_average >= minRating && item.vote_average <= maxRating)));
-  }, [minRating, maxRating])
+  },[minRating, maxRating, page])
 
   if (loading) return <Loading />;
-
+  console.log(popular)
   return (
     <Container size={1366}>
       <Title order={1} mb={'md'}>Top rated movies</Title>
@@ -55,7 +48,7 @@ export default function TopRatedMovies() {
           <Text>max: {maxRating}</Text>
         </Paper>
         <Flex wrap={'wrap'} gap={20}>
-          {filtered?.map((item) =>
+          {popular?.results?.map((item) =>
             <Box
               maw={220}
               onClick={() => navigate(`/movie/${item.id}`)}
@@ -74,6 +67,7 @@ export default function TopRatedMovies() {
           )}
         </Flex>
       </Box>
+      <Pagination value={page} onChange={setPage} total={popular?.total_pages}  withEdges/>
     </Container>
   )
 }
