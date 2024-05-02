@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/ui/loading';
 import '@mantine/carousel/styles.css';
+import { DatePickerInput } from '@mantine/dates';
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import { Flex, NumberInput, Pagination, Paper, RangeSlider, Text, rem } from '@mantine/core';
 import { Box, Container, Image, Title } from '@mantine/core';
@@ -12,8 +13,8 @@ export default function TopRatedMovies() {
   const [loading, setLoading] = useState(true);
   const [minRating, setMinRating] = useState(7);
   const [maxRating, setMaxRating] = useState(10);
-  const [minYear, setMinYear] = useState(1950);
-  const [maxYear, setMaxYear] = useState(2024);
+  const [minYear, setMinYear] = useState(new Date('1-1-1950'));
+  const [maxYear, setMaxYear] = useState(new Date());
   const navigate = useNavigate();
 
   const [embla, setEmbla] = useState(null);
@@ -48,13 +49,13 @@ export default function TopRatedMovies() {
           <Box>
             <Title order={3} mb={10}>User rating</Title>
             <RangeSlider
-              minRange={0} 
+              minRange={0}
               mb={10}
-              min={0} 
-              max={10} 
+              min={0}
+              max={10}
               step={0.1}
-              value={[minRating, maxRating]} 
-              defaultValue={[minRating, maxRating]} 
+              value={[minRating, maxRating]}
+              defaultValue={[minRating, maxRating]}
               onChangeEnd={(value) => (setMaxRating(value[1]), setMinRating(value[0]))}
             />
             <Flex align='center' gap={10}>
@@ -79,33 +80,16 @@ export default function TopRatedMovies() {
           </Box>
           <Box>
             <Title order={3} mb={10}>Year</Title>
-            <RangeSlider
-              minRange={0} 
-              mb={10}
-              min={1900} 
-              max={2024} 
-              step={1}
-              value={[minYear, maxYear]} 
-              defaultValue={[minYear, maxYear]} 
-              onChangeEnd={(value) => (setMaxYear(value[1]), setMinYear(value[0]))}
+            <DatePickerInput
+              clearable
+              value={minYear}
+              onChange={setMinYear}
             />
-            <Flex align='center' gap={10}>
-              <NumberInput
-                value={minYear}
-                onChange={setMinYear}
-                defaultValue={minYear}
-                min={1900}
-                max={2024}
-              />
-              to
-              <NumberInput
-                value={maxYear}
-                onChange={setMaxYear}
-                defaultValue={maxYear}
-                min={1900}
-                max={2024}
-              />
-            </Flex>
+            <DatePickerInput
+              clearable
+              value={maxYear}
+              onChange={setMaxYear}
+            />
           </Box>
         </Paper>
         <Flex wrap={'wrap'} gap={20}>
