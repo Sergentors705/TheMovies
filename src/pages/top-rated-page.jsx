@@ -12,6 +12,8 @@ export default function TopRatedMovies() {
   const [loading, setLoading] = useState(true);
   const [minRating, setMinRating] = useState(7);
   const [maxRating, setMaxRating] = useState(10);
+  const [minYear, setMinYear] = useState(1950);
+  const [maxYear, setMaxYear] = useState(2024);
   const navigate = useNavigate();
 
   const [embla, setEmbla] = useState(null);
@@ -34,7 +36,7 @@ export default function TopRatedMovies() {
       setPopular(object);
       setLoading(false);
     })
-  },[minRating, maxRating, page])
+  },[minRating, maxRating, minYear, maxYear, page])
 
   if (loading) return <Loading />;
   console.log(popular)
@@ -45,16 +47,65 @@ export default function TopRatedMovies() {
         <Paper p={20} mr={30}>
           <Box>
             <Title order={3} mb={10}>User rating</Title>
-            <RangeSlider minRange={0} min={0} max={10} step={0.1}value={[minRating, maxRating]} defaultValue={[minRating, maxRating]} onChangeEnd={(value) => (setMaxRating(value[1]), setMinRating(value[0]))}/>
-            <NumberInput
-              label='Min'
-              value={minRating}
-              onChange={setMinRating}
-              defaultValue={minRating}
-              decimalScale={1}
-              min={0}
-              max={10}
+            <RangeSlider
+              minRange={0} 
+              mb={10}
+              min={0} 
+              max={10} 
+              step={0.1}
+              value={[minRating, maxRating]} 
+              defaultValue={[minRating, maxRating]} 
+              onChangeEnd={(value) => (setMaxRating(value[1]), setMinRating(value[0]))}
             />
+            <Flex align='center' gap={10}>
+              <NumberInput
+                value={minRating}
+                onChange={setMinRating}
+                defaultValue={minRating}
+                decimalScale={1}
+                min={0}
+                max={10}
+              />
+              to
+              <NumberInput
+                value={maxRating}
+                onChange={setMaxRating}
+                defaultValue={maxRating}
+                decimalScale={1}
+                min={0}
+                max={10}
+              />
+            </Flex>
+          </Box>
+          <Box>
+            <Title order={3} mb={10}>Year</Title>
+            <RangeSlider
+              minRange={0} 
+              mb={10}
+              min={1900} 
+              max={2024} 
+              step={1}
+              value={[minYear, maxYear]} 
+              defaultValue={[minYear, maxYear]} 
+              onChangeEnd={(value) => (setMaxYear(value[1]), setMinYear(value[0]))}
+            />
+            <Flex align='center' gap={10}>
+              <NumberInput
+                value={minYear}
+                onChange={setMinYear}
+                defaultValue={minYear}
+                min={1900}
+                max={2024}
+              />
+              to
+              <NumberInput
+                value={maxYear}
+                onChange={setMaxYear}
+                defaultValue={maxYear}
+                min={1900}
+                max={2024}
+              />
+            </Flex>
           </Box>
         </Paper>
         <Flex wrap={'wrap'} gap={20}>
