@@ -1,11 +1,10 @@
+import '@mantine/carousel/styles.css';
+import { Box, Container, Flex, Image, NumberInput, Pagination, Paper, RangeSlider, Text, Title } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/ui/loading';
-import '@mantine/carousel/styles.css';
-import { DatePickerInput } from '@mantine/dates';
-import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
-import { Flex, NumberInput, Pagination, Paper, RangeSlider, Text, rem } from '@mantine/core';
-import { Box, Container, Image, Title } from '@mantine/core';
+const dayjs = require('dayjs');
 
 export default function TopRatedMovies() {
   const [page, setPage] = useState(1);
@@ -17,11 +16,8 @@ export default function TopRatedMovies() {
   const [maxYear, setMaxYear] = useState(new Date());
   const navigate = useNavigate();
 
-  const [embla, setEmbla] = useState(null);
-  useAnimationOffsetEffect(embla, 200);
-
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=vote_average.desc&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&without_genres=99,10755&vote_count.gte=1000&release_date.gte=${minYear.getFullYear()}-${minYear.getMonth()}-${minYear.getDate()}&release_date.lte=${maxYear.getFullYear()}-${maxYear.getMonth()}-${maxYear.getDate()}`, {
+    fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=vote_average.desc&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&without_genres=99,10755&vote_count.gte=1000&primary_release_date.gte=${dayjs(minYear).format('YYYY-MM-DD')}&primary_release_date.lte=${dayjs(maxYear).format('YYYY-MM-DD')}}`, {
       headers: {
         Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc',
         Accept: 'application/json',
@@ -33,14 +29,13 @@ export default function TopRatedMovies() {
       }
     })
     .then((object) => {
-      console.log('ti pidor typoi')
       setPopular(object);
       setLoading(false);
     })
   },[minRating, maxRating, minYear, maxYear, page])
 
   if (loading) return <Loading />;
-  
+
   return (
     <Container size={1366}>
       <Title order={1} mb={'md'}>Top rated movies</Title>
@@ -56,7 +51,7 @@ export default function TopRatedMovies() {
               step={0.1}
               value={[minRating, maxRating]}
               defaultValue={[minRating, maxRating]}
-              onChangeEnd={(value) => (setMaxRating(value[1]), setMinRating(value[0]))}
+              onChangeEnd={(value) => {setMaxRating(value[1]); setMinRating(value[0])}}
             />
             <Flex align='center' gap={10}>
               <NumberInput
@@ -81,11 +76,14 @@ export default function TopRatedMovies() {
           <Box>
             <Title order={3} mb={10}>Year</Title>
             <DatePickerInput
+              label='From:'
               clearable
+              mb={10}
               value={minYear}
               onChange={value => setMinYear(value)}
             />
             <DatePickerInput
+              label='To:'
               clearable
               value={maxYear}
               onChange={value => setMaxYear(value)}
