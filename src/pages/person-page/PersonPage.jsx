@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './style.css';
 import Loading from '../../components/ui/loading';
-import { Title } from '@mantine/core';
 
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
@@ -33,7 +32,7 @@ export default function PersonPage() {
     })
     .then((object) => {setPerson(object);
       });
-  }, [])
+  }, [personId])
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, {
@@ -50,12 +49,12 @@ export default function PersonPage() {
     })
     .then((object) => {
       console.log(object);
-      setCast(object.cast.sort((a, b) => a.popularity - b.popularity).reverse());
-      setCrew(object.crew.sort((a, b) => a.popularity - b.popularity).reverse());
-      setCredits(credits.concat(object.cast, object.crew).sort((a, b) => a.popularity - b.popularity).reverse())
+      setCast(object.cast.sort((a, b) => a.vote_average - b.vote_average).reverse());
+      setCrew(object.crew.sort((a, b) => a.vote_average - b.vote_average).reverse());
+      setCredits(credits.concat(object.cast, object.crew).sort((a, b) => a.vote_average - b.vote_average).reverse())
       setLoading(false);
     });
-  }, [])
+  }, [personId])
 
   if (loading) return <Loading />
 
@@ -63,7 +62,7 @@ export default function PersonPage() {
     <div className='person-page'>
       <div className='person-page__header'>
         <div className='person-page__info'>
-          <img className='person-page__image' width={300} height={450} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} />
+          <img className='person-page__image' width={300} height={450} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} alt=''/>
           <div className='person-page__birthday'>
             <span className='person-page__birthday-title'>Birthday:</span>
             <p className='person-page__birthday-date'>{new Date(person?.birthday).getDate()} {getMonthName(new Date(person?.birthday).getMonth())} {new Date(person?.birthday).getFullYear()}</p>
@@ -89,17 +88,17 @@ export default function PersonPage() {
       </div>
       <ul className='person-page__popular-movies'>
         {
-          credits?.slice(0, 9).map((item) =>
+          credits?.filter(item => !item.genre_ids.includes(10767) && !item.genre_ids.includes(10763) && item.vote_count >= 500).slice(0, 9).map((item) =>
               <li key={item.id} className='person-page__popular-movie'>
               {
-                item.media_type == 'movie' ?
+                item.media_type === 'movie' ?
                 <Link to={`/movie/${item.id}`} className='popular-movie__link'>
-                  <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} />
+                  <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} alt=''/>
                   <h3 className='popular-movie__title'>{item.title}</h3>
                 </Link>
                 :
                 <Link to={`/tv-show/${item.id}`} className='popular-movie__link'>
-                  <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} />
+                  <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} alt=''/>
                   <h3 className='popular-movie__title'>{item.name}</h3>
                 </Link>
               }
