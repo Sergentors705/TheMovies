@@ -19,7 +19,7 @@ export default function TopRatedMovies() {
   const [maxRuntime, setMaxRuntime] = useState(360);
   const [genreList, setGenreList] = useState([]);
   const [genreValue, setGenreValue] = useState([]);
-  const [selectValue, setSelectValue] = useState('');
+  const [selectValue, setSelectValue] = useState('vote_average.desc');
   const navigate = useNavigate();
   const marks = [
     { value: 60, label: '1h' },
