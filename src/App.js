@@ -12,6 +12,7 @@ import TopRatedMovies from "./pages/top-rated-page";
 import TvShowPage from "./pages/tv-show-page";
 import TopRatedTvShows from "./pages/top-rated-tv";
 import SearchPage from "./pages/SearchPage";
+import TvSeasonPage from "./pages/tv-season-page";
 
 function App() {
 
@@ -22,7 +23,7 @@ function App() {
           <Flex
             style={{flexGrow: '1'}}
             justify='center'
-            bg='var(--mantine-color-gray-1)'
+            bg='var(--mantine-color-gray-2)'
           >
             <Routes>
               <Route path='search' element={<Search />} />
@@ -37,6 +38,7 @@ function App() {
               <Route path='keyword/:keywordId' element={<SearchPage />} />
               <Route path='genre/:genreId' element={<SearchPage />} />
               <Route path='companie/:companieId' element={<SearchPage />} />
+              <Route path='tv-show/:tvShowId/tv-season/:seasonId' element={<TvSeasonPage />} />
             </Routes>
           </Flex>
           <Footer />

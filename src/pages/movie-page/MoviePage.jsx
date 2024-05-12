@@ -12,6 +12,7 @@ import Keywords from '../../components/ui/keywords.jsx';
 export default function MoviePage() {
   const [movie, setMovie] = useState(null);
   const [images, setImages] = useState(null);
+  const [videos, setVideos] = useState(null);
   const [similar, setSimilar] = useState(null)
   const [recomendations, setRecomendations] = useState(null)
   const [releaseDate, setReleaseDate] = useState(null);
@@ -29,11 +30,13 @@ export default function MoviePage() {
   const [fetchMovies, isLoadingMovies] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}`, setMovie))
   const [fetchReleaseDates, isLoadingReleaseDates] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`,setReleaseDate))
   const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/images`, setImages))
+  const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/videos`, setVideos))
   const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/credits`, setCredits))
 
   useEffect(() => {
     fetchMovies();
     fetchImages();
+    fetchVideos();
     fetchReleaseDates();
     fetchCredits();
     requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/similar`, setSimilar);
@@ -44,7 +47,7 @@ export default function MoviePage() {
     setDirector(credits?.crew.filter(item => item.job === 'Director'))
     setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing'))
   }, [credits]);
-  console.log(movie)
+  console.log(videos)
   return (
     <>
       <SimpleGrid
@@ -75,7 +78,7 @@ export default function MoviePage() {
                 miw={300}
                 mb={10}
               >
-                <h2 className='movie-page__title'>{movie?.title}</h2>
+                <Title order={1} fz={48}>{movie?.title}</Title>
               </Skeleton>
               <ul className='movie-page__title-info-list'>
                 <li className='movie-page__title-info-item'>
@@ -146,7 +149,9 @@ export default function MoviePage() {
               </Skeleton>
             </div>
           </Flex>
+          <Title order={2} fz={32}>Top cast</Title>
           <Crew />
+          {/* Photo section */}
           <SegmentedControl
             value={imageType}
             onChange={setImageType}
@@ -169,7 +174,7 @@ export default function MoviePage() {
           {images?.[imageType].map((item) =>
           <Carousel.Slide key={item.file_path}>
             <Skeleton visible={isLoadingImages}>
-              <Image w='100%' h='auto' fit='cover' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
+              <Image w='100%' h='auto' fit='contain' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
                 onClick={() =>{open(); setPath(item.file_path)}}
               />
             </Skeleton>

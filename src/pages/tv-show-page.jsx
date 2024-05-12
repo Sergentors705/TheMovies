@@ -1,11 +1,12 @@
 import { Carousel, CarouselSlide, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { React, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import PrimaryButton from '../components/ui/button/button';
 import useLoading from '../hooks/use-loading';
+import requestMaker from '../functions/requestMaker';
 
 export default function TvShowPage() {
   const {tvShowId} = useParams();
@@ -36,44 +37,9 @@ export default function TvShowPage() {
       .then((object) => {setTvShow(object);console.log(object)})
   })
 
-  const [fetchImages, isLoadingImages] = useLoading(async () => {
-    await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/images`, {
-          headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-            Accept: "application/json",
-          },
-        })
-          .then((response) => {
-            if (response.ok) {
-              return response.json();
-            }
-          })
-          .then((object) => {
-            setPosters(object.backdrops);
-          });
-  })
+  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/images`, setPosters));
 
-  const [fetchTvShowCredits, isLoadingTvshowCredits] = useLoading(
-    async () => {
-      await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}/credits`, {
-        headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-          Accept: "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            return response.json();
-          }
-        })
-        .then((object) => {
-          setCrew(object);
-          console.log(object);
-        });
-    }
-  )
+  const [fetchTvShowCredits, isLoadingTvshowCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/credits`, setCrew));
 
   useEffect(() => {
     fetchTvShow();
@@ -111,7 +77,7 @@ export default function TvShowPage() {
           miw={300}
           mb={10}
         >
-          <h2 className='movie-page__title'>{tvShow?.name}</h2>
+          <Title order={1} fz={'pageTitle'}>{tvShow?.name}</Title>
         </Skeleton>
         <ul className='movie-page__title-info-list'>
           <li className='movie-page__title-info-item'>
@@ -244,56 +210,75 @@ export default function TvShowPage() {
         </div>
       </div>
     </SimpleGrid>
-        <Carousel
-          slideSize='20%'
-          align='start'
-          slideGap='md'
-          containScroll='trimSnaps'
-        >
-          {
-            starring?.map( item =>
-              <CarouselSlide
-                key={item.id}
-                flex
-                align='center'
-                onClick={() => navigate(`/person/${item.id}`)}
+    <Carousel
+      slideSize='20%'
+      align='start'
+      slideGap='md'
+      containScroll='trimSnaps'
+      mb={50}
+    >
+      {
+        starring?.map( item =>
+          <CarouselSlide
+            key={item.id}
+            flex
+            align='center'
+            onClick={() => navigate(`/person/${item.id}`)}
+          >
+            <Paper
+              h='100%'
+              shadow='xs'
+              p='md'
+            >
+              <Skeleton
+                visible={isLoadingTvshowCredits}
+                mih={225}
+                miw={150}
+                mb={10}
               >
-                <Paper
-                  h='100%'
-                  shadow='xs'
-                  p='md'
-                >
-                  <Skeleton
-                    visible={isLoadingTvshowCredits}
-                    mih={225}
-                    miw={150}
-                    mb={10}
-                  >
-                    <Image
-                      w={150}
-                      h={225}
-                      radius='md'
-                      src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
-                    />
-                  </Skeleton>
-                  <Skeleton
-                    visible={isLoadingTvshowCredits}
-                    mih={20}
-                    mb={6}
-                  >
-                    <Title order={3}>{item.name}</Title>
-                  </Skeleton>
-                  <Skeleton
-                    visible={isLoadingTvshowCredits}
-                    mih={20}
-                    mb={6}
-                  >
-                    <Text size='md'>{item.character}</Text>
-                  </Skeleton>
-                </Paper>
-              </CarouselSlide>
-          )}
-        </Carousel>
+                <Image
+                  w={150}
+                  h={225}
+                  radius='md'
+                  src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
+                />
+              </Skeleton>
+              <Skeleton
+                visible={isLoadingTvshowCredits}
+                mih={20}
+                mb={6}
+              >
+                <Title order={3}>{item.name}</Title>
+              </Skeleton>
+              <Skeleton
+                visible={isLoadingTvshowCredits}
+                mih={20}
+                mb={6}
+              >
+                <Text size='md'>{item.character}</Text>
+              </Skeleton>
+            </Paper>
+          </CarouselSlide>
+      )}
+    </Carousel>
+    {/* Seasons section */}
+    <Flex
+      direction={'column'}
+      gap={20}
+    >
+      {
+        tvShow?.seasons?.map(item =>{
+          console.log(item);
+return          <Link to={`tv-season/${item.season_number}`} >
+            <Paper p={30}>
+              <Title order={3}>{item.name}</Title>
+              <Text>{item.overview}</Text>
+            </Paper>
+          </Link>}
+        )
+      }
+    </Flex>
+    {/* Posters section */}
     <Carousel
       getEmblaApi={setEmbla}
       dragFree
@@ -305,7 +290,7 @@ export default function TvShowPage() {
       controlSize={40}
       containScroll='trimSnaps'
     >
-      {posters?.map((item) =>
+      {posters?.backdrops?.map((item) =>
         <Carousel.Slide key={item.file_path}>
           <Skeleton visible={isLoadingImages} height={300}>
             <Image w='100%' h='auto' fit='cover' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
