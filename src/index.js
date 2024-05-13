@@ -13,6 +13,8 @@ const theme = createTheme({
   },
   fontSizes: {
     pageTitle: '48px',
+    sectionTitle: '32px',
+    secondaryTitle: '24px',
   }
 });
 const root = ReactDOM.createRoot(document.getElementById('root'));
