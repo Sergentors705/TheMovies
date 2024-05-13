@@ -20,25 +20,8 @@ export default function TvShowPage() {
   const [opened, { open, close }] = useDisclosure(false);
   const [posters, setPosters] = useState([]);
   const [starring, setStarring] = useState([]);
-
-  const [fetchTvShow, isLoadingTvShow] = useLoading(async() => {
-    await fetch(`https://api.themoviedb.org/3/tv/${tvShowId}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-        Accept: "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-      })
-      .then((object) => {setTvShow(object);console.log(object)})
-  })
-
+  const [fetchTvShow, isLoadingTvShow] = useLoading(async() => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}`, setTvShow));
   const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/images`, setPosters));
-
   const [fetchTvShowCredits, isLoadingTvshowCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/credits`, setCrew));
 
   useEffect(() => {
@@ -48,7 +31,7 @@ export default function TvShowPage() {
   }, [])
 
   useEffect(() => setStarring(crew?.cast.slice(0, 9)), [crew]);
-
+console.log(tvShow)
   return (
     <Flex
     maw='1366px'
@@ -263,18 +246,21 @@ export default function TvShowPage() {
     </Carousel>
     {/* Seasons section */}
     <Flex
+      mb={50}
       direction={'column'}
       gap={20}
     >
       {
-        tvShow?.seasons?.map(item =>{
-          console.log(item);
-return          <Link to={`tv-season/${item.season_number}`} >
-            <Paper p={30}>
-              <Title order={3}>{item.name}</Title>
-              <Text>{item.overview}</Text>
+        tvShow?.seasons?.map(item =>
+          <Link to={`tv-season/${item.season_number}`} style={{textDecoration: 'none'}} key={item.id}>
+            <Paper p={30} style={{display: 'flex', gap: '20px'}}>
+                <Image src={`https://media.themoviedb.org/t/p/w130_and_h195_bestv2/${item.poster_path}`} w={100} h={150} alt='' radius='md'/>
+              <Box>
+                <Title order={3} c={'black'}>{item.name}</Title>
+                <Text c={'gray.9'}>{item.overview}</Text>
+              </Box>
             </Paper>
-          </Link>}
+          </Link>
         )
       }
     </Flex>
