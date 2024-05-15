@@ -23,7 +23,7 @@ function App() {
           <Flex
             style={{flexGrow: '1'}}
             justify='center'
-            bg='var(--mantine-color-gray-2)'
+            bg='var(--mantine-color-gray-1)'
           >
             <Routes>
               <Route path='search' element={<Search />} />

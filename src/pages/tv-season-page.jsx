@@ -58,7 +58,12 @@ export default function TvSeasonPage() {
         >
           {tvSeason?.episodes?.map(item =>
               <Link to={`tv-episode/${item.id}`} style={{textDecoration: 'none'}} key={item.id}>
-                <Paper p={20} style={{display: 'flex', gap: '30px'}}>
+                <Paper
+                  shadow='md'
+                  withBorder
+                  p={20}
+                  style={{display: 'flex', gap: '30px'}}
+                >
                   <Image src={`https://media.themoviedb.org/t/p/w130_and_h195_bestv2/${item.still_path}`} w={100} h={150} alt='' radius='md'/>
                   <Flex direction={'column'}>
                     <Flex justify={'space-between'}>
