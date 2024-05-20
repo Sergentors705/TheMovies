@@ -35,7 +35,7 @@ export default function StartPage() {
         previousControlIcon={<IconArrowLeft style={{ width: rem(16), height: rem(16) }} />}
       >
           {array?.map((item) =>
-            <Carousel.Slide>
+            <Carousel.Slide key={item.id}>
               <Box
                 maw={220}
                 onClick={() => navigate(`/${item.title ? 'movie': 'tv-show'}/${item.id}`)}
@@ -69,7 +69,6 @@ export default function StartPage() {
       }
     })
     .then((object) => {
-      console.log(object);
       setTrending(object.results);
       setLoading(false);
     })
@@ -88,7 +87,6 @@ export default function StartPage() {
       }
     })
     .then((object) => {
-      console.log(object);
       setPopularMovie(object.results);
       setLoading(false);
     })
@@ -107,7 +105,6 @@ export default function StartPage() {
       }
     })
     .then((object) => {
-      console.log(object);
       setPopularTv(object.results);
       setLoading(false);
     })

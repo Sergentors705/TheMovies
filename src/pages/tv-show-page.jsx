@@ -1,6 +1,6 @@
 import { Carousel, CarouselSlide, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Box, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Button, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { React, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -41,6 +41,7 @@ console.log(tvShow)
     style={{flexGrow: '1'}}
   >
     <SimpleGrid
+      mb={50}
       style={{gridTemplateColumns: '300px 1fr max-content'}}
     >
       <div>
@@ -93,15 +94,18 @@ console.log(tvShow)
               height={20}
               miw={50}
             >
-              <Text>
-                {tvShow?.episode_run_time}m
-              </Text>
+              {
+                tvShow?.episode_run_time.length
+                ? <Text>
+                  {tvShow?.episode_run_time?.join('m, ')}m
+                </Text>
+                : <></>
+              }
             </Skeleton>
           </li>
         </ul>
         <Skeleton
           visible={isLoadingTvShow}
-          height={30}
           width='50%'
           mb={8}
         >
@@ -114,26 +118,21 @@ console.log(tvShow)
                 <Skeleton
                   key={genre.id}
                   visible={isLoadingTvShow}
-                  height={45}
+                  mih={45}
                   miw={100}
                   width='auto'
                 >
-                  <PrimaryButton text={genre.name} classname='button-primary--yellow' key={genre.id}/>
+                  <Button
+                        key={genre.id}
+                        onClick={() => navigate(`/genre/${genre.id}`)}
+                      >{genre.name}</Button>
                 </Skeleton>
             )})
           }
         </div>
-        <Skeleton visible={isLoadingTvShow} height={8} width='70%'>
+        <Skeleton visible={isLoadingTvShow} width='70%'>
           <p className='movie-page__overview'>{tvShow?.overview}</p>
         </Skeleton>
-        <Skeleton visible={isLoadingTvShow} height={8} mt={6} width='70%'></Skeleton>
-        <Skeleton visible={isLoadingTvShow} height={8} mt={6} width='70%'></Skeleton>
-        <Skeleton visible={isLoadingTvShow} height={8} mt={6} width='70%'></Skeleton>
-        <Skeleton visible={isLoadingTvShow} height={8} mt={6} width='70%'></Skeleton>
-        <Skeleton visible={isLoadingTvShow} height={8} mt={6} width='70%'></Skeleton>
-        <Skeleton visible={isLoadingTvShow} height={8} mt={6} width='70%'></Skeleton>
-        <Skeleton visible={isLoadingTvShow} height={8} mt={6} width='70%'></Skeleton>
-
       </div>
       <div>
         <div className='movie-page__rating'>
@@ -175,13 +174,6 @@ console.log(tvShow)
             mt={6}
           >
             <p className='movie-page__cash-value'>{tvShow?.status}</p>
-          </Skeleton>
-          <Skeleton
-            height={10}
-            visible={isLoadingTvShow}
-            mt={6}
-          >
-            <p className='movie-page__cash-title'>Revenue</p>
           </Skeleton>
           <Skeleton
             height={10}
@@ -286,7 +278,7 @@ console.log(tvShow)
         </Carousel.Slide>
       )}
     </Carousel>
-    <Modal opened={opened} onClose={close} size='75%'>
+    <Modal opened={opened} onClose={close} size='75%' children={Image}>
       <Image w='100%' h='auto' fit='cover' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />
     </Modal>
   </Flex>
