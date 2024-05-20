@@ -57,7 +57,7 @@ export default function TvSeasonPage() {
           gap={30}
         >
           {tvSeason?.episodes?.map(item =>
-              <Link to={`tv-episode/${item.id}`} style={{textDecoration: 'none'}} key={item.id}>
+              <Link to={`tv-episode/${item.episode_number}`} style={{textDecoration: 'none'}} key={item.id}>
                 <Paper
                   shadow='md'
                   withBorder

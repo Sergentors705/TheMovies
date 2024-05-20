@@ -56,7 +56,13 @@ export default function TopRatedMovies() {
     <Container size={1366}>
       <Title order={1} mb={'md'}>Top rated movies</Title>
       <Box display='grid' w='100%' style={{gridTemplateColumns: '300px 1fr'}} mb={30}>
-        <Paper p={20} mr={30}>
+        <Paper 
+          withBorder
+          shadow='md'
+          p={20} 
+          mr={30}
+          h={'min-content'}
+        >
           <Title order={3} mb={10}>Sort by</Title>
           <NativeSelect
             mb={15}
@@ -153,14 +159,17 @@ export default function TopRatedMovies() {
         </Paper>
         <Flex wrap={'wrap'} gap={20}>
           {popular?.results?.map((item) =>
-            <Box
+            <Paper
+              withBorder
+              shadow='md'
+              p={10}
               key={item.id}
               maw={220}
               onClick={() => navigate(`/tv-show/${item.id}`)}
             >
               <Image
-                w={220}
-                h={330}
+                w={200}
+                h={'auto'}
                 src={`https://www.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}`}
               />
               <Title
@@ -169,7 +178,7 @@ export default function TopRatedMovies() {
                 textWrap='wrap'
               >{item.name}</Title>
               <Text>{item.release_date}</Text>
-            </Box>
+            </Paper>
           )}
         </Flex>
       </Box>
