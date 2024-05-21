@@ -302,9 +302,7 @@ export default function MoviePage() {
           <Keywords />
         </Box>
       </SimpleGrid>
-      <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />}>
-
-        </Modal>
+      <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />}/>
     </>
   )
 }
