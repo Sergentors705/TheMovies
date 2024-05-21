@@ -69,6 +69,7 @@ export default function MoviePage() {
               h={450}
               radius="md"
               src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movie?.poster_path}`}
+              alt=''
             />
             </Skeleton>
             <div>
