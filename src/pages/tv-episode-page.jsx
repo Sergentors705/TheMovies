@@ -30,17 +30,19 @@ export default function TvEpisodePage() {
         <Text fz={'sectionTitle'} c={'black'}>Back to {tvShow?.name}</Text>
         </Link>
       </Box>
-      <Flex>
+      <Flex gap={30}>
         <Skeleton visible={isLoadingEpisode}>
           <Image w={300} h={450} radius={'md'} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${episode?.still_path}`} alt='' />
         </Skeleton>
+        <Box>
+          <Skeleton visible={isLoadingEpisode}>
+            <Title order={1} fz={'page-title'}>{episode?.name}</Title>
+          </Skeleton>
+        </Box>
       </Flex>
       <Paper
         p={20}
       >
-        <Skeleton visible={isLoadingEpisode}>
-          <Title order={1} fz={'page-title'}>{episode?.name}</Title>
-        </Skeleton>
 
       </Paper>
     </Flex>
