@@ -15,7 +15,10 @@ const theme = createTheme({
     pageTitle: '48px',
     sectionTitle: '32px',
     secondaryTitle: '24px',
-  }
+  },
+  lineHeights: {
+    pageTitle: '48px',
+  },
 });
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

@@ -1,9 +1,10 @@
-import { Box, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from "@mantine/core";
+import { Box, Flex, Image, List, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from "@mantine/core";
 import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import requestMaker from "../functions/requestMaker";
 import useLoading from "../hooks/use-loading";
+import Actors from "../modules/actors";
 
 export default function TvEpisodePage() {
   const {tvShowId, seasonId, episodeId} = useParams();
@@ -23,8 +24,8 @@ export default function TvEpisodePage() {
     fetchRating();
     fetchCountries();
   }, [])
-  console.log(episode)
-  console.log(tvShow)
+  console.log('Actors',episode?.guest_stars)
+  console.log('episode', episode)
   return (
     <>
       <Flex
@@ -44,9 +45,9 @@ export default function TvEpisodePage() {
           </Skeleton>
           <Box>
             <Skeleton visible={isLoadingEpisode}>
-              <Title order={1} fz={'page-title'}>{episode?.name}</Title>
+              <Title order={1} fz={'pageTitle'} lh={'pageTitle'} mb={10}>{episode?.name}</Title>
             </Skeleton>
-            <Flex gap={20} justify={'flex-start'} mb={20}>
+            <Flex gap={20} mb={20}>
               <Skeleton visible={isLoadingEpisode}>
                 <Text c={'gray.9'}>Episode aired {episode?.air_date}</Text>
               </Skeleton>
@@ -62,11 +63,9 @@ export default function TvEpisodePage() {
             </Skeleton>
           </Box>
           {/* Additional info section */}
-          <Paper
-            withBorder
-            shadow={'md'}
+          <Box
             px={20}
-            style={{display: 'flex', flexDirection: 'column', gap: '10px'}}
+            style={{display: 'flex', flexDirection: 'column', gap: '15px'}}
           >
             <Title order={2} fz={'sectionTitle'}>Details</Title>
             <Box>
@@ -99,11 +98,29 @@ export default function TvEpisodePage() {
                 <Text c={'gray.9'}>{episode?.vote_count} votes</Text>
               </Skeleton>
             </Box>
-          </Paper>
+            <Box>
+              <Title order={3} mb={10}>Production</Title>
+              <List listStyleType='none'>
+                {tvShow?.production_companies.map((item) =>
+                  <List.Item key={item.id}>
+                    <Link to={`/companie/${item.id}`}>
+                      {
+                        item.logo_path
+                        ? <Image w={200} h={'auto'} src={`https://image.tmdb.org/t/p/h60/${item.logo_path}`} mb={10}/>
+                        : <Text size='xl' c={'black'} mb={10}>{item.name}</Text>
+                      }
+
+                    </Link>
+                  </List.Item>
+                )}
+              </List>
+            </Box>
+          </Box>
         </SimpleGrid>
         <Paper
           p={20}
         >
+        {isLoadingEpisode ? <Actors array={episode?.guest_stars}/> : <></>}
 
         </Paper>
       </Flex>
