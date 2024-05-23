@@ -1,16 +1,19 @@
 import { Carousel, CarouselSlide, useAnimationOffsetEffect } from '@mantine/carousel';
 import { Image, Paper, Skeleton, Text, Title } from '@mantine/core';
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
-export default function Actors(array, isVisible) {
+export default function Actors({array}) {
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const {movieId} = useParams()
   const navigate = useNavigate();
-console.log(array)
+
   return (
     <div className='starring'>
+      <Link style={{textDecoration: 'none'}}>
+        <Title order={2} fz={'sectionTitle'} c={'black'}>All cast</Title>
+      </Link>
         <Carousel
           getEmblaApi={setEmbla}
           dragFree
@@ -22,6 +25,7 @@ console.log(array)
           {
             array?.map( item =>
               <CarouselSlide
+              py={20}
                 key={item.id}
                 flex
                 align='center'
@@ -29,11 +33,12 @@ console.log(array)
               >
                 <Paper
                   h='100%'
-                  shadow='xs'
+                  withBorder
+                  shadow='xl'
                   p='md'
                 >
                   <Skeleton
-                    visible={isVisible}
+                    visible={false}
                     mih={225}
                     miw={150}
                     mb={10}
@@ -46,14 +51,14 @@ console.log(array)
                     />
                   </Skeleton>
                   <Skeleton
-                    visible={isVisible}
+                    visible={false}
                     mih={20}
                     mb={6}
                   >
                     <Title order={3}>{item.name}</Title>
                   </Skeleton>
                   <Skeleton
-                    visible={isVisible}
+                    visible={false}
                     mih={20}
                     mb={6}
                   >

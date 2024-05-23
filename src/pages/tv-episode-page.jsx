@@ -1,12 +1,13 @@
-import { Box, Flex, Image, List, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from "@mantine/core";
+import { Box, Button, Flex, Image, List, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from "@mantine/core";
 import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import requestMaker from "../functions/requestMaker";
 import useLoading from "../hooks/use-loading";
 import Actors from "../modules/actors";
 
 export default function TvEpisodePage() {
+  const navigate = useNavigate();
   const {tvShowId, seasonId, episodeId} = useParams();
   const [episode, setEpisode] = useState(null);
   const [tvShow, setTvShow] = useState(null);
@@ -24,7 +25,7 @@ export default function TvEpisodePage() {
     fetchRating();
     fetchCountries();
   }, [])
-  console.log('Actors',episode?.guest_stars)
+  console.log(tvShow)
   console.log('episode', episode)
   return (
     <>
@@ -49,15 +50,35 @@ export default function TvEpisodePage() {
             </Skeleton>
             <Flex gap={20} mb={20}>
               <Skeleton visible={isLoadingEpisode}>
-                <Text c={'gray.9'}>Episode aired {episode?.air_date}</Text>
+                <Text c={'dimmed'}>Episode aired {episode?.air_date}</Text>
               </Skeleton>
               <Skeleton visible={isLoadingRating}>
-                <Text c={'gray.9'}>{contentRating?.results?.find(item => item.iso_3166_1 === 'US').rating}</Text>
+                <Text c={'dimmed'}>{contentRating?.results?.find(item => item.iso_3166_1 === 'US').rating}</Text>
               </Skeleton>
               <Skeleton visible={isLoadingEpisode}>
-                <Text c={'gray.9'} >{episode?.runtime}m</Text>
+                <Text c={'dimmed'} >{episode?.runtime}m</Text>
               </Skeleton>
             </Flex>
+            <Skeleton visible={isLoadingTvShow}>
+              <Text maw={500} mb={10} fs={'italic'} c={'dimmed'}>{tvShow?.tagline}</Text>
+            </Skeleton>
+            <Box>
+            {
+                  tvShow?.genres.map(genre =>
+                    <Skeleton
+                      key={genre.id}
+                      visible={isLoadingTvShow}
+                      mih={45}
+                      miw={100}
+                      width='auto'
+                    >
+                      <Button
+                        key={genre.id}
+                        onClick={() => navigate(`/genre/${genre.id}`)}
+                      >{genre.name}</Button>
+                    </Skeleton>
+                  )}
+            </Box>
             <Skeleton visible={isLoadingEpisode}>
               <Text maw={500}>{episode?.overview}</Text>
             </Skeleton>
@@ -69,25 +90,19 @@ export default function TvEpisodePage() {
           >
             <Title order={2} fz={'sectionTitle'}>Details</Title>
             <Box>
-              <Skeleton visible={isLoadingEpisode}>
-                <Title order={3}>Country of origin</Title>
-              </Skeleton>
+              <Title order={3}>Country of origin</Title>
               <Skeleton visible={isLoadingTvShow}>
                 <Text c={'gray.9'}>{countries?.find(item => item.iso_3166_1 === tvShow?.origin_country[0])?.english_name}</Text>
               </Skeleton>
             </Box>
             <Box>
-              <Skeleton visible={isLoadingEpisode}>
-                <Title order={3}>Status</Title>
-              </Skeleton>
+              <Title order={3}>Status</Title>
               <Skeleton visible={isLoadingTvShow}>
                 <Text c={'gray.9'}>{tvShow?.status}</Text>
               </Skeleton>
             </Box>
             <Box>
-              <Skeleton visible={isLoadingEpisode}>
-                <Title order={3}>The Movie Rating</Title>
-              </Skeleton>
+              <Title order={3}>The Movie Rating</Title>
               <Skeleton visible={isLoadingEpisode}>
                 <Flex>
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
@@ -106,7 +121,7 @@ export default function TvEpisodePage() {
                     <Link to={`/companie/${item.id}`}>
                       {
                         item.logo_path
-                        ? <Image w={200} h={'auto'} src={`https://image.tmdb.org/t/p/h60/${item.logo_path}`} mb={10}/>
+                        ? <Image w={200} h={'auto'} src={`https://image.tmdb.org/t/p/h60/${item.logo_path}`} mb={10} alt=''/>
                         : <Text size='xl' c={'black'} mb={10}>{item.name}</Text>
                       }
 
@@ -120,7 +135,7 @@ export default function TvEpisodePage() {
         <Paper
           p={20}
         >
-        {isLoadingEpisode ? <Actors array={episode?.guest_stars}/> : <></>}
+        {episode?.guest_stars.length ? <Actors array={episode?.guest_stars}/> : <></>}
 
         </Paper>
       </Flex>
