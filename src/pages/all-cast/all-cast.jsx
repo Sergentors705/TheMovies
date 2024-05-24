@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import './script.css';
 import { Link, useParams } from 'react-router-dom';
-import { Flex, Image } from '@mantine/core';
+import { Box, Flex, Image, List, Paper, SimpleGrid, Text, Title } from '@mantine/core';
 
 export default function AllCast() {
   const {creationId, type} = useParams();
@@ -21,30 +20,63 @@ export default function AllCast() {
   const [visualEffects, setVisualEffects] = useState([]);
 
   const PeopleListCreator = (array, title) => {
-    console.log(crew)
-    return <div className='crew__list'>
+
+    return (
+      <div className='crew__list'>
       {
         array?.length > 0
         ? <>
           <h3 className='all-cast-page__list-title'>{title}</h3>
-          <ul className='actors-list'>
+        <Flex
+          miw={400}
+          direction={'column'}
+          gap={15}
+        >
             {array.map((item) =>
-              <li className='actor-card' key={Math.random()}>
-                <Link className='actor-link' to={`/person/${item.id}`}>
-                  <img className='actor-card__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`} width={100} height={150} />
-                  <div className='actor-card__content'>
-                    <h3 className='actor-title'>{item.name}</h3>
-                    <p className='actor-character-name'>{item.job}</p>
-                  </div>
-                </Link>
-              </li>
+            <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}} key={item.id}>
+            <Paper
+              p={10}
+              withBorder
+              shadow='xl'
+            >
+              <Flex gap={20}>
+                <Image radius={'lg'} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`} w={75} h='auto' />
+                <Flex
+                  direction={'column'}
+                  justify={'center'}
+                >
+                  <Title
+                    order={3}
+                    c={'black'}
+                    fz={'listTitle'}
+                  >{item.name}</Title>
+                  <Text fz={'listTitle'} c={'dimmed'}>As {item.character}</Text>
+                </Flex>
+              </Flex>
+            </Paper>
+          </Link>
+              // <List.Item className='actor-card' key={Math.random()}>
+              //   <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}}>
+              //     <Image
+              //       w={100}
+              //       h={150}
+              //       radius={'lg'}
+              //       fit='cover'
+              //       src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
+              //     />
+              //     <Box>
+              //       <Title order={3} c={'black'} fz={'listTitle'}>{item.name}</Title>
+              //       <Text className='actor-character-name' c={'dimmed'} fz={'listTitle'}>{item.job}</Text>
+              //     </Box>
+              //   </Link>
+              // </List.Item>
             )}
-          </ul>
+          </Flex>
         </>
         :<></>
       }
-    </div>
-  }
+      </div>
+    )}
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/${type}/${creationId}`, {
@@ -94,34 +126,53 @@ export default function AllCast() {
   }, [crew])
 
   return (
-    <div className='all-cast-page'>
+    <Flex maw={1366} w={'100%'} direction={'column'}>
       <div className='all-cast__header'>
         <Link className='all-cast__back-to-movie' to={`/${type}/${creation?.id}`}>
           <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${creation?.poster_path}`} width={100} height={150} />
           Back to {creation?.title}
         </Link>
       </div>
-      <div className='all-cast-page__content'>
-        <div className='actors-container'>
-          <h3 className='all-cast-page__list-title'>Cast</h3>
-          <ul style={{listStyleType: 'none'}}>
-            {
-              crew?.cast.map( item =>
-                <li key={item.id} >
-                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                    <Flex gap={20}>
-                      <Image src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`} w={75} h='auto' />
-                      <div className='actor-card__content'>
-                        <h3 className='actor-title'>{item.name}</h3>
-                        <p className='actor-character-name'>As {item.character}</p>
-                      </div>
+      <Flex
+        gap={50}
+        justify={'center'}
+      >
+        <Flex
+          miw={400}
+          direction={'column'}
+          gap={15}
+        >
+          <Title c={'black'} fz={'sectionTitle'}>Cast</Title>
+            {crew?.cast.map( item =>
+              <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}} key={item.id}>
+                <Paper
+                  p={10}
+                  withBorder
+                  shadow='xl'
+                >
+                  <Flex gap={20}>
+                    <Image radius={'lg'} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`} w={75} h='auto' />
+                    <Flex
+                      direction={'column'}
+                      justify={'center'}
+                    >
+                      <Title
+                        order={3}
+                        c={'black'}
+                        fz={'listTitle'}
+                      >{item.name}</Title>
+                      <Text fz={'listTitle'} c={'dimmed'}>As {item.character}</Text>
                     </Flex>
-                  </Link>
-                </li>
+                  </Flex>
+                </Paper>
+              </Link>
             )}
-          </ul>
-        </div>
-        <div className='crew-container'>
+        </Flex>
+        <Flex
+          miw={400}
+          direction={'column'}
+          gap={15}
+        >
           {PeopleListCreator(art, 'Art')}
           {PeopleListCreator(lighting, 'Lighting')}
           {PeopleListCreator(sound, 'Sound')}
@@ -134,8 +185,8 @@ export default function AllCast() {
           {PeopleListCreator(team, 'Crew')}
           {PeopleListCreator(editing, 'Editing')}
           {PeopleListCreator(visualEffects, 'Visual Effects')}
-        </div>
-      </div>
-    </div>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }
