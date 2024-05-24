@@ -32,7 +32,7 @@ function App() {
               <Route path='tv-show/:tvShowId' element={<TvShowPage />} />
               <Route path='person/:personId' element={<PersonPage />} />
               <Route path='all-movies/:personId' element={<AllMovies />} />
-              <Route path='all-cast/:movieId' element={<AllCast />} />
+              <Route path='all-cast/:type/:creationId' element={<AllCast />} />
               <Route path='/' element={<StartPage />} />
               <Route path='top-rated-movies' element={<TopRatedMovies />} />
               <Route path='top-rated-tv-shows' element={<TopRatedTvShows />} />

@@ -4,8 +4,8 @@ import { Link, useParams } from 'react-router-dom';
 import { Flex, Image } from '@mantine/core';
 
 export default function AllCast() {
-  const {movieId} = useParams();
-  const [movie, setMovie] = useState(null);
+  const {creationId, type} = useParams();
+  const [creation, setCreation] = useState(null);
   const [crew, setCrew] = useState(null);
   const [art, setArt] = useState([]);
   const [lighting, setLighting] = useState([]);
@@ -47,7 +47,7 @@ export default function AllCast() {
   }
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${movieId}`, {
+    fetch(`https://api.themoviedb.org/3/${type}/${creationId}`, {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
@@ -59,11 +59,11 @@ export default function AllCast() {
           return response.json();
         }
       })
-      .then((object) => setMovie(object));
+      .then((object) => setCreation(object));
   }, [])
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
+    fetch(`https://api.themoviedb.org/3/${type}/${creationId}/credits`, {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
@@ -96,9 +96,9 @@ export default function AllCast() {
   return (
     <div className='all-cast-page'>
       <div className='all-cast__header'>
-        <Link className='all-cast__back-to-movie' to={`/movie/${movie?.id}`}>
-          <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${movie?.poster_path}`} width={100} height={150} />
-          Back to {movie?.title}
+        <Link className='all-cast__back-to-movie' to={`/${type}/${creation?.id}`}>
+          <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${creation?.poster_path}`} width={100} height={150} />
+          Back to {creation?.title}
         </Link>
       </div>
       <div className='all-cast-page__content'>

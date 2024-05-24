@@ -62,23 +62,19 @@ export default function TvEpisodePage() {
             <Skeleton visible={isLoadingTvShow}>
               <Text maw={500} mb={10} fs={'italic'} c={'dimmed'}>{tvShow?.tagline}</Text>
             </Skeleton>
-            <Box>
-            {
-                  tvShow?.genres.map(genre =>
-                    <Skeleton
-                      key={genre.id}
-                      visible={isLoadingTvShow}
-                      mih={45}
-                      miw={100}
-                      width='auto'
-                    >
-                      <Button
-                        key={genre.id}
-                        onClick={() => navigate(`/genre/${genre.id}`)}
-                      >{genre.name}</Button>
-                    </Skeleton>
-                  )}
-            </Box>
+            <Flex>
+            {tvShow?.genres.map(genre =>
+              <Skeleton
+                key={genre.id}
+                visible={isLoadingTvShow}
+                mih={45}
+                miw={100}
+                width='auto'
+              >
+                <Button onClick={() => navigate(`/genre/${genre.id}`)}>{genre.name}</Button>
+              </Skeleton>
+            )}
+            </Flex>
             <Skeleton visible={isLoadingEpisode}>
               <Text maw={500}>{episode?.overview}</Text>
             </Skeleton>
