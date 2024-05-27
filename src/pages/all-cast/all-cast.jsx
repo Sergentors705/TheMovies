@@ -47,7 +47,7 @@ export default function AllCast() {
     setEditing(crew?.crew.filter((item) => item.department === 'Editing'));
     setVisualEffects(crew?.crew.filter((item) => item.department === 'Visual Effects'));
   }, [crew])
-
+console.log(crew)
   return (
     <>
       <Flex maw={1366} w={'100%'} direction={'column'}>
