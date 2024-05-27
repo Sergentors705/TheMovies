@@ -80,7 +80,7 @@ export default function Crew() {
               </CarouselSlide>
           )}
         </Carousel>
-        <PrimaryButton classname='button-primary--red' text='Show all' type='button' onclick={() => navigate(`/all-cast/${movieId}`)} />
+        <PrimaryButton classname='button-primary--red' text='Show all' type='button' onclick={() => navigate(`/all-cast/movie/${movieId}`)} />
     </div>
   )
 }

@@ -48,7 +48,6 @@ export default function PersonPage() {
       }
     })
     .then((object) => {
-      console.log(object);
       setCast(object.cast.sort((a, b) => a.vote_average - b.vote_average).reverse());
       setCrew(object.crew.sort((a, b) => a.vote_average - b.vote_average).reverse());
       setCredits(credits.concat(object.cast, object.crew).sort((a, b) => a.vote_average - b.vote_average).reverse())
@@ -89,7 +88,7 @@ export default function PersonPage() {
       <ul className='person-page__popular-movies'>
         {
           credits?.filter(item => !item.genre_ids.includes(10767) && !item.genre_ids.includes(10763) && item.vote_count >= 500).slice(0, 9).map((item) =>
-              <li key={item.id} className='person-page__popular-movie'>
+              <li key={item.credit_id} className='person-page__popular-movie'>
               {
                 item.media_type === 'movie' ?
                 <Link to={`/movie/${item.id}`} className='popular-movie__link'>
