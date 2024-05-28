@@ -67,18 +67,18 @@ console.log(crew)
             direction={'column'}
             gap={15}
           >
-            {PeopleListCreator(art, 'Art')}
-            {PeopleListCreator(lighting, 'Lighting')}
-            {PeopleListCreator(sound, 'Sound')}
-            {PeopleListCreator(production, 'Production')}
-            {PeopleListCreator(actors, 'Actors')}
-            {PeopleListCreator(costume, 'Costume & Make-Up')}
-            {PeopleListCreator(directing, 'Directing')}
-            {PeopleListCreator(camera, 'Camera')}
-            {PeopleListCreator(writting, 'Writing')}
-            {PeopleListCreator(team, 'Crew')}
-            {PeopleListCreator(editing, 'Editing')}
-            {PeopleListCreator(visualEffects, 'Visual Effects')}
+            {PeopleListCreator(art, 'Art', open)}
+            {PeopleListCreator(lighting, 'Lighting', open)}
+            {PeopleListCreator(sound, 'Sound', open)}
+            {PeopleListCreator(production, 'Production', open)}
+            {PeopleListCreator(actors, 'Actors', open)}
+            {PeopleListCreator(costume, 'Costume & Make-Up', open)}
+            {PeopleListCreator(directing, 'Directing', open)}
+            {PeopleListCreator(camera, 'Camera', open)}
+            {PeopleListCreator(writting, 'Writing', open)}
+            {PeopleListCreator(team, 'Crew', open)}
+            {PeopleListCreator(editing, 'Editing', open)}
+            {PeopleListCreator(visualEffects, 'Visual Effects', open)}
           </Flex>
         </Flex>
       </Flex>

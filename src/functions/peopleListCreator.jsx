@@ -1,9 +1,9 @@
-import { Button, Collapse, Flex, Image, Paper, Text, Title } from '@mantine/core';
+import { Button, Center, Collapse, Flex, Image, Paper, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function PeopleListCreator  (array, title) {
+export default function PeopleListCreator  (array, title, modalOpen) {
   const [opened, { toggle }] = useDisclosure(true);
 
   return (
@@ -23,25 +23,24 @@ export default function PeopleListCreator  (array, title) {
             gap={15}
           >
             {array.map((item) =>
-            <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}} key={item.credit_id}>
               <Paper
                 p={10}
                 withBorder
                 shadow='xl'
+                radius={'lg'}
               >
                 <Flex gap={20}>
-                  <Image
-                    w={100}
-                    h={150}
-                    fit={'cover'}
-                    radius={'lg'}
-                    src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
-                    alt=''
-                  />
-                  <Flex
-                    direction={'column'}
-                    justify={'center'}
-                  >
+                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}} key={item.credit_id}>
+                    <Image
+                      w={100}
+                      h={150}
+                      fit={'cover'}
+                      radius={'lg'}
+                      src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
+                      alt=''
+                    />
+                  </Link>
+                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none', display: 'flex', justifyContent: 'center', flexDirection: 'column'}} key={item.credit_id}>
                     <Title
                       order={3}
                       c={'black'}
@@ -50,9 +49,10 @@ export default function PeopleListCreator  (array, title) {
                     {item.character
                     ?<Text fz={'listTitle'} c={'dimmed'}>As {item.character}</Text>
                     :<Text fz={'listTitle'} c={'dimmed'}>{item.job}</Text>}
-                  </Flex>
+                  </Link>
                   <Button
-                    onClick={(event) => {event.stopPropagation(); console.log('ti pidor')}}
+                    onClick={modalOpen}
+                    style={{alignSelf: 'center'}}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" role="presentation">
                       <path fill="none" d="M0 0h24v24H0V0z"></path>
@@ -61,7 +61,6 @@ export default function PeopleListCreator  (array, title) {
                   </Button>
                 </Flex>
               </Paper>
-            </Link>
             )}
           </Flex>
         </Collapse>
