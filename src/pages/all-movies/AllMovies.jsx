@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 import { Link, useParams } from 'react-router-dom';
-import { Text, Title } from '@mantine/core';
+import { Box, Flex, Image, Modal, Text, Title } from '@mantine/core';
+import uniqueArrayFilter from '../../functions/uniqueArrayFilter';
+import CreationListCreator from '../../functions/creationListCreator';
+import { useDisclosure } from '@mantine/hooks';
 
 export default function AllMovies() {
   const [person, setPerson] = useState(null);
@@ -20,8 +23,8 @@ export default function AllMovies() {
   const [team, setTeam] = useState([]);
   const [editing, setEditing] = useState([]);
   const [visualEffects, setVisualEffects] = useState([]);
-
-  useEffect(() => console.log(crew), [person]);
+  const [opened, { open, close }] = useDisclosure(false);
+  const [modalDate, setModalDate] = useState(null);
 
   useEffect(() => {
     setArt(crew?.filter((item) => item.department === 'Art'));
@@ -74,388 +77,70 @@ export default function AllMovies() {
   }, [])
 
   return (
-    <div className='all-movies__wrapper'>
-      <div className='all-movies__header'>
-        <Link className='all-movies__back-to-person' to={`/person/${person?.id}`}>
-          <img className='all-movies__person-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} width={100} height={150} />
-          Back to {person?.name}
-        </Link>
-      </div>
-      <div className='all-movies__content'>
-        <div className='all-movies__cast'>
-          {
-            cast.length > 0
-            ? <>
-              <h3 className='all-movies__list-title'>Acting</h3>
-              <ul className='all-movies__list'>
-                {
-                  cast?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} className='cast-movies-list__link' style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <Title order={3}>{item.title}</Title>
-                            <Text>{item.character}</Text>
-                            <p className='cast-movies__rating-date-container'>
-                              <span className='cast-movies__rating'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                  <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                                </svg>
-                                {item.vote_average.toFixed(1)}
-                              </span>
-                              <span className='cast-movies__date'>{new Date(item.release_date).getFullYear()}</span>
-                            </p>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            : <></>
-          }
-
+      <>
+      <Flex maw={1366} w={'100%'} direction={'column'}>
+        <div className='all-cast__header'>
+          <Link to={`/person/${person?.id}`}>
+            <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} width={100} height={150} />
+            Back to {person?.name}
+          </Link>
         </div>
-        <div className='all-movies__crew'>
-          {
-            art.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Art</h3>
-              <ul className='all-movies__list'>
-                {
-                  art?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            lighting.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Lighting</h3>
-              <ul className='all-movies__list'>
-                {
-                  lighting?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            sound.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Sound</h3>
-              <ul className='all-movies__list'>
-                {
-                  sound?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            production.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Production</h3>
-              <ul className='all-movies__list'>
-                {
-                  production?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            actors.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Actors</h3>
-              <ul className='all-movies__list'>
-                {
-                  actors?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            costume.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Costume & Make-Up</h3>
-              <ul className='all-movies__list'>
-                {
-                  costume?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            directing.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Directing</h3>
-              <ul className='all-movies__list'>
-                {
-                  directing?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            camera.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Camera</h3>
-              <ul className='all-movies__list'>
-                {
-                  camera?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            writting.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Writing</h3>
-              <ul className='all-movies__list'>
-                {
-                  writting?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            team.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Crew</h3>
-              <ul className='all-movies__list'>
-                {
-                  team?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            editing.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Editing</h3>
-              <ul className='all-movies__list'>
-                {
-                  editing?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
-          {
-            visualEffects.length >0 ?
-            <>
-              <h3 className='all-movies__list-title'>Visual effects</h3>
-              <ul className='all-movies__list'>
-                {
-                  visualEffects?.map((item) =>
-                      <li key={item.id} className='all-movies__popular-movie'>
-                        <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', color: 'inherit'}}>
-                          <img className='cast-movies-list__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={100} height={150} />
-                          <div className='cast-movies-list__content'>
-                            <h3 className='cast-movies__title'>{item.title}</h3>
-                            <h3 className='cast-movies__character'>{item.job}</h3>
-                            <span className='cast-movies__rating'>
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--star sc-bde20123-4 frBGmx" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
-                                <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
-                              </svg>
-                              {item.vote_average.toFixed(1)}
-                            </span>
-                          </div>
-                        </Link>
-                      </li>
-                  )
-                }
-              </ul>
-            </>
-            :<></>
-          }
+        <Flex
+          gap={50}
+          justify={'center'}
+        >
+          {CreationListCreator(cast, 'Cast', open, setModalDate)}
+          <Flex
+            miw={400}
+            direction={'column'}
+            gap={15}
+          >
+            {CreationListCreator(art, 'Art', open, setModalDate)}
+            {CreationListCreator(lighting, 'Lighting', open, setModalDate)}
+            {CreationListCreator(sound, 'Sound', open, setModalDate)}
+            {CreationListCreator(production, 'Production', open, setModalDate)}
+            {CreationListCreator(actors, 'Actors', open, setModalDate)}
+            {CreationListCreator(costume, 'Costume & Make-Up', open, setModalDate)}
+            {CreationListCreator(directing, 'Directing', open, setModalDate)}
+            {CreationListCreator(camera, 'Camera', open, setModalDate)}
+            {CreationListCreator(writting, 'Writing', open, setModalDate)}
+            {CreationListCreator(team, 'Crew', open, setModalDate)}
+            {CreationListCreator(editing, 'Editing', open, setModalDate)}
+            {CreationListCreator(visualEffects, 'Visual Effects', open, setModalDate)}
+          </Flex>
+        </Flex>
+      </Flex>
+      <Modal.Root opened={opened} onClose={close} centered>
+        <Modal.Overlay />
+        <Modal.Content>
 
-        </div>
-      </div>
-    </div>
+        </Modal.Content>
+      </Modal.Root>
+      {/* <Modal.Root opened={opened} onClose={close} centered
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}>
+          <Modal.Overlay />
+          <Modal.Header>
+
+          <Modal.Title>{modalDate?.title}</Modal.Title>
+          </Modal.Header>
+        <Flex
+          gap={30}
+        >
+          <Image
+            w={100}
+            h={150}
+            radius={'md'}
+            fit='cover'
+            src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${modalDate?.poster_path}`}
+          />
+          <Box>
+            <Title></Title>
+          </Box>
+        </Flex>
+      </Modal.Root> */}
+    </>
   )
 }
