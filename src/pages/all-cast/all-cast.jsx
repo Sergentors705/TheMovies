@@ -1,4 +1,4 @@
-import { Flex, Modal } from '@mantine/core';
+import { Flex, Image, Modal, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -47,7 +47,7 @@ export default function AllCast() {
     setEditing(crew?.crew.filter((item) => item.department === 'Editing'));
     setVisualEffects(crew?.crew.filter((item) => item.department === 'Visual Effects'));
   }, [crew])
-console.log(crew)
+
   return (
     <>
       <Flex maw={1366} w={'100%'} direction={'column'}>
@@ -61,7 +61,7 @@ console.log(crew)
           gap={50}
           justify={'center'}
         >
-          {PeopleListCreator(crew?.cast, 'Cast')}
+          {PeopleListCreator(crew?.cast, 'Cast', open, setModalDate)}
           <Flex
             miw={400}
             direction={'column'}
@@ -82,8 +82,15 @@ console.log(crew)
           </Flex>
         </Flex>
       </Flex>
-      <Modal opened={opened} onClose={close} title="Authentication" centered>
-        {/* Modal content */}
+      <Modal opened={opened} onClose={close} title={modalDate?.name} centered>
+        <Title>{}</Title>
+        <Image
+          w={100}
+          h={150}
+          radius={'md'}
+          fit='cover'
+          src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${modalDate?.profile_path}`}
+        />
       </Modal>
     </>
   )

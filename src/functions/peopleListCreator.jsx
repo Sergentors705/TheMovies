@@ -3,7 +3,7 @@ import { useDisclosure } from '@mantine/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function PeopleListCreator  (array, title, modalOpen) {
+export default function PeopleListCreator  (array, title, modalOpen, setModalDate) {
   const [opened, { toggle }] = useDisclosure(true);
 
   return (
@@ -28,9 +28,10 @@ export default function PeopleListCreator  (array, title, modalOpen) {
                 withBorder
                 shadow='xl'
                 radius={'lg'}
+                key={item.credit_id}
               >
                 <Flex gap={20}>
-                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}} key={item.credit_id}>
+                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}} >
                     <Image
                       w={100}
                       h={150}
@@ -51,7 +52,7 @@ export default function PeopleListCreator  (array, title, modalOpen) {
                     :<Text fz={'listTitle'} c={'dimmed'}>{item.job}</Text>}
                   </Link>
                   <Button
-                    onClick={modalOpen}
+                    onClick={() => {modalOpen(); setModalDate(item)}}
                     style={{alignSelf: 'center'}}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" role="presentation">
