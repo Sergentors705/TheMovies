@@ -46,9 +46,9 @@ export default function CreationListCreator  (array, title, modalOpen, setModalD
                       order={3}
                       c={'black'}
                       fz={'listTitle'}
-                    >{item.name}</Title>
-                    {item.title
-                    ?<Text fz={'listTitle'} c={'dimmed'}>As {item.title}</Text>
+                    >{item.title}</Title>
+                    {item.character
+                    ?<Text fz={'listTitle'} c={'dimmed'}>As {item.character}</Text>
                     :<Text fz={'listTitle'} c={'dimmed'}>{item.job}</Text>}
                   </Link>
                   <Button
