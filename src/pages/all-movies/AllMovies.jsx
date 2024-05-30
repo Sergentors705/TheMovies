@@ -5,8 +5,11 @@ import { Box, Flex, Image, Modal, Text, Title } from '@mantine/core';
 import uniqueArrayFilter from '../../functions/uniqueArrayFilter';
 import CreationListCreator from '../../functions/creationListCreator';
 import { useDisclosure } from '@mantine/hooks';
+import useLoading from '../../hooks/use-loading';
+import requestMaker from '../../functions/requestMaker';
 
 export default function AllMovies() {
+  const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
   const [person, setPerson] = useState(null);
   const {personId} = useParams();
   const [cast, setCast] = useState([]);
@@ -42,19 +45,7 @@ export default function AllMovies() {
   }, [crew])
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/person/${personId}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-        Accept: "application/json",
-      },
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((object) => setPerson(object));
+    fetchPerson();
   }, [])
 
   useEffect(() => {
@@ -113,7 +104,20 @@ export default function AllMovies() {
       <Modal.Root opened={opened} onClose={close} centered>
         <Modal.Overlay />
         <Modal.Content>
-
+          <Modal.Body display={'flex'}
+            style={{gap: '30px'}}
+          >
+            <Image
+              w={100}
+              h={150}
+              radius={'md'}
+              fit='cover'
+              src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${modalDate?.poster_path}`}
+            />
+            <Box>
+              <Title fz={'secondaryTitle'}>{modalDate?.title}</Title>
+            </Box>
+          </Modal.Body>
         </Modal.Content>
       </Modal.Root>
       {/* <Modal.Root opened={opened} onClose={close} centered
@@ -129,16 +133,7 @@ export default function AllMovies() {
         <Flex
           gap={30}
         >
-          <Image
-            w={100}
-            h={150}
-            radius={'md'}
-            fit='cover'
-            src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${modalDate?.poster_path}`}
-          />
-          <Box>
-            <Title></Title>
-          </Box>
+
         </Flex>
       </Modal.Root> */}
     </>
