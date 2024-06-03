@@ -66,7 +66,7 @@ export default function AllMovies() {
       setCrew(object.crew);
     });
   }, [])
-
+console.log(modalDate)
   return (
       <>
       <Flex maw={1366} w={'100%'} direction={'column'}>
@@ -116,26 +116,13 @@ export default function AllMovies() {
             />
             <Box>
               <Title fz={'secondaryTitle'}>{modalDate?.title}</Title>
+              <Text>{modalDate?.release_date}</Text>
+              <Text>{Math.floor(modalDate?.runtime / 60)}h {modalDate?.runtime % 60}m</Text>
             </Box>
           </Modal.Body>
         </Modal.Content>
       </Modal.Root>
-      {/* <Modal.Root opened={opened} onClose={close} centered
-        overlayProps={{
-          backgroundOpacity: 0.55,
-          blur: 3,
-        }}>
-          <Modal.Overlay />
-          <Modal.Header>
 
-          <Modal.Title>{modalDate?.title}</Modal.Title>
-          </Modal.Header>
-        <Flex
-          gap={30}
-        >
-
-        </Flex>
-      </Modal.Root> */}
     </>
   )
 }
