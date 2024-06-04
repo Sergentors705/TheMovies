@@ -30,7 +30,7 @@ export default function Navigation() {
             <Button size='lg'>TV shows</Button>
           </Menu.Target>
           <Menu.Dropdown>
-            <Menu.Item onClick={() => navigate('/top-rated-tv-shows')}>
+            <Menu.Item onClick={() => navigate('/top-rated-tvs')}>
               Top Rated
             </Menu.Item>
             <Menu.Item>

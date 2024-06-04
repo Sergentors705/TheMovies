@@ -9,7 +9,7 @@ import useLoading from '../hooks/use-loading';
 import requestMaker from '../functions/requestMaker';
 
 export default function TvShowPage() {
-  const {tvShowId} = useParams();
+  const {tvId} = useParams();
   const [tvShow, setTvShow] = useState(null);
   const [crew, setCrew] = useState(null);
   const [path, setPath] = useState('');
@@ -20,9 +20,9 @@ export default function TvShowPage() {
   const [opened, { open, close }] = useDisclosure(false);
   const [posters, setPosters] = useState([]);
   const [starring, setStarring] = useState([]);
-  const [fetchTvShow, isLoadingTvShow] = useLoading(async() => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}`, setTvShow));
-  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/images`, setPosters));
-  const [fetchTvShowCredits, isLoadingTvshowCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/credits`, setCrew));
+  const [fetchTvShow, isLoadingTvShow] = useLoading(async() => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}`, setTvShow));
+  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/images`, setPosters));
+  const [fetchTvShowCredits, isLoadingTvshowCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/credits`, setCrew));
 
   useEffect(() => {
     fetchTvShow();

@@ -6,12 +6,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 export default function Actors({array}) {
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
-  const {tvShowId} = useParams()
+  const {tvId} = useParams()
   const navigate = useNavigate();
 
   return (
     <div className='starring'>
-      <Link style={{textDecoration: 'none'}} to={`/all-cast/tv/${tvShowId}`}>
+      <Link style={{textDecoration: 'none'}} to={`/all-cast/tv/${tvId}`}>
         <Title order={2} fz={'sectionTitle'} c={'black'}>All cast</Title>
       </Link>
         <Carousel

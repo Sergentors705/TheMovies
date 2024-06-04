@@ -56,10 +56,10 @@ export default function TopRatedMovies() {
     <Container size={1366}>
       <Title order={1} mb={'md'}>Top rated movies</Title>
       <Box display='grid' w='100%' style={{gridTemplateColumns: '300px 1fr'}} mb={30}>
-        <Paper 
+        <Paper
           withBorder
           shadow='md'
-          p={20} 
+          p={20}
           mr={30}
           h={'min-content'}
         >
@@ -165,7 +165,7 @@ export default function TopRatedMovies() {
               p={10}
               key={item.id}
               maw={220}
-              onClick={() => navigate(`/tv-show/${item.id}`)}
+              onClick={() => navigate(`/tv/${item.id}`)}
             >
               <Image
                 w={200}

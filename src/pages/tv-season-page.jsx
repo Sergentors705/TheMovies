@@ -7,16 +7,16 @@ import TvRecomendations from './tv-recomendations';
 
 
 export default function TvSeasonPage() {
-  const {tvShowId, seasonId} = useParams();
+  const {tvId, seasonId} = useParams();
   const [seasonNumber, setSeasonNumber] = useState(seasonId);
   const [tvSeason, setTvSeason] = useState(null);
   const [tvShow, setTvShow] = useState(null);
-  const [fetchSeason, isLoadingTvSeason] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/season/${seasonNumber}`, setTvSeason));
+  const [fetchSeason, isLoadingTvSeason] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}`, setTvSeason));
   const theme = useMantineTheme();
 
   useEffect(()=>{
     fetchSeason();
-    requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}`, setTvShow);
+    requestMaker(`https://api.themoviedb.org/3/tv/${tvId}`, setTvShow);
   },[seasonNumber])
 
   console.log(tvSeason)
@@ -27,7 +27,7 @@ export default function TvSeasonPage() {
       direction={'column'}
       pt={50}
     >
-      <Link to={`/tv-show/${tvShowId}`} style={{textDecoration: 'none'}}>
+      <Link to={`/tv/${tvId}`} style={{textDecoration: 'none'}}>
         <Paper
           p={20}
           style={{display: 'flex', gap: '30px'}}

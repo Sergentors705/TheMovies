@@ -31,7 +31,7 @@ export default function CreationListCreator  (array, title, modalOpen, setModalD
                 key={item.credit_id}
               >
                 <Flex gap={20}>
-                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}} >
+                  <Link to={`/${item.media_type}/${item.id}`} style={{textDecoration: 'none'}} >
                     <Image
                       w={100}
                       h={150}
@@ -41,12 +41,16 @@ export default function CreationListCreator  (array, title, modalOpen, setModalD
                       alt=''
                     />
                   </Link>
-                  <Link to={`/movie/${item.id}`} style={{textDecoration: 'none', display: 'flex', justifyContent: 'center', flexDirection: 'column'}} key={item.credit_id}>
+                  <Link to={`/${item.media_type}/${item.id}`}  style={{textDecoration: 'none', display: 'flex', justifyContent: 'center', flexDirection: 'column'}} key={item.credit_id}>
                     <Title
                       order={3}
                       c={'black'}
                       fz={'listTitle'}
-                    >{item.title}</Title>
+                    >
+                      {item.media_type === 'tv'
+                      ? item.name
+                      : item.title}
+                    </Title>
                     {item.character
                     ?<Text fz={'listTitle'} c={'dimmed'}>As {item.character}</Text>
                     :<Text fz={'listTitle'} c={'dimmed'}>{item.job}</Text>}

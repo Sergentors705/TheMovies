@@ -29,18 +29,18 @@ function App() {
             <Routes>
               <Route path='search' element={<Search />} />
               <Route path='movie/:movieId' element={<MoviePage />} />
-              <Route path='tv-show/:tvShowId' element={<TvShowPage />} />
+              <Route path='tv/:tvId' element={<TvShowPage />} />
               <Route path='person/:personId' element={<PersonPage />} />
               <Route path='all-movies/:personId' element={<AllMovies />} />
               <Route path='all-cast/:type/:creationId' element={<AllCast />} />
               <Route path='/' element={<StartPage />} />
               <Route path='top-rated-movies' element={<TopRatedMovies />} />
-              <Route path='top-rated-tv-shows' element={<TopRatedTvShows />} />
+              <Route path='top-rated-tvs' element={<TopRatedTvShows />} />
               <Route path='keyword/:keywordId' element={<SearchPage />} />
               <Route path='genre/:genreId' element={<SearchPage />} />
               <Route path='companie/:companieId' element={<SearchPage />} />
-              <Route path='tv-show/:tvShowId/tv-season/:seasonId' element={<TvSeasonPage />} />
-              <Route path='tv-show/:tvShowId/tv-season/:seasonId/tv-episode/:episodeId' element={<TvEpisodePage />} />
+              <Route path='tv/:tvId/tv-season/:seasonId' element={<TvSeasonPage />} />
+              <Route path='tv/:tvId/tv-season/:seasonId/tv-episode/:episodeId' element={<TvEpisodePage />} />
             </Routes>
           </Flex>
           <Footer />

@@ -96,7 +96,7 @@ export default function PersonPage() {
                   <h3 className='popular-movie__title'>{item.title}</h3>
                 </Link>
                 :
-                <Link to={`/tv-show/${item.id}`} className='popular-movie__link'>
+                <Link to={`/tv/${item.id}`} className='popular-movie__link'>
                   <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} alt=''/>
                   <h3 className='popular-movie__title'>{item.name}</h3>
                 </Link>

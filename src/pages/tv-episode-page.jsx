@@ -8,16 +8,16 @@ import Actors from "../modules/actors";
 
 export default function TvEpisodePage() {
   const navigate = useNavigate();
-  const {tvShowId, seasonId, episodeId} = useParams();
+  const {tvId, seasonId, episodeId} = useParams();
   const [episode, setEpisode] = useState(null);
   const [tvShow, setTvShow] = useState(null);
   const [contentRating, setRating] = useState(null);
   const [countries, setCountries] = useState(null);
   const [opened, { open, close }] = useDisclosure(false);
   const [fetchCountries, isLoadingCountries] = useLoading(async () => requestMaker('https://api.themoviedb.org/3/configuration/countries?language=en-US', setCountries));
-  const [fetchRating, isLoadingRating] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/content_ratings`, setRating));
-  const [fetchEpisode, isLoadingEpisode] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/season/${seasonId}/episode/${episodeId}`, setEpisode));
-  const [fetchTvShow, isLoadingTvShow] = useLoading(async() => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}`, setTvShow));
+  const [fetchRating, isLoadingRating] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/content_ratings`, setRating));
+  const [fetchEpisode, isLoadingEpisode] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonId}/episode/${episodeId}`, setEpisode));
+  const [fetchTvShow, isLoadingTvShow] = useLoading(async() => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}`, setTvShow));
 
   useEffect(() => {
     fetchEpisode();
@@ -36,7 +36,7 @@ export default function TvEpisodePage() {
         w={'100%'}
       >
         <Box p={20}>
-          <Link to={`/tv-show/${tvShowId}`} style={{textDecoration: 'none'}}>
+          <Link to={`/tv/${tvId}`} style={{textDecoration: 'none'}}>
           <Text fz={'secondaryTitle'} c={'black'}>Back to {tvShow?.name}</Text>
           </Link>
         </Box>

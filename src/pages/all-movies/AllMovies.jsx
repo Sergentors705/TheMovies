@@ -49,7 +49,7 @@ export default function AllMovies() {
   }, [])
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/person/${personId}/movie_credits`, {
+    fetch(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, {
       headers: {
         Authorization:
           "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",

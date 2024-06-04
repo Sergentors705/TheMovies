@@ -6,10 +6,10 @@ import useLoading from '../hooks/use-loading';
 import { useDisclosure } from '@mantine/hooks';
 
 export default function TvRecomendations() {
-  const {tvShowId} = useParams();
+  const {tvId} = useParams();
   const [opened, { open, close }] = useDisclosure(false);
   const [tvRecomendations, setTvRecomendations] = useState(null);
-  const [fetchTvRecomendations, isLoadingTvRecomendations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvShowId}/similar`, setTvRecomendations));
+  const [fetchTvRecomendations, isLoadingTvRecomendations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/similar`, setTvRecomendations));
 
   useEffect(() => {
     fetchTvRecomendations();
@@ -22,7 +22,7 @@ console.log(tvRecomendations)
           <Title order={3} ta={'center'} fz={'secondaryTitle'}>Recomendations</Title>
         </Skeleton>
         {tvRecomendations?.results?.map(item =>
-          <Link to={`/tv-show/${item.id}`} style={{textDecoration: 'none'}}>
+          <Link to={`/tv/${item.id}`} style={{textDecoration: 'none'}}>
             <Paper
               shadow='md'
               withBorder

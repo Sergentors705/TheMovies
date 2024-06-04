@@ -38,7 +38,7 @@ export default function StartPage() {
             <Carousel.Slide key={item.id}>
               <Box
                 maw={220}
-                onClick={() => navigate(`/${item.title ? 'movie': 'tv-show'}/${item.id}`)}
+                onClick={() => navigate(`/${item.title ? 'movie': 'tv'}/${item.id}`)}
               >
                 <Image
                   w={220}
