@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 import { Link, useParams } from 'react-router-dom';
-import { Box, Flex, Image, Modal, Text, Title } from '@mantine/core';
+import { Box, Flex, Image, Modal, Skeleton, Text, Title } from '@mantine/core';
 import uniqueArrayFilter from '../../functions/uniqueArrayFilter';
 import CreationListCreator from '../../functions/creationListCreator';
 import { useDisclosure } from '@mantine/hooks';
@@ -10,7 +10,9 @@ import requestMaker from '../../functions/requestMaker';
 
 export default function AllMovies() {
   const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
+  const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}`, setCreation));
   const [person, setPerson] = useState(null);
+  const [creation, setCreation] = useState(null);
   const {personId} = useParams();
   const [cast, setCast] = useState([]);
   const [crew, setCrew] = useState([]);
@@ -47,6 +49,10 @@ export default function AllMovies() {
   useEffect(() => {
     fetchPerson();
   }, [])
+
+  useEffect(() => {
+    fetchCreation();
+  }, [modalDate])
 
   useEffect(() => {
     fetch(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, {
@@ -104,7 +110,8 @@ console.log(modalDate)
       <Modal.Root opened={opened} onClose={close} centered>
         <Modal.Overlay />
         <Modal.Content>
-          <Modal.Body display={'flex'}
+          <Modal.Body
+            display={'flex'}
             style={{gap: '30px'}}
           >
             <Image
@@ -117,7 +124,9 @@ console.log(modalDate)
             <Box>
               <Title fz={'secondaryTitle'}>{modalDate?.title}</Title>
               <Text>{modalDate?.release_date}</Text>
-              <Text>{Math.floor(modalDate?.runtime / 60)}h {modalDate?.runtime % 60}m</Text>
+              <Skeleton visible={isLoadingCreation}>
+                <Text>{Math.floor(creation?.runtime / 60)}h {creation?.runtime % 60}m</Text>
+              </Skeleton>
             </Box>
           </Modal.Body>
         </Modal.Content>
