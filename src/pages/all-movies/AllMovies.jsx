@@ -72,7 +72,7 @@ export default function AllMovies() {
       setCrew(object.crew);
     });
   }, [])
-console.log(modalDate)
+console.log(creation)
   return (
       <>
       <Flex maw={1366} w={'100%'} direction={'column'}>
@@ -107,11 +107,12 @@ console.log(modalDate)
           </Flex>
         </Flex>
       </Flex>
-      <Modal.Root opened={opened} onClose={close} centered>
+      <Modal.Root opened={opened} onClose={() => {close(); setModalDate(null)}} centered>
         <Modal.Overlay />
         <Modal.Content>
           <Modal.Body
             display={'flex'}
+            miw={480}
             style={{gap: '30px'}}
           >
             <Image
@@ -122,8 +123,8 @@ console.log(modalDate)
               src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${modalDate?.poster_path}`}
             />
             <Box>
-              <Title fz={'secondaryTitle'}>{modalDate?.title}</Title>
-              <Text>{modalDate?.release_date}</Text>
+              <Title fz={'secondaryTitle'}>{modalDate?.title || modalDate?.name}</Title>
+              <Text>{modalDate?.release_date || `${new Date(creation?.first_air_date)?.getFullYear()} - ${new Date(creation?.last_air_date)?.getFullYear()}`}</Text>
               <Skeleton visible={isLoadingCreation}>
                 <Text>{Math.floor(creation?.runtime / 60)}h {creation?.runtime % 60}m</Text>
               </Skeleton>
