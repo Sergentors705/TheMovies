@@ -11,8 +11,10 @@ import requestMaker from '../../functions/requestMaker';
 export default function AllMovies() {
   const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
   const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}`, setCreation));
+  const [fetchCreationCrew, isLoadingCreationCrew] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}/credits`, setCreationCrew));
   const [person, setPerson] = useState(null);
   const [creation, setCreation] = useState(null);
+  const [creationCrew, setCreationCrew] = useState(null);
   const {personId} = useParams();
   const [cast, setCast] = useState([]);
   const [crew, setCrew] = useState([]);
@@ -52,6 +54,7 @@ export default function AllMovies() {
 
   useEffect(() => {
     fetchCreation();
+    fetchCreationCrew();
   }, [modalDate])
 
   useEffect(() => {
@@ -72,7 +75,7 @@ export default function AllMovies() {
       setCrew(object.crew);
     });
   }, [])
-console.log(creation)
+console.log(creationCrew)
   return (
       <>
       <Flex maw={1366} w={'100%'} direction={'column'}>
@@ -129,8 +132,16 @@ console.log(creation)
                 <Skeleton visible={isLoadingCreation}>
                   <Text>{Math.floor(creation?.runtime / 60)}h {creation?.runtime % 60}m</Text>
                 </Skeleton>
+                <Flex>
+                  {creation?.genres?.map((item) =>
+                    <Skeleton visible={isLoadingCreation}>
+                      <Text>{item.name}</Text>
+                    </Skeleton>
+                  )}
+                </Flex>
               </Box>
             </Flex>
+            <Text>Director: {creationCrew?.crew?.find(item => item.job === 'Director')?.name}</Text>
             <Text>{creation?.overview}</Text>
           </Modal.Body>
         </Modal.Content>

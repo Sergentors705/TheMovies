@@ -64,13 +64,15 @@ export default function MoviePage() {
         >
           <Flex gap={30}>
             <Skeleton visible={isLoadingMovies} height={450} width={300}>
-            <Image
-              w={300}
-              h={450}
-              radius="md"
-              src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movie?.poster_path}`}
-              alt=''
-            />
+              <Image
+                w={300}
+                h={450}
+                radius="md"
+                src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movie?.poster_path}`}
+                onClick={() =>{open(); setPath(movie?.poster_path)}}
+                alt=''
+                style={{cursor: 'pointer'}}
+              />
             </Skeleton>
             <div>
               <Skeleton

@@ -31,7 +31,7 @@ export default function TvShowPage() {
   }, [])
 
   useEffect(() => setStarring(crew?.cast.slice(0, 9)), [crew]);
-console.log(tvShow)
+console.log(crew)
   return (
     <Flex
     maw='1366px'
