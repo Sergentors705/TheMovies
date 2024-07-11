@@ -3,14 +3,14 @@ import { Box, Chip, Container, Flex, Image, NativeSelect, NumberInput, Paginatio
 import { DatePickerInput } from '@mantine/dates';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Loading from '../components/ui/loading';
 import requestMaker from '../functions/requestMaker';
+import useLoading from '../hooks/use-loading';
 const dayjs = require('dayjs');
 
 export default function TopRatedMovies() {
   const [page, setPage] = useState(1);
   const [popular, setPopular] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [fetchPopular, isLoadingPopular] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${selectValue}&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&without_genres=99,10755&vote_count.gte=1000&primary_release_date.gte=${dayjs(minYear).format('YYYY-MM-DD')}&primary_release_date.lte=${dayjs(maxYear).format('YYYY-MM-DD')}}${genreValue.length !== 0 ? `&with_genres=${genreValue.join('|')}` : ''}&with_runtime.gte=${minRuntime}&with_runtime.lte=${maxRuntime}`,setPopular));
   const [minRating, setMinRating] = useState(7);
   const [maxRating, setMaxRating] = useState(10);
   const [minYear, setMinYear] = useState(new Date('1-1-1950'));
@@ -33,25 +33,9 @@ export default function TopRatedMovies() {
   },[])
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${selectValue}&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&without_genres=99,10755&vote_count.gte=1000&primary_release_date.gte=${dayjs(minYear).format('YYYY-MM-DD')}&primary_release_date.lte=${dayjs(maxYear).format('YYYY-MM-DD')}}${genreValue.length !== 0 ? `&with_genres=${genreValue.join('|')}` : ''}&with_runtime.gte=${minRuntime}&with_runtime.lte=${maxRuntime}`, {
-      headers: {
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc',
-        Accept: 'application/json',
-      },
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((object) => {
-      setPopular(object);
-      setLoading(false);
-    })
+    fetchPopular();
   },[minRating, maxRating, minYear, maxYear, page, genreValue, selectValue, minRuntime, maxRuntime])
 
-  if (loading) return <Loading />;
-  console.log(genreValue)
   return (
     <Container size={1366}>
       <Title order={1} mb={'md'}>Top rated movies</Title>

@@ -12,6 +12,8 @@ export default function AllMovies() {
   const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
   const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}`, setCreation));
   const [fetchCreationCrew, isLoadingCreationCrew] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}/credits`, setCreationCrew));
+  const [credits, setCredits] = useState(null);
+  const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
   const [person, setPerson] = useState(null);
   const [creation, setCreation] = useState(null);
   const [creationCrew, setCreationCrew] = useState(null);
@@ -50,7 +52,8 @@ export default function AllMovies() {
 
   useEffect(() => {
     fetchPerson();
-  }, [])
+    fetchCredits();
+  }, [personId])
 
   useEffect(() => {
     fetchCreation();
@@ -58,24 +61,10 @@ export default function AllMovies() {
   }, [modalDate])
 
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-        Accept: "application/json",
-      },
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((object) => {
-      setCast(object.cast.sort((a, b) => a.popularity - b.popularity).reverse());
-      setCrew(object.crew);
-    });
-  }, [])
-console.log(creationCrew)
+      setCast(credits?.cast.sort((a, b) => a.popularity - b.popularity).reverse());
+      setCrew(credits?.crew);
+  }, [credits])
+
   return (
       <>
       <Flex maw={1366} w={'100%'} direction={'column'}>

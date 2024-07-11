@@ -2,60 +2,33 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './style.css';
-import Loading from '../../components/ui/loading';
+import useLoading from '../../hooks/use-loading';
+import requestMaker from '../../functions/requestMaker';
 
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
+  const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
   const {personId} = useParams();
   const [credits, setCredits] = useState([]);
+  const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
   const [cast, setCast] = useState([]);
   const [crew, setCrew] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   const getMonthName = (monthNumber) => {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     return monthNames[monthNumber];
   }
-
+console.log(credits)
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/person/${personId}`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-        Accept: "application/json",
-      },
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((object) => {setPerson(object);
-      });
+    fetchPerson();
+    fetchCredits();
   }, [personId])
 
-  useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, {
-      headers: {
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-        Accept: "application/json",
-      },
-    })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((object) => {
-      setCast(object.cast.sort((a, b) => a.vote_average - b.vote_average).reverse());
-      setCrew(object.crew.sort((a, b) => a.vote_average - b.vote_average).reverse());
-      setCredits(credits.concat(object.cast, object.crew).sort((a, b) => a.vote_average - b.vote_average).reverse())
-      setLoading(false);
-    });
-  }, [personId])
-
-  if (loading) return <Loading />
+  // useEffect(() => {
+  //     setCast(credits?.cast?.sort((a, b) => a.vote_average - b.vote_average).reverse());
+  //     setCrew(credits?.crew?.sort((a, b) => a.vote_average - b.vote_average).reverse());
+  //     setCredits([].concat(credits?.cast, credits?.crew).sort((a, b) => a.vote_average - b.vote_average).reverse())
+  // }, [credits])
 
   return (
     <div className='person-page'>
@@ -87,7 +60,7 @@ export default function PersonPage() {
       </div>
       <ul className='person-page__popular-movies'>
         {
-          credits?.filter(item => !item.genre_ids.includes(10767) && !item.genre_ids.includes(10763) && item.vote_count >= 500).slice(0, 9).map((item) =>
+          []?.concat(credits?.cast, credits?.crew).sort((a, b) => a.vote_average - b.vote_average).reverse().filter(item => !item?.genre_ids.includes(10767) && !item?.genre_ids.includes(10763) && item?.vote_count >= 500).slice(0, 9).map((item) =>
               <li key={item.credit_id} className='person-page__popular-movie'>
               {
                 item.media_type === 'movie' ?
@@ -105,7 +78,7 @@ export default function PersonPage() {
           )
         }
         <li className='person-page__popular-movie person-page__popular-movie--show-all'>
-          <Link className='person-page__show-all-link' to={`/all-movies/${personId}`} cast={cast} crew={crew}>Show All</Link>
+          <Link to={`/all-movies/${personId}`}>Show All</Link>
         </li>
       </ul>
     </div>

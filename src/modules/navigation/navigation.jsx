@@ -1,8 +1,7 @@
+import { Button, Image, Input, Menu, Title } from '@mantine/core';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
-import PrimaryButton from '../../components/ui/button/button';
-import { Menu, Button, Text, rem, UnstyledButton, Image } from '@mantine/core';
 
 export default function Navigation() {
   const navigate = useNavigate();
@@ -10,7 +9,7 @@ export default function Navigation() {
     <header className='page-header'>
       <nav className='page-navigation'>
         <Link className='main-logo-link' to='/'>
-          <Image w={150} src='../../logo.svg' />
+          <Image src='/logo.svg'/>
         </Link>
         <Menu shadow="md" width={200}>
           <Menu.Target>
@@ -38,7 +37,13 @@ export default function Navigation() {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-        <PrimaryButton text='Search' classname='button-primary--blue' type='button' onclick={() => navigate('/search')} />
+
+        <Input
+            size='lg'
+            value={'searchValue'}
+            onChange={(event) => 'setSearchValue(event.currentTarget.value)'}
+          ></Input>
+        <Button size='lg' onClick={() => navigate('/search')}>Search</Button>
       </nav>
     </header>
   )

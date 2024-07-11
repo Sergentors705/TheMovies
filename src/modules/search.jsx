@@ -1,11 +1,15 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import useLoading from '../hooks/use-loading';
+import requestMaker from '../functions/requestMaker';
+import { Input } from '@mantine/core';
 
 export default function Search() {
   const searchInput = document.querySelector('.search-field');
   const [searchResults, setSearchResults] = useState([]);
   const [searchValue, setSearchValue] = useState('');
+  const [fetchSearchResults, isLoadingSearchResults] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/search/multi?query=${searchValue}`, setSearchResults));
 
   return (
     <>
@@ -15,32 +19,25 @@ export default function Search() {
           onSubmit={
             evt => {
               evt.preventDefault();
-              fetch(`https://api.themoviedb.org/3/search/multi?query=${searchValue}`, {
-                headers: {
-                  Authorization:
-                    "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJhMTMzZmZiMGJiZDYyMmYxNWEyYzk2ZGI1N2JiNDk5NSIsInN1YiI6IjY1NjYwNGY3ZDk1NDIwMDBmZTMzNDBmZiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.EP_uOQGwm3MJDqxGnJSkPjAXSlGfO6jJU2UbB7GWADc",
-                  Accept: "application/json",
-                },
-              })
-              .then((response) => {
-                if (response.ok) {
-                  return response.json();
-                }
-              })
-              .then((results) => {setSearchResults(results.results)})
+              fetchSearchResults();
             }
         }>
-          <input
+          <Input
+            size='md'
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.currentTarget.value)}
+          ></Input>
+          {/* <input
             className='search-field'
             type='text'
             value={searchValue}
             onChange={() => setSearchValue(searchInput?.value)}
-          ></input>
+          ></input> */}
           <button className='search-button' type='submit'><span className='visually-hidden'>Search</span></button>
         </form>
     <div>
       {
-            searchResults?.map((data) => {
+            searchResults?.results?.map((data) => {
               if (data.media_type === "movie" || data.media_type === "tv") {
                 return (
                   <Link to={`/movie/${data.id}`}>

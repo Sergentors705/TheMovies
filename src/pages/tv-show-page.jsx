@@ -51,6 +51,9 @@ console.log(crew)
           h={450}
           radius="md"
           src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${tvShow?.poster_path}`}
+          onClick={() =>{open(); setPath(tvShow?.poster_path)}}
+          alt=''
+          style={{cursor: 'pointer'}}
         />
         </Skeleton>
       </div>
@@ -96,7 +99,7 @@ console.log(crew)
             >
               {
                 tvShow?.episode_run_time.length
-                ? <Text>
+                ? <Text c={'dimmed'}>
                   {tvShow?.episode_run_time?.join('m, ')}m
                 </Text>
                 : <></>

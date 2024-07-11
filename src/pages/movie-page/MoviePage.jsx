@@ -90,7 +90,7 @@ export default function MoviePage() {
                     mih={20}
                     miw={50}
                   >
-                    <Text>
+                    <Text c={'dimmed'}>
                       {new Date(movie?.release_date)?.getFullYear()}
                     </Text>
                   </Skeleton>
@@ -101,7 +101,7 @@ export default function MoviePage() {
                     mih={20}
                     miw={50}
                   >
-                    <Text>
+                    <Text c={'dimmed'}>
                       {releaseDate?.results.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3)?.certification}
                     </Text>
                   </Skeleton>
@@ -112,7 +112,7 @@ export default function MoviePage() {
                     height={20}
                     miw={50}
                   >
-                    <Text>
+                    <Text c={'dimmed'}>
                       {Math.floor(movie?.runtime / 60)}h {movie?.runtime % 60}m
                     </Text>
                   </Skeleton>
