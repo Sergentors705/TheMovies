@@ -4,9 +4,10 @@ import { Box, Button, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Tit
 import { useDisclosure } from '@mantine/hooks';
 import { React, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import PrimaryButton from '../components/ui/button/button';
 import useLoading from '../hooks/use-loading';
 import requestMaker from '../functions/requestMaker';
+import TvRecomendations from './tv-recomendations';
+import Crew from '../modules/crew/crew';
 
 export default function TvShowPage() {
   const {tvId} = useParams();
@@ -16,7 +17,8 @@ export default function TvShowPage() {
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const navigate = useNavigate();
-  const [releaseDate, setReleaseDate] = useState(null);
+  const [contentRating, setContentRating] = useState(null);
+  const [fetchContentRating, isLoadingContentRating] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}}/content_ratings`, setContentRating));
   const [opened, { open, close }] = useDisclosure(false);
   const [posters, setPosters] = useState([]);
   const [starring, setStarring] = useState([]);
@@ -28,10 +30,11 @@ export default function TvShowPage() {
     fetchTvShow();
     fetchImages();
     fetchTvShowCredits();
-  }, [])
+    fetchContentRating();
+  }, [tvId])
 
   useEffect(() => setStarring(crew?.cast.slice(0, 9)), [crew]);
-console.log(crew)
+console.log(tvShow)
   return (
     <Flex
     maw='1366px'
@@ -73,7 +76,7 @@ console.log(crew)
               mih={20}
               miw={50}
             >
-              <Text>
+              <Text c='dimmed'>
                 {new Date(tvShow?.first_air_date)?.getFullYear()}
                 -
                 {new Date(tvShow?.last_air_date)?.getFullYear()}
@@ -82,12 +85,12 @@ console.log(crew)
           </li>
           <li className='movie-page__title-info-item'>
             <Skeleton
-              visible={isLoadingTvShow}
+              visible={isLoadingContentRating}
               height={20}
               width={50}
             >
-              <Text>
-                {releaseDate?.results.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3)?.certification}
+              <Text c='dimmed'>
+                {contentRating?.results?.find(item => item.iso_3166_1 === 'US')?.rating}
               </Text>
             </Skeleton>
           </li>
@@ -137,7 +140,7 @@ console.log(crew)
           <p className='movie-page__overview'>{tvShow?.overview}</p>
         </Skeleton>
       </div>
-      <div>
+      <Box>
         <div className='movie-page__rating'>
           <Skeleton visible={isLoadingTvShow} height={28} mb={15}>
             <p className='movie-page__rating-title'>The Movie Rating</p>
@@ -186,101 +189,134 @@ console.log(crew)
             <p className='movie-page__cash-value'>${tvShow?.revenue}</p>
           </Skeleton>
         </div>
-      </div>
+      </Box>
     </SimpleGrid>
-    <Carousel
-      slideSize='20%'
-      align='start'
-      slideGap='md'
-      containScroll='trimSnaps'
-      mb={50}
-    >
-      {
-        starring?.map( item =>
-          <CarouselSlide
-            key={item.id}
-            flex
-            align='center'
-            onClick={() => navigate(`/person/${item.id}`)}
-          >
-            <Paper
-              h='100%'
-              shadow='xs'
-              p='md'
-            >
-              <Skeleton
-                visible={isLoadingTvshowCredits}
-                mih={225}
-                miw={150}
-                mb={10}
+    <Box style={{display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '50px'}}>
+      <Flex direction='column'>
+        {/* <Crew creature='tv' /> */}
+        {/* <Carousel
+          getEmblaApi={setEmbla}
+          dragFree
+          slideSize='20%'
+          align='start'
+          slideGap='md'
+          containScroll='trimSnaps'
+        >
+          {
+            starring?.map( item =>
+              <CarouselSlide
+                key={item.id}
+                flex
+                mb={30}
+                align='center'
+                onClick={() => navigate(`/person/${item.id}`)}
               >
-                <Image
-                  w={150}
-                  h={225}
-                  radius='md'
-                  src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
+                <Paper
+                  h='100%'
+                  shadow='xs'
+                  p='md'
+                >
+                  <Skeleton
+                    visible={isLoadingTvshowCredits}
+                    mih={225}
+                    miw={150}
+                    mb={10}
+                  >
+                    <Image
+                      w={150}
+                      h={225}
+                      radius='md'
+                      src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.profile_path}`}
+                    />
+                  </Skeleton>
+                  <Skeleton
+                    visible={isLoadingTvshowCredits}
+                    mih={20}
+                    mb={6}
+                  >
+                    <Title order={3}>{item.name}</Title>
+                  </Skeleton>
+                  <Skeleton
+                    visible={isLoadingTvshowCredits}
+                    mih={20}
+                    mb={6}
+                  >
+                    <Text size='md'>{item.character}</Text>
+                  </Skeleton>
+                </Paper>
+              </CarouselSlide>
+          )}
+        </Carousel> */}
+        {/* Seasons section */}
+        <Flex
+          mb={50}
+          direction={'column'}
+          gap={20}
+        >
+          {
+            tvShow?.seasons?.map(item =>
+              <Link to={`tv-season/${item.season_number}`} style={{textDecoration: 'none'}} key={item.id}>
+                <Paper
+                  p={30}
+                  withBorder
+                  shadow='lg'
+                  style={{display: 'flex', gap: '20px'}}
+                >
+                  <Image src={`https://media.themoviedb.org/t/p/w130_and_h195_bestv2/${item.poster_path}`} w={100} h={150} alt='' radius='md'/>
+                  <Box>
+                    <Title order={3} c={'black'}>{item.name}</Title>
+                    <Text c={'gray.9'}>{item.overview}</Text>
+                  </Box>
+                </Paper>
+              </Link>
+            )
+          }
+        </Flex>
+        {/* Posters section */}
+        {/* <Carousel
+          getEmblaApi={setEmbla}
+          dragFree
+          slideSize='33.333333%'
+          slideGap='md'
+          align="start"
+          slidesToScroll={1}
+          controlSize={40}
+          containScroll='trimSnaps'
+        >
+          {posters?.backdrops?.map((item) =>
+            <Carousel.Slide key={item.file_path}>
+              <Skeleton visible={isLoadingImages} height={300}>
+                <Image w='100%' h='auto' fit='contain' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
+                  onClick={() =>{open(); setPath(item.file_path)}}
                 />
               </Skeleton>
-              <Skeleton
-                visible={isLoadingTvshowCredits}
-                mih={20}
-                mb={6}
-              >
-                <Title order={3}>{item.name}</Title>
+            </Carousel.Slide>
+          )}
+        </Carousel> */}
+        {/* <Carousel
+            getEmblaApi={setEmbla}
+            dragFree
+            slideSize='33.333333%'
+            slideGap='md'
+            align="start"
+            slidesToScroll={1}
+            controlSize={40}
+            containScroll='trimSnaps'
+          >
+          {posters?.backdrops?.map((item) =>
+            <Carousel.Slide key={item.file_path}>
+              <Skeleton visible={isLoadingImages}>
+                <Image w='100%' h='auto' fit='contain' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
+                  onClick={() =>{open(); setPath(item.file_path)}}
+                />
               </Skeleton>
-              <Skeleton
-                visible={isLoadingTvshowCredits}
-                mih={20}
-                mb={6}
-              >
-                <Text size='md'>{item.character}</Text>
-              </Skeleton>
-            </Paper>
-          </CarouselSlide>
-      )}
-    </Carousel>
-    {/* Seasons section */}
-    <Flex
-      mb={50}
-      direction={'column'}
-      gap={20}
-    >
-      {
-        tvShow?.seasons?.map(item =>
-          <Link to={`tv-season/${item.season_number}`} style={{textDecoration: 'none'}} key={item.id}>
-            <Paper p={30} style={{display: 'flex', gap: '20px'}}>
-                <Image src={`https://media.themoviedb.org/t/p/w130_and_h195_bestv2/${item.poster_path}`} w={100} h={150} alt='' radius='md'/>
-              <Box>
-                <Title order={3} c={'black'}>{item.name}</Title>
-                <Text c={'gray.9'}>{item.overview}</Text>
-              </Box>
-            </Paper>
-          </Link>
-        )
-      }
-    </Flex>
-    {/* Posters section */}
-    <Carousel
-      getEmblaApi={setEmbla}
-      dragFree
-      height='min-content'
-      slideSize={{ base: '100%', sm: '50%', md: '33.333333%' }}
-      slideGap={{ base: 0, sm: 'md' }}
-      align="start"
-      slidesToScroll={1}
-      controlSize={40}
-      containScroll='trimSnaps'
-    >
-      {posters?.backdrops?.map((item) =>
-        <Carousel.Slide key={item.file_path}>
-          <Skeleton visible={isLoadingImages} height={300}>
-            <Image w='100%' h='auto' fit='cover' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
-              onClick={() =>{open(); setPath(item.file_path)}}
-            />
-          </Skeleton>
-        </Carousel.Slide>
-      )}
-    </Carousel>
+            </Carousel.Slide>
+          )}
+          </Carousel> */}
+      </Flex>
+      <TvRecomendations />
+    </Box>
+
     <Modal opened={opened} onClose={close} size='75%' children={Image}>
       <Image w='100%' h='auto' fit='cover' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />
     </Modal>

@@ -1,12 +1,12 @@
 import { Carousel, CarouselSlide, useAnimationOffsetEffect } from '@mantine/carousel';
-import { Image, Paper, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Image, Paper, Skeleton, Text, Title } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import PrimaryButton from '../../components/ui/button/button';
 import requestMaker from '../../functions/requestMaker';
 import useLoading from '../../hooks/use-loading';
 
-export default function Crew() {
+export default function Crew({creature}) {
   const [movie, setMovie] = useState(null);
   const [director, setDirector] = useState(null);
   const [producer, setProducer] = useState(null);
@@ -14,11 +14,11 @@ export default function Crew() {
   const [starring, setStarring] = useState([]);
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
-  const {movieId} = useParams()
+  const {movieId, tvId} = useParams()
   const navigate = useNavigate();
 
-  const [fetchMovies, isLoadingMovies] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}`, setMovie))
-  const [fetchCredits2, isLoadingCredits2] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/credits`, setCredits2))
+  const [fetchMovies, isLoadingMovies] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creature}/${movieId || tvId}`, setMovie))
+  const [fetchCredits2, isLoadingCredits2] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creature}/${movieId || tvId}/credits`, setCredits2))
 
   useEffect(() => {
     fetchMovies();
@@ -27,7 +27,7 @@ export default function Crew() {
   useEffect(() => setStarring(credits2?.cast.slice(0, 9)), [credits2]);
 
   return (
-    <div className='starring'>
+    <Box>
         <Carousel
           getEmblaApi={setEmbla}
           dragFree
@@ -84,7 +84,7 @@ export default function Crew() {
           )}
         </Carousel>
         <PrimaryButton classname='button-primary--red' text='Show all' type='button' onclick={() => navigate(`/all-cast/movie/${movieId}`)} />
-    </div>
+    </Box>
   )
 }
 

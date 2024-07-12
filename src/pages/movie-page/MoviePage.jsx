@@ -153,7 +153,7 @@ export default function MoviePage() {
             </div>
           </Flex>
           <Title order={2} fz={32}>Top cast</Title>
-          <Crew />
+          <Crew creature='movie'/>
           {/* Photo section */}
           <SegmentedControl
             value={imageType}
