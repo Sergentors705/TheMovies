@@ -22,6 +22,7 @@ function App() {
         <BrowserRouter>
           <Navigation />
           <Flex
+            mx={50}
             style={{flexGrow: '1'}}
             justify='center'
             bg='var(--mantine-color-gray-0)'

@@ -14,7 +14,7 @@ export default function TvRecomendations() {
   useEffect(() => {
     fetchTvRecomendations();
   },[])
-console.log(tvRecomendations)
+
   return (
     <>
       <Flex direction={'column'} gap={30}>
@@ -22,7 +22,7 @@ console.log(tvRecomendations)
           <Title order={3} ta={'center'} fz={'secondaryTitle'}>Recomendations</Title>
         </Skeleton>
         {tvRecomendations?.results?.map(item =>
-          <Link to={`/tv/${item.id}`} style={{textDecoration: 'none'}}>
+          <Link key={item.id} to={`/tv/${item.id}`} style={{textDecoration: 'none'}}>
             <Paper
               shadow='md'
               withBorder

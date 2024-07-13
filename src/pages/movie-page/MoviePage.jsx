@@ -1,17 +1,17 @@
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Box, Button, Flex, Image, List, Modal, NumberFormatter, Paper, SegmentedControl, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Button, Flex, Image, List, Modal, NumberFormatter, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import Posters from '../../components/blocks/posters/posters.jsx';
+import Keywords from '../../components/ui/keywords.jsx';
+import requestMaker from '../../functions/requestMaker.js';
 import useLoading from '../../hooks/use-loading.jsx';
 import Crew from '../../modules/crew/crew.jsx';
-import requestMaker from '../../functions/requestMaker.js';
-import Keywords from '../../components/ui/keywords.jsx';
 
 export default function MoviePage() {
   const [movie, setMovie] = useState(null);
-  const [images, setImages] = useState(null);
   const [videos, setVideos] = useState(null);
   const [similar, setSimilar] = useState(null)
   const [recomendations, setRecomendations] = useState(null)
@@ -24,18 +24,15 @@ export default function MoviePage() {
   useAnimationOffsetEffect(embla, 200);
   const [opened, { open, close }] = useDisclosure(false);
   const [path, setPath] = useState('');
-  const [imageType, setImageType] = useState('posters');
   const navigate = useNavigate();
 
   const [fetchMovies, isLoadingMovies] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}`, setMovie))
   const [fetchReleaseDates, isLoadingReleaseDates] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`,setReleaseDate))
-  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/images`, setImages))
   const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/videos`, setVideos))
   const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/credits`, setCredits))
 
   useEffect(() => {
     fetchMovies();
-    fetchImages();
     fetchVideos();
     fetchReleaseDates();
     fetchCredits();
@@ -154,41 +151,10 @@ export default function MoviePage() {
           </Flex>
           <Title order={2} fz={32}>Top cast</Title>
           <Crew creature='movie'/>
-          {/* Photo section */}
-          <SegmentedControl
-            value={imageType}
-            onChange={setImageType}
-            data={[
-              { label: 'Posters', value: 'posters' },
-              { label: 'Backdrops', value: 'backdrops' },
-            ]}
-          />
-
+          <Posters creature='movie' />
+          <Title mb={10}>Similar movies</Title>
           <Carousel
-            getEmblaApi={setEmbla}
             dragFree
-            slideSize='33.333333%'
-            slideGap='md'
-            align="start"
-            slidesToScroll={1}
-            controlSize={40}
-            containScroll='trimSnaps'
-          >
-          {images?.[imageType].map((item) =>
-          <Carousel.Slide key={item.file_path}>
-            <Skeleton visible={isLoadingImages}>
-              <Image w='100%' h='auto' fit='contain' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
-                onClick={() =>{open(); setPath(item.file_path)}}
-              />
-            </Skeleton>
-          </Carousel.Slide>
-          )}
-          </Carousel>
-
-          <Title
-            mb={10}
-          >Similar movies</Title>
-          <Carousel
             slideSize='25%'
             align='start'
             slideGap='md'
