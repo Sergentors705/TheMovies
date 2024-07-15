@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import './style.css';
 import useLoading from '../../hooks/use-loading';
 import requestMaker from '../../functions/requestMaker';
+import { Title } from '@mantine/core';
 
 export default function PersonPage() {
   const [person, setPerson] = useState(null);
@@ -18,7 +19,7 @@ export default function PersonPage() {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     return monthNames[monthNumber];
   }
-console.log(credits)
+console.log(person)
   useEffect(() => {
     fetchPerson();
     fetchCredits();
@@ -60,20 +61,13 @@ console.log(credits)
       </div>
       <ul className='person-page__popular-movies'>
         {
-          []?.concat(credits?.cast, credits?.crew).sort((a, b) => a.vote_average - b.vote_average).reverse().filter(item => !item?.genre_ids.includes(10767) && !item?.genre_ids.includes(10763) && item?.vote_count >= 500).slice(0, 9).map((item) =>
+          // person?.known_for_department === 'Acting' : 1 ? 0
+          []?.concat(credits?.cast, credits?.crew).filter(item => item).sort((a, b) => a.vote_average - b.vote_average).reverse().filter(item => !item?.genre_ids.includes(10767) && !item?.genre_ids.includes(10763) && item?.vote_count >= 500).slice(0, 9).map((item) =>
               <li key={item.credit_id} className='person-page__popular-movie'>
-              {
-                item.media_type === 'movie' ?
-                <Link to={`/movie/${item.id}`} className='popular-movie__link'>
+                <Link to={item.title ? `/movie/${item.id}` : `/tv/${item.id}`} style={{textDecoration: 'none'}}>
                   <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} alt=''/>
-                  <h3 className='popular-movie__title'>{item.title}</h3>
+                  <Title order={3} fz={'listTitle'} c='black'>{item.title || item.name}</Title>
                 </Link>
-                :
-                <Link to={`/tv/${item.id}`} className='popular-movie__link'>
-                  <img className='popular-movie__image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${item.poster_path}`} width={150} height={225} alt=''/>
-                  <h3 className='popular-movie__title'>{item.name}</h3>
-                </Link>
-              }
               </li>
           )
         }
