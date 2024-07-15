@@ -61,7 +61,7 @@ export default function AllMovies() {
   }, [modalDate])
 
   useEffect(() => {
-      setCast(credits?.cast.sort((a, b) => a.popularity - b.popularity).reverse());
+      setCast(credits?.cast.sort((a, b) => a.order - b.order));
       setCrew(credits?.crew);
   }, [credits])
 

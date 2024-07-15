@@ -54,6 +54,10 @@ export default function CreationListCreator  (array, title, modalOpen, setModalD
                     {item.character
                     ?<Text fz={'listTitle'} c={'dimmed'}>As {item.character}</Text>
                     :<Text fz={'listTitle'} c={'dimmed'}>{item.job}</Text>}
+                    <Text>order - {item.order}</Text>
+                    <Text>popularity - {item.popularity}</Text>
+                    <Text>rating - {item.vote_average}</Text>
+                    <Text>votes - {item.vote_count}</Text>
                   </Link>
                   <Button
                     onClick={() => {modalOpen(); setModalDate(item)}}
