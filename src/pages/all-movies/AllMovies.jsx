@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 import { Link, useParams } from 'react-router-dom';
-import { Box, Flex, Image, Modal, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Flex, Image, Modal, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import uniqueArrayFilter from '../../functions/uniqueArrayFilter';
 import CreationListCreator from '../../functions/creationListCreator';
 import { useDisclosure } from '@mantine/hooks';
@@ -74,9 +74,10 @@ export default function AllMovies() {
             Back to {person?.name}
           </Link>
         </div>
-        <Flex
+        <SimpleGrid
           gap={50}
           justify={'center'}
+          style={{gridTemplateColumns: '1fr 1fr'}}
         >
           {CreationListCreator(cast, 'Cast', open, setModalDate)}
           <Flex
@@ -97,7 +98,7 @@ export default function AllMovies() {
             {CreationListCreator(editing, 'Editing', open, setModalDate)}
             {CreationListCreator(visualEffects, 'Visual Effects', open, setModalDate)}
           </Flex>
-        </Flex>
+        </SimpleGrid>
       </Flex>
       <Modal.Root opened={opened} onClose={() => {close(); setModalDate(null)}} centered>
         <Modal.Overlay />

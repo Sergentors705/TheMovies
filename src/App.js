@@ -28,7 +28,7 @@ function App() {
             bg='var(--mantine-color-gray-0)'
           >
             <Routes>
-              <Route path='search' element={<Search />} />
+              <Route path='search/:searchValue' element={<Search />} />
               <Route path='movie/:movieId' element={<MoviePage />} />
               <Route path='tv/:tvId' element={<TvShowPage />} />
               <Route path='person/:personId' element={<PersonPage />} />

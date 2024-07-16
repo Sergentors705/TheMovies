@@ -1,10 +1,12 @@
-import { Button, Image, Input, Menu, Title } from '@mantine/core';
-import React from 'react';
+import { Button, Flex, Image, Input, Menu, Title } from '@mantine/core';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 
 export default function Navigation() {
+  const [searchValue, setSearchValue] = useState('');
   const navigate = useNavigate();
+
   return (
     <header className='page-header'>
       <nav className='page-navigation'>
@@ -37,13 +39,14 @@ export default function Navigation() {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-
-        <Input
+        <Flex>
+          <Input
             size='lg'
-            value={'searchValue'}
-            onChange={(event) => 'setSearchValue(event.currentTarget.value)'}
+            value={searchValue}
+            onChange={(event) => setSearchValue(event.currentTarget.value)}
           ></Input>
-        <Button size='lg' onClick={() => navigate('/search')}>Search</Button>
+          <Button size='lg' onClick={() => navigate(`/search/${searchValue}`)}>Search</Button>
+        </Flex>
       </nav>
     </header>
   )

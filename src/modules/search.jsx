@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useLoading from '../hooks/use-loading';
 import requestMaker from '../functions/requestMaker';
 import { Input } from '@mantine/core';
@@ -8,7 +8,8 @@ import { Input } from '@mantine/core';
 export default function Search() {
   const searchInput = document.querySelector('.search-field');
   const [searchResults, setSearchResults] = useState([]);
-  const [searchValue, setSearchValue] = useState('');
+  const [{searchParams}] = useParams();
+  const [searchValue, setSearchValue] = useState(searchParams);
   const [fetchSearchResults, isLoadingSearchResults] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/search/multi?query=${searchValue}`, setSearchResults));
 
   return (

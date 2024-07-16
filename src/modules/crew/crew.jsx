@@ -17,7 +17,7 @@ export default function Crew({creature}) {
 
   useEffect(() => {
     fetchCredits();
-  }, [movieId])
+  }, [movieId, tvId])
 
   useEffect(() => setStarring(credits?.cast.slice(0, 9)), [credits]);
 
