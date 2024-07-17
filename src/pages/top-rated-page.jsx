@@ -39,7 +39,7 @@ export default function TopRatedMovies() {
   },[minRating, maxRating, minYear, maxYear, page, genreValue, selectValue, minRuntime, maxRuntime])
 
   return (
-    <Container size={1366}>
+    <Container className='pidor' size={1366}>
       <Title order={1} mb={'md'}>Top rated movies</Title>
       <Box display='grid' w='100%' style={{gridTemplateColumns: '300px 1fr'}}>
         <Paper p={20} mr={30}>
@@ -137,7 +137,7 @@ export default function TopRatedMovies() {
             />
           </Box>
         </Paper>
-        <Flex wrap={'wrap'} gap={20}>
+        <Flex gap={20} direction='column'>
           {popular?.results?.map(item => <TopRatedCard key={item.id} id={item.id} />)}
         </Flex>
       </Box>
