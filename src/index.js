@@ -16,6 +16,7 @@ const theme = createTheme({
     sectionTitle: '32px',
     secondaryTitle: '24px',
     listTitle: '16px',
+    textSmall: '14px',
   },
   lineHeights: {
     pageTitle: '48px',

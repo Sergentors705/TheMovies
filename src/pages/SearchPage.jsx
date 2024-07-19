@@ -16,12 +16,12 @@ export default function SearchPage() {
   useEffect(() => {
     requestMaker(`https://api.themoviedb.org/3/keyword/${keywordId}`, setKeywordTitle);
     requestMaker(`https://api.themoviedb.org/3/genre/${genreId}`, setGenreTitle);
-  }, [])
+  }, [keywordId, genreId])
 
   useEffect(() => {
     fetchKeyword();
   }, [keywordId, page, genreId])
-console.log(movies)
+console.log(genreTitle)
   return (
     <Flex
       maw={1366}

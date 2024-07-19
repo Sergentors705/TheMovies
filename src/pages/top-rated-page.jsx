@@ -39,9 +39,19 @@ export default function TopRatedMovies() {
   },[minRating, maxRating, minYear, maxYear, page, genreValue, selectValue, minRuntime, maxRuntime])
 
   return (
-    <Container className='pidor' size={1366}>
+    <Container
+      w={'100%'}
+      py={30}
+      className='pidor'
+      size={1366}
+    >
       <Title order={1} mb={'md'}>Top rated movies</Title>
-      <Box display='grid' w='100%' style={{gridTemplateColumns: '300px 1fr'}}>
+      <Box
+        display='grid'
+        w='100%'
+        mb={30}
+        style={{gridTemplateColumns: '300px 1fr'}}
+      >
         <Paper p={20} mr={30}>
           <Title order={3} mb={10}>Sort by</Title>
           <NativeSelect
@@ -137,7 +147,7 @@ export default function TopRatedMovies() {
             />
           </Box>
         </Paper>
-        <Flex gap={20} direction='column'>
+        <Flex  wrap={'wrap'} gap={20}>
           {popular?.results?.map(item => <TopRatedCard key={item.id} id={item.id} />)}
         </Flex>
       </Box>

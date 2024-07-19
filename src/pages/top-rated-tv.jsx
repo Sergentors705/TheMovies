@@ -37,7 +37,12 @@ export default function TopRatedMovies() {
   },[minRating, maxRating, minYear, maxYear, page, genreValue, selectValue, minRuntime, maxRuntime])
 
   return (
-    <Container size={1366}>
+    <Container
+      w={'100%'}
+      py={30}
+      className='pidor'
+      size={1366}
+    >
       <Title order={1} mb={'md'}>Top rated movies</Title>
       <Box display='grid' w='100%' style={{gridTemplateColumns: '300px 1fr'}} mb={30}>
         <Paper

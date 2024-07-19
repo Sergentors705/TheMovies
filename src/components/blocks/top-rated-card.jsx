@@ -14,30 +14,43 @@ export default function TopRatedCard({id}) {
 
   return (
     <Link
+      key={info?.id}
       to={`/movie/${info?.id}`}
       style={{textDecoration: 'none'}}
     >
       <Paper
-        p={10}
+        h='100%'
         withBorder
         shadow='lg'
+        p={10}
+        maw={220}
       >
-        <Flex gap={10}>
-          <Image
-            w={100}
-            h={150}
-            src={`https://www.themoviedb.org/t/p/w220_and_h330_face${info?.poster_path}`}
-          />
-          <Flex direction='column'>
-            <Title
-              ta='center'
-              order={2}
-              textWrap='wrap'
-              c='black'
-            >{info?.title}</Title>
-            <Text c='dimmed'>{info?.release_date}</Text>
-            <Text c='dimmed'>{Math.floor(info?.runtime / 60)}h {info?.runtime % 60}m</Text>
-          </Flex>
+        <Image
+          mb={10}
+          w={200}
+          h={'auto'}
+          src={`https://www.themoviedb.org/t/p/w220_and_h330_face${info?.poster_path}`}
+        />
+        <Title
+          fz={'listTitle'}
+          ta='center'
+          order={2}
+          textWrap='wrap'
+          c='black'
+        >{info?.title}</Title>
+        <Flex gap={15}>
+          <Text
+            c='dimmed'
+            fz={'textSmall'}
+          >
+            {new Date(info?.release_date)?.getFullYear()}
+          </Text>
+          <Text
+            c='dimmed'
+            fz={'textSmall'}
+          >
+            {Math.floor(info?.runtime / 60)}h {info?.runtime % 60}m
+          </Text>
         </Flex>
       </Paper>
     </Link>
