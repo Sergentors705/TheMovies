@@ -5,13 +5,32 @@ import useLoading from '../hooks/use-loading';
 import requestMaker from '../functions/requestMaker';
 
 export default function SearchPage() {
+  const [creationType, setCreationType] = useState('');
   const {keywordId, genreId, companieId} = useParams();
-  const [movies, setMovies] = useState(null);
+  const [creations, setCreations] = useState(null);
   const [page, setPage] = useState(1);
+  const [tvGenreList, setTvGenreList] = useState([]);
+  const [movieGenreList, setMovieGenreList] = useState([]);
+  const [unionGenreList, setUnionGenreList] = useState([]);
   const navigate = useNavigate();
-  const [fetchKeyword, isLoadingKeyword] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setMovies))
+  const [fetchKeyword, isLoadingKeyword] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
   const [keywordTitle, setKeywordTitle] = useState(null);
   const [genreTitle, setGenreTitle] = useState(null);
+
+  useEffect(() => {
+    requestMaker('https://api.themoviedb.org/3/genre/movie/list', setMovieGenreList);
+    requestMaker('https://api.themoviedb.org/3/genre/tv/list', setTvGenreList);
+  }, [])
+
+  useEffect(() => {
+    tvGenreList.forEach(item => {
+      if (movieGenreList.includes(item)) {
+        unionGenreList.push(item);
+        tvGenreList.splice(tvGenreList.indexOf(item),1);
+        movieGenreList.splice(movieGenreList.indexOf(item),1);
+      }
+    })
+  }, [])
 
   useEffect(() => {
     requestMaker(`https://api.themoviedb.org/3/keyword/${keywordId}`, setKeywordTitle);
@@ -21,7 +40,9 @@ export default function SearchPage() {
   useEffect(() => {
     fetchKeyword();
   }, [keywordId, page, genreId])
-console.log(genreTitle)
+  console.log('TV', tvGenreList)
+  console.log('MOV', movieGenreList)
+  console.log('UNI', unionGenreList)
   return (
     <Flex
       maw={1366}
@@ -32,7 +53,7 @@ console.log(genreTitle)
     >
       <Title order={2} tt="capitalize">{keywordTitle?.name || genreTitle?.name}</Title>
         {
-          movies?.results.map((item) =>
+          creations?.results.map((item) =>
             <Link to={`/movie/${item.id}`} style={{textDecoration: 'none'}}>
               <Paper
                 key={item.id}
@@ -72,7 +93,7 @@ console.log(genreTitle)
             </Link>
           )
         }
-      <Pagination value={page} onChange={setPage} total={movies?.total_pages}  withEdges/>
+      <Pagination value={page} onChange={setPage} total={creations?.total_pages}  withEdges/>
     </Flex>
   )
 }

@@ -11,7 +11,13 @@ const requestMaker = async (req, setter, arg) => {
         return response.json();
       }
     })
-    .then((object) => setter(object))
+    .then((object) => {
+      if (arg) {
+        setter(object.arg)
+      } else {
+        setter(object)
+      }
+    })
 }
 
 export default requestMaker
