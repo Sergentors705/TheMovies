@@ -13,7 +13,7 @@ const requestMaker = async (req, setter, arg) => {
     })
     .then((object) => {
       if (arg) {
-        setter(object.arg)
+        setter(object[arg]);
       } else {
         setter(object)
       }

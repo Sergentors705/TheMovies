@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import useLoading from '../hooks/use-loading';
 import requestMaker from '../functions/requestMaker';
+import ArraySeparator from '../functions/arraySeparator';
 
 export default function SearchPage() {
   const [creationType, setCreationType] = useState('');
@@ -18,19 +19,13 @@ export default function SearchPage() {
   const [genreTitle, setGenreTitle] = useState(null);
 
   useEffect(() => {
-    requestMaker('https://api.themoviedb.org/3/genre/movie/list', setMovieGenreList);
-    requestMaker('https://api.themoviedb.org/3/genre/tv/list', setTvGenreList);
+    requestMaker('https://api.themoviedb.org/3/genre/movie/list', setMovieGenreList, 'genres');
+    requestMaker('https://api.themoviedb.org/3/genre/tv/list', setTvGenreList, 'genres');
   }, [])
 
   useEffect(() => {
-    tvGenreList.forEach(item => {
-      if (movieGenreList.includes(item)) {
-        unionGenreList.push(item);
-        tvGenreList.splice(tvGenreList.indexOf(item),1);
-        movieGenreList.splice(movieGenreList.indexOf(item),1);
-      }
-    })
-  }, [])
+    ArraySeparator(tvGenreList, movieGenreList, unionGenreList);
+  }, [tvGenreList, movieGenreList])
 
   useEffect(() => {
     requestMaker(`https://api.themoviedb.org/3/keyword/${keywordId}`, setKeywordTitle);
