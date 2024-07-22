@@ -35,9 +35,9 @@ export default function SearchPage() {
   useEffect(() => {
     fetchKeyword();
   }, [keywordId, page, genreId])
-  console.log('TV', tvGenreList)
-  console.log('MOV', movieGenreList)
-  console.log('UNI', unionGenreList)
+  // console.log('TV', tvGenreList)
+  // console.log('MOV', movieGenreList)
+  // console.log('UNI', unionGenreList)
   return (
     <Flex
       maw={1366}

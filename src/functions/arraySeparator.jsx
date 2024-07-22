@@ -1,18 +1,23 @@
-import React from 'react'
+import React from 'react';
 
 export default function ArraySeparator(array1, array2, array3) {
-  const TimelessArray1 = array1;
-  const TimelessArray2 = array2;
+  // const TimelessArray1 = [...array1];
+  // const TimelessArray2 = [...array2];
 
-  array1.forEach(item => {
-    array2.forEach(element => {
-      if (element.id === item.id) {
-        array3.push(item);
-        TimelessArray1.splice(TimelessArray1.indexOf(item),1);
-        TimelessArray2.splice(TimelessArray2.indexOf(element),1);
-      }
-    })
-  })
-  array1 = TimelessArray1;
-  array2 = TimelessArray2;
+  // for (let i = 0; i < array1.length; i++ ) {
+  //   for (let k = 0; k < array2.length; k++ ) {
+  //     if (TimelessArray1[i].id === TimelessArray2[k].id) {
+  //       array3.push(TimelessArray1[i]);
+  //       TimelessArray1.splice(TimelessArray1.indexOf(TimelessArray1[i]), 1)
+  //     }
+  //   }
+  // }
+
+  // array1 = [...TimelessArray1];
+  // array2 = [...TimelessArray2];
+
+  const test = [{id: 1, name: 'One'}, {id: 2, name: 'two'}]
+  const arr = [{id: 1, name: 'One'}, {id: 2, name: 'two'}]
+
+  console.log(arr.includes({id: 1, name: 'One'}))
 }
