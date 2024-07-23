@@ -15,9 +15,9 @@ export default function ArraySeparator(array1, array2, array3) {
 
   // array1 = [...TimelessArray1];
   // array2 = [...TimelessArray2];
-
+  const pidor = {id: 1, name: 'One'};
   const test = [{id: 1, name: 'One'}, {id: 2, name: 'two'}]
   const arr = [{id: 1, name: 'One'}, {id: 2, name: 'two'}]
-
-  console.log(arr.includes({id: 1, name: 'One'}))
+  const hui = ['a', 'b', 'c', 'd', 'e', {id: 3}]
+  console.log(hui.includes('d'))
 }

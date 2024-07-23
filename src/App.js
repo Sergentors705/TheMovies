@@ -38,7 +38,7 @@ function App() {
               <Route path='top-rated-movies' element={<TopRatedMovies />} />
               <Route path='top-rated-tvs' element={<TopRatedTvShows />} />
               <Route path='keyword/:keywordId' element={<SearchPage />} />
-              <Route path='genre/:genreId' element={<SearchPage />} />
+              <Route path=':creationType/genre/:genreId' element={<SearchPage />} />
               <Route path='companie/:companieId' element={<SearchPage />} />
               <Route path='tv/:tvId/tv-season/:seasonId' element={<TvSeasonPage />} />
               <Route path='tv/:tvId/tv-season/:seasonId/tv-episode/:episodeId' element={<TvEpisodePage />} />

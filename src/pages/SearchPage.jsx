@@ -1,31 +1,17 @@
-import { Box, Divider, Flex, Image, List, Pagination, Paper, Skeleton, Text, Title } from '@mantine/core'
-import React, { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import useLoading from '../hooks/use-loading';
+import { Box, Divider, Flex, Image, Pagination, Paper, Skeleton, Text, Title } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import requestMaker from '../functions/requestMaker';
-import ArraySeparator from '../functions/arraySeparator';
+import useLoading from '../hooks/use-loading';
 
 export default function SearchPage() {
-  const [creationType, setCreationType] = useState('');
-  const {keywordId, genreId, companieId} = useParams();
+  const {creationType, keywordId, genreId, companieId} = useParams();
   const [creations, setCreations] = useState(null);
   const [page, setPage] = useState(1);
-  const [tvGenreList, setTvGenreList] = useState([]);
-  const [movieGenreList, setMovieGenreList] = useState([]);
-  const [unionGenreList, setUnionGenreList] = useState([]);
   const navigate = useNavigate();
   const [fetchKeyword, isLoadingKeyword] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
   const [keywordTitle, setKeywordTitle] = useState(null);
   const [genreTitle, setGenreTitle] = useState(null);
-
-  useEffect(() => {
-    requestMaker('https://api.themoviedb.org/3/genre/movie/list', setMovieGenreList, 'genres');
-    requestMaker('https://api.themoviedb.org/3/genre/tv/list', setTvGenreList, 'genres');
-  }, [])
-
-  useEffect(() => {
-    ArraySeparator(tvGenreList, movieGenreList, unionGenreList);
-  }, [tvGenreList, movieGenreList])
 
   useEffect(() => {
     requestMaker(`https://api.themoviedb.org/3/keyword/${keywordId}`, setKeywordTitle);
@@ -35,9 +21,7 @@ export default function SearchPage() {
   useEffect(() => {
     fetchKeyword();
   }, [keywordId, page, genreId])
-  // console.log('TV', tvGenreList)
-  // console.log('MOV', movieGenreList)
-  // console.log('UNI', unionGenreList)
+
   return (
     <Flex
       maw={1366}
@@ -49,9 +33,9 @@ export default function SearchPage() {
       <Title order={2} tt="capitalize">{keywordTitle?.name || genreTitle?.name}</Title>
         {
           creations?.results.map((item) =>
-            <Link to={`/movie/${item.id}`} style={{textDecoration: 'none'}}>
+            <Link
+                key={item.id} to={`/movie/${item.id}`} style={{textDecoration: 'none'}}>
               <Paper
-                key={item.id}
                 display='flex'
                 w='100%'
                 shadow='md'
@@ -70,7 +54,7 @@ export default function SearchPage() {
                     />
                   </Skeleton>
                   <Box w='100%'>
-                    <Title order={3} c='black'>{item.title}</Title>
+                    <Title order={3} c='black'>{item.title || item.name}</Title>
                     <Text c='dimmed'>{item.original_title}, {new Date(item.release_date)?.getFullYear()}, {item.runtime}</Text>
                     <Divider my='xs'></Divider>
                     <Text c='gray.9'>{item.overview}</Text>

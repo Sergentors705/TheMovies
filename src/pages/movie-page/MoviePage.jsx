@@ -135,7 +135,7 @@ export default function MoviePage() {
                     >
                       <Button
                         key={genre.id}
-                        onClick={() => navigate(`/genre/${genre.id}`)}
+                        onClick={() => navigate(`/movie/genre/${genre.id}`)}
                       >{genre.name}</Button>
                     </Skeleton>
                   )}

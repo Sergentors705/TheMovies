@@ -134,7 +134,7 @@ export default function TvShowPage() {
                       >
                         <Button
                               key={genre.id}
-                              onClick={() => navigate(`/genre/${genre.id}`)}
+                              onClick={() => navigate(`/tv/genre/${genre.id}`)}
                             >{genre.name}</Button>
                       </Skeleton>
                   )})
