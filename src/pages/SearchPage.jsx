@@ -55,7 +55,7 @@ export default function SearchPage() {
                   </Skeleton>
                   <Box w='100%'>
                     <Title order={3} c='black'>{item.title || item.name}</Title>
-                    <Text c='dimmed'>{item.original_title}, {new Date(item.release_date)?.getFullYear()}, {item.runtime}</Text>
+                    <Text c='dimmed'>{item.original_title || item.original_name}, {new Date(item.release_date)?.getFullYear() || new Date(item.first_air_date)?.getFullYear()}, {item.runtime}</Text>
                     <Divider my='xs'></Divider>
                     <Text c='gray.9'>{item.overview}</Text>
                   </Box>
