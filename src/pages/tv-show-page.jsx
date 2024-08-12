@@ -9,6 +9,8 @@ import useLoading from '../hooks/use-loading';
 import TvRecomendations from './tv-recomendations';
 import Crew from '../modules/crew/crew';
 import Posters from '../components/blocks/posters/posters';
+import Keywords from '../components/ui/keywords';
+import Companies from '../components/blocks/companies';
 
 export default function TvShowPage() {
   const {tvId} = useParams();
@@ -35,7 +37,7 @@ export default function TvShowPage() {
   }, [tvId])
 
   useEffect(() => setStarring(crew?.cast.slice(0, 9)), [crew]);
-
+console.log(tvShow)
   return (
     <>
       <SimpleGrid
@@ -175,12 +177,12 @@ export default function TvShowPage() {
           <Posters creature='tv' />
         </Flex>
         {/* SECOND COLUMN */}
-        <Box>
+        <Box p={20}>
           {/* RATING SECTION */}
           <Box>
             <div className='movie-page__rating'>
-              <Skeleton visible={isLoadingTvShow} height={28} mb={15}>
-                <p className='movie-page__rating-title'>The Movie Rating</p>
+              <Skeleton visible={isLoadingTvShow} mih={28}>
+                <Title order={3}>The Movie Rating</Title>
               </Skeleton>
               <div className='movie-page__rating-container'>
                 <Skeleton
@@ -227,7 +229,9 @@ export default function TvShowPage() {
               </Skeleton>
             </div>
           </Box>
-          <TvRecomendations />
+          <Companies creationType='tv' companies={tvShow?.production_companies} />
+          <Keywords creationType='tv' />
+          <TvRecomendations creationType='tv'/>
         </Box>
       </SimpleGrid>
       <Modal opened={opened} onClose={close} size='75%' children={Image}>

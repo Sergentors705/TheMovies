@@ -9,6 +9,8 @@ import Keywords from '../../components/ui/keywords.jsx';
 import requestMaker from '../../functions/requestMaker.js';
 import useLoading from '../../hooks/use-loading.jsx';
 import Crew from '../../modules/crew/crew.jsx';
+import Companies from '../../components/blocks/companies.jsx';
+import TvRecomendations from '../tv-recomendations.jsx';
 
 export default function MoviePage() {
   const [movie, setMovie] = useState(null);
@@ -44,7 +46,7 @@ export default function MoviePage() {
     setDirector(credits?.crew.filter(item => item.job === 'Director'))
     setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing'))
   }, [credits]);
-  console.log(videos)
+
   return (
     <>
       <SimpleGrid
@@ -152,6 +154,9 @@ export default function MoviePage() {
           <Title order={2} fz={32}>Top cast</Title>
           <Crew creature='movie'/>
           <Posters creature='movie' />
+
+          {/* SIMILAR SECTION */}
+
           <Title mb={10}>Similar movies</Title>
           <Carousel
             dragFree
@@ -160,40 +165,46 @@ export default function MoviePage() {
             slideGap='md'
             containScroll='trimSnaps'
           >
-            {recomendations?.results?.slice(0,9).map((item) =>
+            {similar?.results?.slice(0,9).map((item) =>
               <Carousel.Slide
                 key={item.id}
                 flex
                 align='center'
-                onClick={() => navigate(`/movie/${item.id}`)}
+                mb={40}
               >
-                <Paper
-                  h='100%'
-                  shadow='xs'
-                  p='sm'
+                <Link
+                  to={`/movie/${item.id}`}
+                  style={{textDecoration: 'none'}}
                 >
-                  <Skeleton
-                    visible={isLoadingMovies}
-                    mih={130}
-                    miw={150}
-                    mb={10}
+                  <Paper
+                    h='100%'
+                    withBorder
+                    shadow='lg'
+                    p='sm'
                   >
-                    <Image
-                      w='100%'
-                      h='auto'
-                      fit='contain'
-                      radius='md'
-                      src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.poster_path}`}
-                    />
-                  </Skeleton>
-                  <Skeleton
-                    visible={isLoadingMovies}
-                    mih={20}
-                    mb={6}
-                  >
-                    <Title order={3}>{item.title}</Title>
-                  </Skeleton>
-                </Paper>
+                    <Skeleton
+                      visible={isLoadingMovies}
+                      mih={130}
+                      miw={150}
+                      mb={10}
+                    >
+                      <Image
+                        w='100%'
+                        h='auto'
+                        fit='contain'
+                        radius='md'
+                        src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.poster_path}`}
+                      />
+                    </Skeleton>
+                    <Skeleton
+                      visible={isLoadingMovies}
+                      mih={20}
+                      mb={6}
+                    >
+                      <Title order={3} c={'black'}>{item.title}</Title>
+                    </Skeleton>
+                  </Paper>
+                </Link>
               </Carousel.Slide>
             )}
           </Carousel>
@@ -251,24 +262,9 @@ export default function MoviePage() {
               <NumberFormatter prefix='$'value={movie?.revenue} thousandSeparator/>
             </Skeleton>
           </Box>
-          <Box>
-            <Title order={3} mb={10}>Production</Title>
-            <List listStyleType='none'>
-              {movie?.production_companies.map((item) =>
-                <List.Item>
-                  <Link to={`/companie/${item.id}`}>
-                    {
-                      item.logo_path
-                      ? <Image src={`https://image.tmdb.org/t/p/h60/${item.logo_path}`} mb={10}/>
-                      : <Text size='xl' td='none'  mb={10}>{item.name}</Text>
-                    }
-
-                  </Link>
-                </List.Item>
-              )}
-            </List>
-          </Box>
-          <Keywords />
+          <Companies companies={movie?.production_companies} creationType='movie' />
+          <Keywords creationType='movie'/>
+          <TvRecomendations creationType='movie' />
         </Box>
       </SimpleGrid>
       <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />}/>

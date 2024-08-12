@@ -5,23 +5,31 @@ import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
 
 export default function SearchPage() {
-  const {creationType, keywordId, genreId, companieId} = useParams();
+  const {creationType, keywordId, genreId, companieId, searchValue} = useParams();
   const [creations, setCreations] = useState(null);
+  const [searchResults, setSearchResults] = useState(null);
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const [fetchKeyword, isLoadingKeyword] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
+  const [fetchSearch, isLoadingSearch] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/search/multi?query=${searchValue}&include_adult=false&language=en-US&page=${page}`, setSearchResults))
   const [keywordTitle, setKeywordTitle] = useState(null);
   const [genreTitle, setGenreTitle] = useState(null);
+  const [companieName, setCompanieName] = useState(null);
 
   useEffect(() => {
     requestMaker(`https://api.themoviedb.org/3/keyword/${keywordId}`, setKeywordTitle);
     requestMaker(`https://api.themoviedb.org/3/genre/${genreId}`, setGenreTitle);
-  }, [keywordId, genreId])
+    requestMaker(`https://api.themoviedb.org/3/company/${companieId}`, setCompanieName);
+  }, [keywordId, genreId, companieId])
 
   useEffect(() => {
     fetchKeyword();
-  }, [keywordId, page, genreId])
+  }, [keywordId, page, genreId, companieId])
 
+  useEffect(() => {
+    fetchSearch();
+  }, [searchValue, page])
+  console.log(searchResults)
   return (
     <Flex
       maw={1366}
@@ -30,11 +38,16 @@ export default function SearchPage() {
       align=''
       gap={20}
     >
-      <Title order={2} tt="capitalize">{keywordTitle?.name || genreTitle?.name}</Title>
+      <Title
+        order={2}
+        tt="capitalize"
+        fz='sectionTitle'
+        ml={20}
+      >{keywordTitle?.name || genreTitle?.name || companieName?.name}</Title>
         {
-          creations?.results.map((item) =>
+          (creations?.results || searchResults?.results)?.map((item) =>
             <Link
-                key={item.id} to={`/movie/${item.id}`} style={{textDecoration: 'none'}}>
+                key={item.id} to={`/${item?.media_type || creationType}/${item.id}`} style={{textDecoration: 'none'}}>
               <Paper
                 display='flex'
                 w='100%'
@@ -50,7 +63,7 @@ export default function SearchPage() {
                       w={100}
                       h={150}
                       mr={20}
-                      src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${item.poster_path}`}
+                      src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${item.poster_path || item.profile_path}`}
                     />
                   </Skeleton>
                   <Box w='100%'>
@@ -64,7 +77,7 @@ export default function SearchPage() {
                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
                         <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
                       </svg>
-                      <Title order={4} c='black'>{item?.vote_average.toFixed(1)}/10</Title>
+                      <Title order={4} c='black'>{item?.vote_average?.toFixed(1)}/10</Title>
                     </Flex>
                     <Text c='dimmed'>({item.vote_count})</Text>
                   </Flex>
@@ -72,7 +85,7 @@ export default function SearchPage() {
             </Link>
           )
         }
-      <Pagination value={page} onChange={setPage} total={creations?.total_pages}  withEdges/>
+      <Pagination value={page} onChange={setPage} total={creations?.total_pages || searchResults?.total_pages}  withEdges/>
     </Flex>
   )
 }

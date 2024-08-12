@@ -28,7 +28,7 @@ function App() {
             bg='var(--mantine-color-gray-0)'
           >
             <Routes>
-              <Route path='search/:searchValue' element={<Search />} />
+              <Route path='search/:searchValue' element={<SearchPage />} />
               <Route path='movie/:movieId' element={<MoviePage />} />
               <Route path='tv/:tvId' element={<TvShowPage />} />
               <Route path='person/:personId' element={<PersonPage />} />
@@ -37,9 +37,9 @@ function App() {
               <Route path='/' element={<StartPage />} />
               <Route path='top-rated-movies' element={<TopRatedMovies />} />
               <Route path='top-rated-tvs' element={<TopRatedTvShows />} />
-              <Route path='keyword/:keywordId' element={<SearchPage />} />
+              <Route path=':creationType/keyword/:keywordId' element={<SearchPage />} />
               <Route path=':creationType/genre/:genreId' element={<SearchPage />} />
-              <Route path='companie/:companieId' element={<SearchPage />} />
+              <Route path=':creationType/companie/:companieId' element={<SearchPage />} />
               <Route path='tv/:tvId/tv-season/:seasonId' element={<TvSeasonPage />} />
               <Route path='tv/:tvId/tv-season/:seasonId/tv-episode/:episodeId' element={<TvEpisodePage />} />
             </Routes>

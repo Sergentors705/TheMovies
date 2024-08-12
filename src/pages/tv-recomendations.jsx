@@ -5,15 +5,15 @@ import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
 import { useDisclosure } from '@mantine/hooks';
 
-export default function TvRecomendations() {
-  const {tvId} = useParams();
+export default function TvRecomendations({creationType}) {
+  const {tvId, movieId} = useParams();
   const [opened, { open, close }] = useDisclosure(false);
   const [tvRecomendations, setTvRecomendations] = useState(null);
-  const [fetchTvRecomendations, isLoadingTvRecomendations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/similar`, setTvRecomendations));
+  const [fetchTvRecomendations, isLoadingTvRecomendations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${tvId || movieId}/recommendations`, setTvRecomendations));
 
   useEffect(() => {
     fetchTvRecomendations();
-  },[])
+  },[tvId, movieId])
 
   return (
     <>
@@ -22,7 +22,7 @@ export default function TvRecomendations() {
           <Title order={3} ta={'center'} fz={'secondaryTitle'}>Recomendations</Title>
         </Skeleton>
         {tvRecomendations?.results?.map(item =>
-          <Link key={item.id} to={`/tv/${item.id}`} style={{textDecoration: 'none'}}>
+          <Link key={item.id} to={`/${creationType}/${item.id}`} style={{textDecoration: 'none'}}>
             <Paper
               shadow='md'
               withBorder
@@ -39,7 +39,7 @@ export default function TvRecomendations() {
               </Skeleton>
               <Flex direction={'column'} justify={'space-between'}>
                 <Skeleton visible={isLoadingTvRecomendations}>
-                  <Title order={3} fz={'md'} c={'black'} fw={'normal'}>{item.name}</Title>
+                  <Title order={3} fz={'md'} c={'black'} fw={'normal'}>{item.name || item.title}</Title>
                 </Skeleton>
                 <Skeleton visible={isLoadingTvRecomendations}>
                   <Flex>

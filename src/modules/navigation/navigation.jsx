@@ -1,6 +1,6 @@
 import { Button, Flex, Image, Input, Menu, Title } from '@mantine/core';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Form, Link, useNavigate } from 'react-router-dom';
 import './style.css';
 
 export default function Navigation() {
@@ -39,14 +39,16 @@ export default function Navigation() {
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
-        <Flex>
-          <Input
-            size='lg'
-            value={searchValue}
-            onChange={(event) => setSearchValue(event.currentTarget.value)}
-          ></Input>
-          <Button size='lg' onClick={() => navigate(`/search/${searchValue}`)}>Search</Button>
-        </Flex>
+        <form>
+          <Flex>
+            <Input
+              size='lg'
+              value={searchValue}
+              onChange={(event) => setSearchValue(event.currentTarget.value)}
+            ></Input>
+            <Button type='submit' size='lg' onClick={() => navigate(`/search/${searchValue}`)}>Search</Button>
+          </Flex>
+        </form>
       </nav>
     </header>
   )

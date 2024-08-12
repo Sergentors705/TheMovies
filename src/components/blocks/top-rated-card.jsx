@@ -33,7 +33,6 @@ export default function TopRatedCard({id}) {
         />
         <Title
           fz={'listTitle'}
-          ta='center'
           order={2}
           textWrap='wrap'
           c='black'

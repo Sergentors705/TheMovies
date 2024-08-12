@@ -87,7 +87,7 @@ export default function TvSeasonPage() {
               </Link>
           )}
         </Flex>
-        <TvRecomendations />
+        <TvRecomendations creationType='tv' />
       </Box>
     </Flex>
   )
