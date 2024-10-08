@@ -4,17 +4,28 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
 
+interface IMultiTitle {
+  name: string,
+  id: number,
+}
+
+interface ISearchResults {
+  page: number,
+  results: Array<any>,
+  total_pages: number,
+}
+
 export default function SearchPage() {
   const {creationType, keywordId, genreId, companieId, searchValue} = useParams();
-  const [creations, setCreations] = useState(null);
-  const [searchResults, setSearchResults] = useState(null);
+  const [creations, setCreations] = useState<ISearchResults | null>();
+  const [searchResults, setSearchResults] = useState<ISearchResults | null>();
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
-  const [fetchKeyword, isLoadingKeyword] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
+  const [fetchCreations, isLoadingCreations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
   const [fetchSearch, isLoadingSearch] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/search/multi?query=${searchValue}&include_adult=false&language=en-US&page=${page}`, setSearchResults))
-  const [keywordTitle, setKeywordTitle] = useState(null);
-  const [genreTitle, setGenreTitle] = useState(null);
-  const [companieName, setCompanieName] = useState(null);
+  const [keywordTitle, setKeywordTitle] = useState<IMultiTitle | null>();
+  const [genreTitle, setGenreTitle] = useState<IMultiTitle | null>();
+  const [companieName, setCompanieName] = useState<IMultiTitle | null>();
 
   useEffect(() => {
     requestMaker(`https://api.themoviedb.org/3/keyword/${keywordId}`, setKeywordTitle);
@@ -23,13 +34,13 @@ export default function SearchPage() {
   }, [keywordId, genreId, companieId])
 
   useEffect(() => {
-    fetchKeyword();
+    fetchCreations();
   }, [keywordId, page, genreId, companieId])
 
   useEffect(() => {
     fetchSearch();
   }, [searchValue, page])
-  console.log(searchResults)
+  
   return (
     <Flex
       maw={1366}
@@ -45,7 +56,7 @@ export default function SearchPage() {
         ml={20}
       >{keywordTitle?.name || genreTitle?.name || companieName?.name}</Title>
         {
-          (creations?.results || searchResults?.results)?.map((item) =>
+          (creations || searchResults)?.results?.map((item) =>
             <Link
                 key={item.id} to={`/${item?.media_type || creationType}/${item.id}`} style={{textDecoration: 'none'}}>
               <Paper
@@ -56,7 +67,7 @@ export default function SearchPage() {
                 p={20}
               >
                   <Skeleton
-                    visible={isLoadingKeyword}
+                    visible={isLoadingCreations}
                     w='auto'
                   >
                     <Image
@@ -85,7 +96,7 @@ export default function SearchPage() {
             </Link>
           )
         }
-      <Pagination value={page} onChange={setPage} total={creations?.total_pages || searchResults?.total_pages}  withEdges/>
+      <Pagination value={page} onChange={setPage} total={creations?.total_pages || searchResults?.total_pages || 0}  withEdges/>
     </Flex>
   )
 }

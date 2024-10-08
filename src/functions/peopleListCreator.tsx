@@ -3,7 +3,24 @@ import { useDisclosure } from '@mantine/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function PeopleListCreator  (array, title, modalOpen, setModalDate) {
+interface iData {
+  credit_id: number,
+  id: number,
+  media_type: string,
+  name: string,
+  buisness: string,
+  profile_path: string,
+  department?: string,
+}
+
+interface PeopleListProps {
+  array: iData[] | [],
+  title: string,
+  modalOpen: () => void,
+  setModalDate?: (item: iData) => void | undefined,
+}
+
+export default function PeopleListCreator({ array, title, modalOpen, setModalDate }: PeopleListProps) {
   const [opened, { toggle }] = useDisclosure(true);
 
   return (
@@ -13,7 +30,7 @@ export default function PeopleListCreator  (array, title, modalOpen, setModalDat
       gap={15}
     >
     {
-      array?.length > 0
+      array.length > 0
       ? <>
         <Title c={'black'} fz={'sectionTitle'} onClick={toggle}>{title}</Title>
         <Collapse in={opened}>
@@ -22,7 +39,7 @@ export default function PeopleListCreator  (array, title, modalOpen, setModalDat
             direction={'column'}
             gap={15}
           >
-            {array.map((item) =>
+            {array?.map((item) =>
               <Paper
                 p={10}
                 withBorder
@@ -47,12 +64,10 @@ export default function PeopleListCreator  (array, title, modalOpen, setModalDat
                       c={'black'}
                       fz={'listTitle'}
                     >{item.name}</Title>
-                    {item.character
-                    ?<Text fz={'listTitle'} c={'dimmed'}>As {item.character}</Text>
-                    :<Text fz={'listTitle'} c={'dimmed'}>{item.job}</Text>}
+                    <Text fz={'listTitle'} c={'dimmed'}>{item.buisness}</Text>
                   </Link>
                   <Button
-                    onClick={() => {modalOpen(); setModalDate(item)}}
+                    onClick={() => {modalOpen(); setModalDate?.(item)}}
                     style={{alignSelf: 'center'}}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" role="presentation">

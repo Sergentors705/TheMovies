@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import Loading from '../components/ui/loading';
 import '@mantine/carousel/styles.css';
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import { Paper, rem } from '@mantine/core';
 import { Box, Container, Image, Title } from '@mantine/core';
-import { IconArrowRight, IconArrowLeft } from '@tabler/icons-react';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
 
@@ -30,7 +28,7 @@ export default function StartPage() {
     fetchPopularTv();
   },[])
 
-  const carouselCreator = (array) => {
+  const carouselCreator = (array: Array<any>) => {
     return <Carousel
         getEmblaApi={setEmbla}
         dragFree
@@ -42,8 +40,6 @@ export default function StartPage() {
         slidesToScroll={1}
         controlSize={40}
         containScroll='trimSnaps'
-        nextControlIcon={<IconArrowRight style={{ width: rem(16), height: rem(16) }} />}
-        previousControlIcon={<IconArrowLeft style={{ width: rem(16), height: rem(16) }} />}
       >
           {array?.map((item) =>
             <Carousel.Slide key={item.id} mb={30}>

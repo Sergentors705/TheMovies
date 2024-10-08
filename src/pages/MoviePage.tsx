@@ -4,13 +4,13 @@ import { Box, Button, Flex, Image, List, Modal, NumberFormatter, Paper, SimpleGr
 import { useDisclosure } from '@mantine/hooks';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import Posters from '../../components/blocks/posters/posters.jsx';
-import Keywords from '../../components/ui/keywords.jsx';
-import requestMaker from '../../functions/requestMaker.js';
-import useLoading from '../../hooks/use-loading.jsx';
-import Crew from '../../modules/crew/crew.jsx';
-import Companies from '../../components/blocks/companies.jsx';
-import TvRecomendations from '../tv-recomendations.jsx';
+import Posters from '../components/blocks/posters/posters.jsx';
+import Keywords from '../components/ui/keywords.jsx';
+import requestMaker from '../functions/requestMaker.js';
+import useLoading from '../hooks/use-loading.js';
+import Crew from '../modules/crew/crew.jsx';
+import Companies from '../components/blocks/companies.jsx';
+import TvRecomendations from './tv-recomendations.js';
 
 export default function MoviePage() {
   const [movie, setMovie] = useState(null);

@@ -1,4 +1,4 @@
-const requestMaker = async (req, setter, arg) => {
+const requestMaker = async (req: string, setter: (value: any) => void, arg?: string) => {
   await fetch(req, {
     headers: {
       Authorization:

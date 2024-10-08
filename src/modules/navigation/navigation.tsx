@@ -1,6 +1,6 @@
-import { Button, Flex, Image, Input, Menu, Title } from '@mantine/core';
-import React, { useState } from 'react';
-import { Form, Link, useNavigate } from 'react-router-dom';
+import { Button, Flex, Image, Input, Menu } from '@mantine/core';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './style.css';
 
 export default function Navigation() {

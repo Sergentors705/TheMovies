@@ -3,7 +3,25 @@ import { useDisclosure } from '@mantine/hooks';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function CreationListCreator  (array, title, modalOpen, setModalDate) {
+interface iCreationData {
+  id: number,
+  credit_id: number,
+  media_type: string,
+  poster_path: string,
+  name: string,
+  title: string,
+  character: string,
+  job: string,
+}
+
+interface iCreationListProps {
+  array: iCreationData[] | [],
+  title: string,
+  modalOpen: () => void,
+  setModalDate: (item: iCreationData) => void,
+}
+
+export default function CreationListCreator  ({array, title, modalOpen, setModalDate}: iCreationListProps) {
   const [opened, { toggle }] = useDisclosure(true);
 
   if (array?.length > 0) {

@@ -2,8 +2,8 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import './style.css';
-import useLoading from '../../hooks/use-loading';
-import requestMaker from '../../functions/requestMaker';
+import useLoading from '../hooks/use-loading';
+import requestMaker from '../functions/requestMaker';
 import { Title } from '@mantine/core';
 
 export default function PersonPage() {
