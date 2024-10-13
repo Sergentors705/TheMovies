@@ -4,14 +4,31 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface iCreationData {
+  adult: boolean,
+  backdrop_path?: string | undefined,
+  genre_ids: number[],
   id: number,
-  credit_id: number,
-  media_type: string,
-  poster_path: string,
-  name: string,
+  original_language: string,
+  original_title: string,
+  overview: string,
+  popularity: number,
+  poster_path?: string | undefined,
+  release_date: string,
   title: string,
-  character: string,
-  job: string,
+  video?: string,
+  vote_average: number,
+  vote_count: number,
+  credit_id: string,
+  department?: string,
+  job?: string,
+  media_type: string,
+  character?: string,
+  name?: string,
+  order?: number,
+  origin_country?: string[],
+  original_name?: string,
+  first_air_date?: string,
+  episode_count?: number,
 }
 
 interface iCreationListProps {

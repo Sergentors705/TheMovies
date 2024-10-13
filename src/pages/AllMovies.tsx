@@ -12,27 +12,94 @@ interface iCreditsData {
   crew: iCrewData[],
 }
 
-interface iCastData {
+interface iCreationData {
+  genres?: string[],
+  overview?: string,
+  runtime: number | undefined,
+  adult: string,
+  gender: string,
   id: number,
-  media_type: string,
-  release_date: string,
+  known_for_department: string,
   name: string,
-  title: string,
-  poster_path: string,
+  original_name: string,
+  popularity: number,
+  profile_path: string,
+  cast_id: number,
   character: string,
+  credit_id: string,
   order: number,
+  first_air_date?: string,
+  last_air_date?: string,
+  last_episode_to_air?: string,
+}
+
+interface iCastData {
+  adult: boolean,
+  backdrop_path?: string | undefined,
+  genre_ids: number[],
+  id: number,
+  original_language: string,
+  original_title: string,
+  overview: string,
+  popularity: number,
+  poster_path?: string | undefined,
+  release_date: string,
+  title: string,
+  video?: string,
+  vote_average: number,
+  vote_count: number,
+  character: string,
+  credit_id: string,
+  order: number,
+  media_type: string,
+  origin_country?: string[],
+  original_name?: string,
+  first_air_date?: string,
+  name?: string,
+  episode_count?: number,
 }
 
 interface iCrewData {
+  adult: boolean,
+  backdrop_path?: string | undefined,
+  genre_ids: number[],
   id: number,
-  media_type: string,
+  original_language: string,
+  original_title: string,
+  overview: string,
+  popularity: number,
+  poster_path?: string | undefined,
   release_date: string,
   title: string,
-  name: string,
-  poster_path: string,
-  department: string,
-  job: string,
+  video?: string,
+  vote_average: number,
+  vote_count: number,
+  credit_id: string,
+  department?: string,
+  job?: string,
+  media_type: string,
+  origin_country?: string[],
+  original_name?: string,
+  first_air_date?: string,
+  name?: string,
+  episode_count?: number,
+}
 
+interface iPersonData {
+  adult: boolean,
+  also_known_as: string[],  
+  biography: string,
+  birthday: string,
+  deathday?: string,
+  gender: number,
+  homepage?: string,
+  id: number,
+  imdb_id: string,
+  known_for_department: string,
+  name: string,
+  place_of_birth: string,
+  popularity: number,
+  profile_path: string,
 }
 
 export default function AllMovies() {
@@ -41,8 +108,8 @@ export default function AllMovies() {
   const [fetchCreationCrew, isLoadingCreationCrew] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}/credits`, setCreationCrew));
   const [credits, setCredits] = useState<iCreditsData | null>(null);
   const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
-  const [person, setPerson] = useState(null);
-  const [creation, setCreation] = useState(null);
+  const [person, setPerson] = useState<iPersonData | null>(null);
+  const [creation, setCreation] = useState<iCreationData | null>(null);
   const [creationCrew, setCreationCrew] = useState(null);
   const {personId} = useParams();
   const [cast, setCast] = useState<iCastData[] | []>([]);
@@ -60,7 +127,7 @@ export default function AllMovies() {
   const [editing, setEditing] = useState<iCrewData[] | []>([]);
   const [visualEffects, setVisualEffects] = useState<iCrewData[] | []>([]);
   const [opened, { open, close }] = useDisclosure(false);
-  const [modalDate, setModalDate] = useState<iCastData[] | iCrewData[] | []>([]);
+  const [modalDate, setModalDate] = useState<iCastData | iCrewData | null>(null);
 
   useEffect(() => {
     setArt(crew?.filter((item) => item.department === 'Art'));
@@ -145,7 +212,7 @@ export default function AllMovies() {
               />
               <Box>
                 <Title fz={'secondaryTitle'}>{modalDate?.title || modalDate?.name}</Title>
-                <Text>{modalDate?.release_date || `${new Date(creation?.first_air_date)?.getFullYear()} - ${new Date(creation?.last_air_date)?.getFullYear()}`}</Text>
+                <Text>{new Date(modalDate?.release_date)?.getFullYear() || `${new Date(creation?.first_air_date)?.getFullYear()} - ${new Date(creation?.last_air_date)?.getFullYear()}`}</Text>
                 <Skeleton visible={isLoadingCreation}>
                   <Text>{Math.floor(creation?.runtime / 60)}h {creation?.runtime % 60}m</Text>
                 </Skeleton>
