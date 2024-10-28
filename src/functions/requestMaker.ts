@@ -2,7 +2,7 @@ const requestMaker = async (req: string, setter: (value: any) => void, arg?: str
   await fetch(req, {
     headers: {
       Authorization:
-      `Bearer ${process.env.REACT_APP_TOKEN}`,
+      `Bearer ${import.meta.env.VITE_TOKEN}`,
       Accept: "application/json",
     },
   })

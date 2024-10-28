@@ -1,15 +1,24 @@
 import { Box, Image, List, Text, Title } from '@mantine/core';
-import React from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
-export default function Companies({companies, creationType}) {
-  const {tvId, movieId} = useParams();
+interface iCompaniesProps {
+  companies: [],
+  creationType: string,
+}
+
+interface iCompanieData {
+  id: number,
+  name: string,
+  logo_path?: string,
+}
+
+export default function Companies({companies, creationType}: iCompaniesProps) {
   console.log(companies)
   return (
     <Box>
       <Title order={3} mb={10}>Production</Title>
       <List listStyleType='none'>
-        {companies?.map((item) =>
+        {companies?.map((item: iCompanieData) =>
           <List.Item>
             <Link to={`/${creationType}/companie/${item.id}`}>
               {

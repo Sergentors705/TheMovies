@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-const dayjs = require('dayjs');
+import dayjs from 'dayjs';
 
 export default function TopRatedTvShows() {
   const [page, setPage] = useState(1);

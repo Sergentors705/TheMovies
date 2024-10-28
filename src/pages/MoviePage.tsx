@@ -1,16 +1,16 @@
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Box, Button, Flex, Image, List, Modal, NumberFormatter, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Button, Flex, Image, Modal, NumberFormatter, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import Posters from '../components/blocks/posters/posters.jsx';
-import Keywords from '../components/ui/keywords.jsx';
-import requestMaker from '../functions/requestMaker.js';
-import useLoading from '../hooks/use-loading.js';
-import Crew from '../modules/crew/crew.jsx';
-import Companies from '../components/blocks/companies.jsx';
-import TvRecomendations from './tv-recomendations.js';
+import Companies from '../components/blocks/companies';
+import Posters from '../components/blocks/posters/posters';
+import Keywords from '../components/ui/keywords';
+import requestMaker from '../functions/requestMaker';
+import useLoading from '../hooks/use-loading';
+import Crew from '../modules/crew/crew';
+import TvRecomendations from './tv-recomendations';
 
 export default function MoviePage() {
   const [movie, setMovie] = useState(null);
@@ -125,14 +125,17 @@ export default function MoviePage() {
               >
                 <p className='movie-page__tagline'>{movie?.tagline}</p>
               </Skeleton>
-              <div className='genres'>
+              <Flex
+                gap='sm'
+                wrap='wrap'
+              >
                 {
                   movie?.genres.map(genre =>
                     <Skeleton
                       key={genre.id}
                       visible={isLoadingMovies}
-                      mih={45}
-                      miw={100}
+                      // mih={45}
+                      // miw={100}
                       width='auto'
                     >
                       <Button
@@ -141,7 +144,7 @@ export default function MoviePage() {
                       >{genre.name}</Button>
                     </Skeleton>
                   )}
-              </div>
+              </Flex>
               <Skeleton visible={isLoadingMovies} mih={8} miw='70%'>
                 <p className='movie-page__overview'>{movie?.overview}</p>
               </Skeleton>

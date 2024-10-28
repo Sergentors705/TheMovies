@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-import './style.css';
 import CreationListCreator from '../functions/creationListCreator';
 
 interface iCreditsData {
@@ -12,22 +11,27 @@ interface iCreditsData {
   crew: iCrewData[],
 }
 
+interface iGenresData {
+  id: number,
+  name: string,
+}
+
 interface iCreationData {
-  genres?: string[],
+  genres?: iGenresData[],
   overview?: string,
   runtime: number | undefined,
   adult: string,
   gender: string,
   id: number,
   known_for_department: string,
-  name: string,
-  original_name: string,
+  name?: string,
+  original_name?: string,
   popularity: number,
   profile_path: string,
   cast_id: number,
-  character: string,
+  character?: string,
   credit_id: string,
-  order: number,
+  order?: number,
   first_air_date?: string,
   last_air_date?: string,
   last_episode_to_air?: string,
@@ -43,7 +47,7 @@ interface iCastData {
   overview: string,
   popularity: number,
   poster_path?: string | undefined,
-  release_date: string,
+  release_date?: string | number,
   title: string,
   video?: string,
   vote_average: number,
@@ -69,7 +73,7 @@ interface iCrewData {
   overview: string,
   popularity: number,
   poster_path?: string | undefined,
-  release_date: string,
+  release_date?: string | number,
   title: string,
   video?: string,
   vote_average: number,
@@ -102,6 +106,15 @@ interface iPersonData {
   profile_path: string,
 }
 
+interface iCreationCrewCrewData {
+  job: string,
+  name: string,
+}
+
+interface iCreationCrewData {
+  crew: iCreationCrewCrewData[],
+}
+
 export default function AllMovies() {
   const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
   const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}`, setCreation));
@@ -110,7 +123,7 @@ export default function AllMovies() {
   const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
   const [person, setPerson] = useState<iPersonData | null>(null);
   const [creation, setCreation] = useState<iCreationData | null>(null);
-  const [creationCrew, setCreationCrew] = useState(null);
+  const [creationCrew, setCreationCrew] = useState<iCreationCrewData | null>(null);
   const {personId} = useParams();
   const [cast, setCast] = useState<iCastData[] | []>([]);
   const [crew, setCrew] = useState<iCrewData[] | []>([]);
@@ -168,11 +181,7 @@ export default function AllMovies() {
             Back to {person?.name}
           </Link>
         </div>
-        <SimpleGrid
-          gap={50}
-          justify={'center'}
-          style={{gridTemplateColumns: '1fr 1fr'}}
-        >
+        <SimpleGrid style={{gridTemplateColumns: '1fr 1fr', gap: '50px', justifyContent: 'center'}}>
           <CreationListCreator array={cast} title='Cast' modalOpen={open} setModalDate={setModalDate} />
           <Flex
             miw={400}
@@ -194,7 +203,7 @@ export default function AllMovies() {
           </Flex>
         </SimpleGrid>
       </Flex>
-      <Modal.Root opened={opened} onClose={() => {close(); setModalDate([])}} centered>
+      <Modal.Root opened={opened} onClose={() => {close(); setModalDate(null)}} centered>
         <Modal.Overlay />
         <Modal.Content miw={480}>
           <Modal.Body
@@ -212,10 +221,14 @@ export default function AllMovies() {
               />
               <Box>
                 <Title fz={'secondaryTitle'}>{modalDate?.title || modalDate?.name}</Title>
-                <Text>{new Date(modalDate?.release_date)?.getFullYear() || `${new Date(creation?.first_air_date)?.getFullYear()} - ${new Date(creation?.last_air_date)?.getFullYear()}`}</Text>
-                <Skeleton visible={isLoadingCreation}>
-                  <Text>{Math.floor(creation?.runtime / 60)}h {creation?.runtime % 60}m</Text>
-                </Skeleton>
+                { modalDate?.release_date ? <Text>{new Date(modalDate?.release_date)?.getFullYear()}</Text> : <></>}
+                { creation?.first_air_date && creation?.last_air_date ? <Text>{`${new Date(creation?.first_air_date)?.getFullYear()} - ${new Date(creation?.last_air_date)?.getFullYear()}`}</Text> : <></>}
+                { creation?.runtime ?
+                  <Skeleton visible={isLoadingCreation}>
+                    <Text>{Math.floor(creation?.runtime / 60)}h {creation?.runtime % 60}m</Text>
+                  </Skeleton>
+                  : <></>
+                }
                 <Flex>
                   {creation?.genres?.map((item) =>
                     <Skeleton visible={isLoadingCreation}>

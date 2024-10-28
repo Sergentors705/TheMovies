@@ -13,7 +13,7 @@ interface iCreationData {
   overview: string,
   popularity: number,
   poster_path?: string | undefined,
-  release_date: string,
+  release_date?: string | number,
   title: string,
   video?: string,
   vote_average: number,

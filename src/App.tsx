@@ -21,10 +21,10 @@ function App() {
     <BrowserRouter>
       <Navigation />
       <Flex
-        mx={50}
+        px={50}
         style={{flexGrow: '1'}}
         justify='center'
-        bg='var(--mantine-color-gray-0)'
+        bg='gray.1'
       >
         <Routes>
           <Route path='search/:searchValue' element={<SearchPage />} />

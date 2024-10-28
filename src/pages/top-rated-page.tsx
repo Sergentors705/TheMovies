@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import TopRatedCard from '../components/blocks/top-rated-card';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-const dayjs = require('dayjs');
+import dayjs from 'dayjs';
 
 export default function TopRatedMovies() {
   const [page, setPage] = useState(1);
