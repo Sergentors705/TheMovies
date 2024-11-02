@@ -4,6 +4,7 @@ import { Box, Button, Flex, Image, Modal, NumberFormatter, Paper, SimpleGrid, Sk
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useMovie, useMovieCredits, useMovieReleaseDates } from '../api';
 import Companies from '../components/blocks/companies';
 import Posters from '../components/blocks/posters/posters';
 import Keywords from '../components/ui/keywords';
@@ -12,39 +13,46 @@ import useLoading from '../hooks/use-loading';
 import Crew from '../modules/crew/crew';
 import TvRecomendations from './tv-recomendations';
 
+interface iCrewMemberData {
+  id: number,
+  job: string,
+  known_for_department: string,
+  name: string,
+}
+
+interface iSimilarMoviesData {
+  id: number,
+  title: string,
+  poster_path: string,
+}
+
 export default function MoviePage() {
-  const [movie, setMovie] = useState(null);
   const [videos, setVideos] = useState(null);
-  const [similar, setSimilar] = useState(null)
+  const [similar, setSimilar] = useState<iSimilarMoviesData[]>([])
   const [recomendations, setRecomendations] = useState(null)
-  const [releaseDate, setReleaseDate] = useState(null);
-  const [credits, setCredits] = useState(null);
-  const [director, setDirector] = useState([]);
-  const [writter, setWritter] = useState([]);
+  const [director, setDirector] = useState<iCrewMemberData[]>([]);
+  const [writter, setWritter] = useState<iCrewMemberData[]>([]);
   const {movieId} = useParams();
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const [opened, { open, close }] = useDisclosure(false);
-  const [path, setPath] = useState('');
+  const [path, setPath] = useState<string>('');
   const navigate = useNavigate();
 
-  const [fetchMovies, isLoadingMovies] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}`, setMovie))
-  const [fetchReleaseDates, isLoadingReleaseDates] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`,setReleaseDate))
+  const [movie, isLoadingMovie] = useMovie({movieId: movieId})
+  const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId})
   const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/videos`, setVideos))
-  const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/credits`, setCredits))
+  const [credits, isLoadingCredits] = useMovieCredits({movieId: movieId})
 
   useEffect(() => {
-    fetchMovies();
     fetchVideos();
-    fetchReleaseDates();
-    fetchCredits();
-    requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/similar`, setSimilar);
+    requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/similar`, setSimilar, 'results');
     requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/recommendations`, setRecomendations)
   }, [movieId])
 
   useEffect(() => {
-    setDirector(credits?.crew.filter(item => item.job === 'Director'))
-    setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing'))
+    setDirector(credits?.crew.filter(item => item.job === 'Director') ?? [])
+    setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing') ?? [])
   }, [credits]);
 
   return (
@@ -62,20 +70,20 @@ export default function MoviePage() {
           p={20}
         >
           <Flex gap={30}>
-            <Skeleton visible={isLoadingMovies} height={450} width={300}>
+            <Skeleton visible={isLoadingMovie} height={450} width={300}>
               <Image
                 w={300}
                 h={450}
                 radius="md"
                 src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movie?.poster_path}`}
-                onClick={() =>{open(); setPath(movie?.poster_path)}}
+                onClick={() =>{open(); setPath(movie?.poster_path ?? '')}}
                 alt=''
                 style={{cursor: 'pointer'}}
               />
             </Skeleton>
             <div>
               <Skeleton
-                visible={isLoadingMovies}
+                visible={isLoadingMovie}
                 mih={60}
                 miw={300}
                 mb={10}
@@ -85,40 +93,40 @@ export default function MoviePage() {
               <ul className='movie-page__title-info-list'>
                 <li className='movie-page__title-info-item'>
                   <Skeleton
-                    visible={isLoadingMovies}
+                    visible={isLoadingMovie}
                     mih={20}
                     miw={50}
                   >
                     <Text c={'dimmed'}>
-                      {new Date(movie?.release_date)?.getFullYear()}
+                      {movie?.release_date && new Date(movie?.release_date)?.getFullYear()}
                     </Text>
                   </Skeleton>
                 </li>
                 <li className='movie-page__title-info-item'>
                   <Skeleton
-                    visible={isLoadingMovies}
+                    visible={isLoadingReleaseDates}
                     mih={20}
                     miw={50}
                   >
                     <Text c={'dimmed'}>
-                      {releaseDate?.results.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3)?.certification}
+                      {releaseDates?.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3)?.certification}
                     </Text>
                   </Skeleton>
                 </li>
                 <li className='movie-page__title-info-item'>
                   <Skeleton
-                    visible={isLoadingMovies}
+                    visible={isLoadingMovie}
                     height={20}
                     miw={50}
                   >
                     <Text c={'dimmed'}>
-                      {Math.floor(movie?.runtime / 60)}h {movie?.runtime % 60}m
+                      {movie?.runtime && `${Math.floor(movie?.runtime / 60)}h ${movie?.runtime % 60}m`}
                     </Text>
                   </Skeleton>
                 </li>
               </ul>
               <Skeleton
-                visible={isLoadingMovies}
+                visible={isLoadingMovie}
                 mih={30}
                 width='50%'
                 mb={8}
@@ -133,7 +141,7 @@ export default function MoviePage() {
                   movie?.genres.map(genre =>
                     <Skeleton
                       key={genre.id}
-                      visible={isLoadingMovies}
+                      visible={isLoadingMovie}
                       // mih={45}
                       // miw={100}
                       width='auto'
@@ -145,7 +153,7 @@ export default function MoviePage() {
                     </Skeleton>
                   )}
               </Flex>
-              <Skeleton visible={isLoadingMovies} mih={8} miw='70%'>
+              <Skeleton visible={isLoadingMovie} mih={8} miw='70%'>
                 <p className='movie-page__overview'>{movie?.overview}</p>
               </Skeleton>
               <Skeleton visible={isLoadingCredits} mih={16} width='70%'>
@@ -168,11 +176,9 @@ export default function MoviePage() {
             slideGap='md'
             containScroll='trimSnaps'
           >
-            {similar?.results?.slice(0,9).map((item) =>
+            {similar?.slice(0,9).map((item) =>
               <Carousel.Slide
                 key={item.id}
-                flex
-                align='center'
                 mb={40}
               >
                 <Link
@@ -186,7 +192,7 @@ export default function MoviePage() {
                     p='sm'
                   >
                     <Skeleton
-                      visible={isLoadingMovies}
+                      visible={isLoadingMovie}
                       mih={130}
                       miw={150}
                       mb={10}
@@ -200,7 +206,7 @@ export default function MoviePage() {
                       />
                     </Skeleton>
                     <Skeleton
-                      visible={isLoadingMovies}
+                      visible={isLoadingMovie}
                       mih={20}
                       mb={6}
                     >
@@ -214,12 +220,12 @@ export default function MoviePage() {
         </Flex>
         <Box p={20}>
           <Box mb={15}>
-            <Skeleton visible={isLoadingMovies} mih={28}>
+            <Skeleton visible={isLoadingMovie} mih={28}>
               <Title order={3}>The Movie Rating</Title>
             </Skeleton>
             <Box>
               <Skeleton
-                visible={isLoadingMovies}
+                visible={isLoadingMovie}
                 height={28}
               >
                 <Flex>
@@ -230,7 +236,7 @@ export default function MoviePage() {
                 </Flex>
               </Skeleton>
               <Skeleton
-                visible={isLoadingMovies}
+                visible={isLoadingMovie}
                 mih={10}
               >
                 <Text>{movie?.vote_count} Votes</Text>
@@ -240,13 +246,13 @@ export default function MoviePage() {
           <Box mb={15}>
             <Skeleton
               mih={10}
-              visible={isLoadingMovies}
+              visible={isLoadingMovie}
             >
               <Title order={3}>Budget</Title>
             </Skeleton>
             <Skeleton
               mih={10}
-              visible={isLoadingMovies}
+              visible={isLoadingMovie}
             >
               <NumberFormatter prefix='$'value={movie?.budget} thousandSeparator/>
             </Skeleton>
@@ -254,13 +260,13 @@ export default function MoviePage() {
           <Box mb={15}>
             <Skeleton
               mih={10}
-              visible={isLoadingMovies}
+              visible={isLoadingMovie}
             >
               <Title order={3}>Revenue</Title>
             </Skeleton>
             <Skeleton
               mih={10}
-              visible={isLoadingMovies}
+              visible={isLoadingMovie}
             >
               <NumberFormatter prefix='$'value={movie?.revenue} thousandSeparator/>
             </Skeleton>
@@ -270,7 +276,7 @@ export default function MoviePage() {
           <TvRecomendations creationType='movie' />
         </Box>
       </SimpleGrid>
-      <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />}/>
+      <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} />}/>
     </>
   )
 }

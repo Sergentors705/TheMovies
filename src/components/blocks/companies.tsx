@@ -2,7 +2,7 @@ import { Box, Image, List, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
 
 interface iCompaniesProps {
-  companies: [],
+  companies: iCompanieData[] | undefined,
   creationType: string,
 }
 
