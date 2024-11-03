@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useLoading from "../hooks/use-loading";
 import requestMaker from "../functions/requestMaker";
+import { useParams } from "react-router-dom";
 
 export interface iUseTrendingOptions {
     period: string,
@@ -144,6 +145,34 @@ export function useMovieCredits({ movieId }: iUseMovieOptions) {
     useEffect(() => {
         fetchData()
     }, [movieId])
+
+    return [data, isLoading] as const
+}
+
+// KEYWORDS
+
+interface iKeywordsOptions {
+    creationType: string,
+}
+
+interface iKeywordData {
+  id: number,
+  name: string,
+}
+
+interface iKeywordsData {
+  keywords: iKeywordData[],
+  results: iKeywordData[],
+}
+
+export function useKeywords({creationType}: iKeywordsOptions) {
+    const [data, setData] = useState<iKeywordsData>()
+    const {movieId, tvId} = useParams()
+    const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}/keywords`, setData))
+
+    useEffect(() => {
+        fetchData()
+    }, [movieId, tvId, creationType])
 
     return [data, isLoading] as const
 }

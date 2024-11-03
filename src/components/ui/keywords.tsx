@@ -1,0 +1,31 @@
+import { Badge, Box, Flex, Title } from '@mantine/core';
+import { Link, useNavigate } from 'react-router-dom';
+import { useKeywords } from '../../api';
+
+interface iKeywordsProps {
+  creationType: string,
+}
+
+export default function Keywords({creationType}: iKeywordsProps) {
+  const navigate = useNavigate();
+  const [keywords, isLoadingKeywords] = useKeywords({creationType: creationType})
+
+  return (
+    <Box>
+      <Title order={3} mb={10}>Keywords</Title>
+      <Flex wrap='wrap' gap={5}>
+        {
+          (keywords?.keywords || keywords?.results)?.map(item =>
+            <Link
+              key={item.id}
+              to={`/${creationType}/keyword/${item.id}`}
+              style={{}}
+            >
+              <Badge variant="light" color="rgba(0, 0, 0, 1)" size="lg" radius="xs" onClick={() => navigate(`/keyword/${item.id}`)}>{item.name}</Badge>
+            </Link>
+          )
+        }
+      </Flex>
+    </Box>
+  )
+}
