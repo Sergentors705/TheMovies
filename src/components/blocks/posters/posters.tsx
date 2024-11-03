@@ -7,16 +7,28 @@ import { useParams } from 'react-router-dom';
 import requestMaker from '../../../functions/requestMaker';
 import useLoading from '../../../hooks/use-loading';
 
-export default function Posters({creature}) {
-  const [images, setImages] = useState(null);
+interface iPostersProps {
+  creature: string,
+}
+
+interface iImageData {
+  aspect_ratio: number,
+  file_path: string,
+}
+
+interface iImagesData {
+  posters: iImageData[],
+  backdrops: iImageData[],
+}
+
+export default function Posters({creature}: iPostersProps) {
+  const [images, setImages] = useState<iImagesData>({posters: [], backdrops: []});
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const [opened, { open, close }] = useDisclosure(false);
   const [path, setPath] = useState('');
-
-  const [imageType, setImageType] = useState('posters');
+  const [imageType, setImageType] = useState<string>('posters');
   const {movieId, tvId} = useParams()
-
   const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creature}/${movieId || tvId}/images`, setImages))
 
   useEffect(() => {
@@ -44,17 +56,17 @@ export default function Posters({creature}) {
         controlSize={40}
         containScroll='trimSnaps'
       >
-        {images?.[imageType].map((item) =>
+        {images[imageType as keyof iImagesData].map((item) =>
           <Carousel.Slide key={item.file_path}>
             <Skeleton visible={isLoadingImages}>
-              <Image w='100%' h='auto' fit='contain' position='center' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
+              <Image w='100%' h='auto' fit='contain' src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.file_path}`}
                 onClick={() =>{open(); setPath(item.file_path)}}
               />
             </Skeleton>
           </Carousel.Slide>
         )}
       </Carousel>
-      <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />}/>
+      <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} />}/>
     </Flex>
   )
 }
