@@ -4,7 +4,7 @@ import { Box, Button, Flex, Image, Modal, NumberFormatter, Paper, SimpleGrid, Sk
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useMovie, useMovieCredits, useMovieReleaseDates } from '../api';
+import { useCredits, useMovie, useMovieReleaseDates } from '../api';
 import Companies from '../components/blocks/companies';
 import Posters from '../components/blocks/posters/posters';
 import Keywords from '../components/ui/keywords';
@@ -39,10 +39,10 @@ export default function MoviePage() {
   const [path, setPath] = useState<string>('');
   const navigate = useNavigate();
 
-  const [movie, isLoadingMovie] = useMovie({movieId: movieId})
-  const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId})
+  const [movie, isLoadingMovie] = useMovie({movieId: movieId || ''})
+  const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId || ''})
   const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/videos`, setVideos))
-  const [credits, isLoadingCredits] = useMovieCredits({movieId: movieId})
+  const [credits, isLoadingCredits] = useCredits({creationType: 'movie'})
 
   useEffect(() => {
     fetchVideos();

@@ -1,25 +1,39 @@
 import { Carousel, CarouselSlide, useAnimationOffsetEffect } from '@mantine/carousel';
 import { Box, Button, Image, Paper, Skeleton, Text, Title } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import requestMaker from '../../functions/requestMaker';
-import useLoading from '../../hooks/use-loading';
+import { useCredits } from '../../api';
 
-export default function Crew({creature}) {
-  const [credits, setCredits] = useState(null);
-  const [starring, setStarring] = useState([]);
+interface iCrewProps {
+  creature: string,
+}
+
+interface iCastData {
+    adult: boolean,
+    gender: number,
+    id: number,
+    known_for_department: string,
+    name: string,
+    original_name: string,
+    popularity: number,
+    profile_path: string,
+    cast_id: number,
+    character: string,
+    credit_id: string,
+    order: number,
+}
+
+export default function Crew({creature}: iCrewProps) {
+  
+  const [starring, setStarring] = useState<iCastData[]>([]);
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const {movieId, tvId} = useParams()
   const navigate = useNavigate();
 
-  const [fetchCredits, isLoadingCredits2] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creature}/${movieId || tvId}/credits`, setCredits))
+  const [credits, isLoadingCredits2] = useCredits({creationType: creature})
 
-  useEffect(() => {
-    fetchCredits();
-  }, [movieId, tvId])
-
-  useEffect(() => setStarring(credits?.cast.slice(0, 9)), [credits]);
+  useEffect(() => setStarring(credits?.cast.slice(0, 9) || []), [credits]);
 
   return (
     <Box>
@@ -35,9 +49,7 @@ export default function Crew({creature}) {
             starring?.map( item =>
               <CarouselSlide
                 key={item.id}
-                flex
                 mb={30}
-                align='center'
               >
                 <Paper
                   h='100%'

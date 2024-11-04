@@ -31,10 +31,6 @@ interface iTrendingData {
   video?: string[],
 }
 
-interface iUseMovieOptions {
-    movieId: string | undefined,
-}
-
 interface iGenresData {
     id: number,
     name: string,
@@ -100,9 +96,8 @@ interface iCrewData {
     job: string,
 }
 
-interface iMovieCredits {
-    cast: iCastData[],
-    crew: iCrewData[],
+interface iUseMovieOptions {
+    movieId: string,
 }
 
 export function useTrending({ period, type }: iUseTrendingOptions) {
@@ -138,9 +133,21 @@ export function useMovieReleaseDates({ movieId }: iUseMovieOptions) {
     return [data, isLoading] as const
 }
 
-export function useMovieCredits({ movieId }: iUseMovieOptions) {
-    const [data, setData] = useState<iMovieCredits | null>(null)
-    const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/credits`, setData, 'results'))
+// CREDITS
+
+interface iUseCreditsOptions {
+    creationType: string,
+}
+
+interface iCreditsData {
+    cast: iCastData[],
+    crew: iCrewData[],
+}
+
+export function useCredits({creationType}: iUseCreditsOptions) {
+    const [data, setData] = useState<iCreditsData | null>(null)
+    const {movieId, tvId} = useParams()
+    const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}/credits`, setData))
 
     useEffect(() => {
         fetchData()
