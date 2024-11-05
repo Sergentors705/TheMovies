@@ -183,3 +183,27 @@ export function useKeywords({creationType}: iKeywordsOptions) {
 
     return [data, isLoading] as const
 }
+
+// SIMILAR
+
+interface iSimilarOptions {
+  creationType: string,
+}
+
+interface iSimilarData {
+  id: number,
+  title: string,
+  poster_path: string,
+}
+
+export function useSimilar({creationType}: iSimilarOptions) {
+  const [data, setData] = useState<iSimilarData[]>()
+  const {movieId, tvId} = useParams()
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}/similar`, setData, 'results'))
+
+  useEffect(() => {
+      fetchData()
+  }, [movieId, tvId, creationType])
+
+  return [data, isLoading] as const
+}

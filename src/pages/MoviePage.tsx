@@ -10,8 +10,9 @@ import Posters from '../components/blocks/posters/posters';
 import Keywords from '../components/ui/keywords';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-import Crew from '../modules/crew/crew';
 import TvRecomendations from './tv-recomendations';
+import Crew from '../modules/crew/crew';
+import Similar from '../components/blocks/similar';
 
 interface iCrewMemberData {
   id: number,
@@ -20,15 +21,9 @@ interface iCrewMemberData {
   name: string,
 }
 
-interface iSimilarMoviesData {
-  id: number,
-  title: string,
-  poster_path: string,
-}
 
 export default function MoviePage() {
   const [videos, setVideos] = useState(null);
-  const [similar, setSimilar] = useState<iSimilarMoviesData[]>([])
   const [recomendations, setRecomendations] = useState(null)
   const [director, setDirector] = useState<iCrewMemberData[]>([]);
   const [writter, setWritter] = useState<iCrewMemberData[]>([]);
@@ -46,7 +41,6 @@ export default function MoviePage() {
 
   useEffect(() => {
     fetchVideos();
-    requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/similar`, setSimilar, 'results');
     requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/recommendations`, setRecomendations)
   }, [movieId])
 
@@ -167,56 +161,8 @@ export default function MoviePage() {
           <Posters creature='movie' />
 
           {/* SIMILAR SECTION */}
+          <Similar creationType='movie'/>
 
-          <Title mb={10}>Similar movies</Title>
-          <Carousel
-            dragFree
-            slideSize='25%'
-            align='start'
-            slideGap='md'
-            containScroll='trimSnaps'
-          >
-            {similar?.slice(0,9).map((item) =>
-              <Carousel.Slide
-                key={item.id}
-                mb={40}
-              >
-                <Link
-                  to={`/movie/${item.id}`}
-                  style={{textDecoration: 'none'}}
-                >
-                  <Paper
-                    h='100%'
-                    withBorder
-                    shadow='lg'
-                    p='sm'
-                  >
-                    <Skeleton
-                      visible={isLoadingMovie}
-                      mih={130}
-                      miw={150}
-                      mb={10}
-                    >
-                      <Image
-                        w='100%'
-                        h='auto'
-                        fit='contain'
-                        radius='md'
-                        src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.poster_path}`}
-                      />
-                    </Skeleton>
-                    <Skeleton
-                      visible={isLoadingMovie}
-                      mih={20}
-                      mb={6}
-                    >
-                      <Title order={3} c={'black'}>{item.title}</Title>
-                    </Skeleton>
-                  </Paper>
-                </Link>
-              </Carousel.Slide>
-            )}
-          </Carousel>
         </Flex>
         <Box p={20}>
           <Box mb={15}>

@@ -11,6 +11,7 @@ import Crew from '../modules/crew/crew';
 import Posters from '../components/blocks/posters/posters';
 import Keywords from '../components/ui/keywords';
 import Companies from '../components/blocks/companies';
+import Similar from '../components/blocks/similar';
 
 export default function TvShowPage() {
   const {tvId} = useParams();
@@ -175,6 +176,7 @@ console.log(tvShow)
             }
           </Flex>
           <Posters creature='tv' />
+          <Similar creationType='tv' />
         </Flex>
         {/* SECOND COLUMN */}
         <Box p={20}>
