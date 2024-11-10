@@ -1,26 +1,28 @@
 import '@mantine/carousel/styles.css';
 import { Box, Chip, Container, Flex, NativeSelect, NumberInput, Pagination, Paper, RangeSlider, Title } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTop } from '../api';
 import TopRatedCard from '../components/blocks/top-rated-card';
 import requestMaker from '../functions/requestMaker';
-import useLoading from '../hooks/use-loading';
-import dayjs from 'dayjs';
+
+interface iGenreData {
+  id: number,
+  name: string,
+}
 
 export default function TopRatedMovies() {
   const [page, setPage] = useState(1);
-  const [popular, setPopular] = useState([]);
   const [popularId, setPopularId] = useState('');
-  const [fetchPopular, isLoadingPopular] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${selectValue}&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&without_genres=99,10755&vote_count.gte=1000&primary_release_date.gte=${dayjs(minYear).format('YYYY-MM-DD')}&primary_release_date.lte=${dayjs(maxYear).format('YYYY-MM-DD')}}${genreValue.length !== 0 ? `&with_genres=${genreValue.join('|')}` : ''}&with_runtime.gte=${minRuntime}&with_runtime.lte=${maxRuntime}`,setPopular))
-  const [minRating, setMinRating] = useState(7);
-  const [maxRating, setMaxRating] = useState(10);
+  const [minRating, setMinRating] = useState<number>(7);
+  const [maxRating, setMaxRating] = useState<number>(10);
   const [minYear, setMinYear] = useState(new Date('1-1-1950'));
   const [maxYear, setMaxYear] = useState(new Date());
-  const [minRuntime, setMinRuntime] = useState(0);
-  const [maxRuntime, setMaxRuntime] = useState(360);
-  const [genreList, setGenreList] = useState([]);
-  const [genreValue, setGenreValue] = useState([]);
+  const [minRuntime, setMinRuntime] = useState<number>(0);
+  const [maxRuntime, setMaxRuntime] = useState<number>(360);
+  const [genreList, setGenreList] = useState<iGenreData[]>([]);
+  const [genreValue, setGenreValue] = useState<iGenreData[]>([]);
   const [selectValue, setSelectValue] = useState('vote_average.desc');
   const navigate = useNavigate();
   const marks = [
@@ -29,20 +31,17 @@ export default function TopRatedMovies() {
     { value: 180, label: '3h' },
     { value: 360, label: '5h' },
   ];
+  const [popular, isLoadingPopular] = useTop({creationType: 'movie', page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
 
   useEffect(() => {
-    requestMaker('https://api.themoviedb.org/3/genre/movie/list?language=en', setGenreList)
+    requestMaker('https://api.themoviedb.org/3/genre/movie/list?language=en', setGenreList, 'genres')
   },[])
-
-  useEffect(() => {
-    fetchPopular();
-  },[minRating, maxRating, minYear, maxYear, page, genreValue, selectValue, minRuntime, maxRuntime])
 
   return (
     <Container
       w={'100%'}
       py={30}
-      className='pidor'
+      px={0}
       size={1366}
     >
       <Title order={1} mb={'md'}>Top rated movies</Title>
@@ -108,7 +107,7 @@ export default function TopRatedMovies() {
             </Flex>
           </Box>
           <Box mb={15}>
-            <Title order={3}>Year</Title>
+            <Title order={3} mb={10}>Year</Title>
             <DatePickerInput
               label='From:'
               clearable
@@ -123,10 +122,10 @@ export default function TopRatedMovies() {
             />
           </Box>
           <Box mb={15}>
-            <Title order={3}>Genres</Title>
+            <Title order={3} mb={10}>Genres</Title>
             <Chip.Group multiple value={genreValue} onChange={setGenreValue}>
               <Flex wrap='wrap' gap={10}>
-              {genreList?.genres?.map((item) =>
+              {genreList?.map((item) =>
                 <Chip key={item.id} value={String(item.id)} >{item.name}</Chip>
               )}
               </Flex>
@@ -148,7 +147,7 @@ export default function TopRatedMovies() {
           </Box>
         </Paper>
         <Flex  wrap={'wrap'} gap={20}>
-          {popular?.results?.map(item => <TopRatedCard key={item.id} id={item.id} />)}
+          {popular?.results?.map(item => <TopRatedCard key={item.id} id={item.id}  creationType='movie'/>)}
         </Flex>
       </Box>
       <Pagination value={page} onChange={setPage} total={popular?.total_pages}  withEdges/>

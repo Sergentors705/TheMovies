@@ -1,6 +1,6 @@
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Box, Button, Flex, Image, Modal, NumberFormatter, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Button, Flex, Image, List, Modal, NumberFormatter, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -20,7 +20,6 @@ interface iCrewMemberData {
   known_for_department: string,
   name: string,
 }
-
 
 export default function MoviePage() {
   const [videos, setVideos] = useState(null);
@@ -84,8 +83,11 @@ export default function MoviePage() {
               >
                 <Title order={1} fz={48}>{movie?.title}</Title>
               </Skeleton>
-              <ul className='movie-page__title-info-list'>
-                <li className='movie-page__title-info-item'>
+              <List
+                listStyleType='none'
+                style={{display: 'flex'}}
+              >
+                <List.Item className='movie-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingMovie}
                     mih={20}
@@ -95,8 +97,8 @@ export default function MoviePage() {
                       {movie?.release_date && new Date(movie?.release_date)?.getFullYear()}
                     </Text>
                   </Skeleton>
-                </li>
-                <li className='movie-page__title-info-item'>
+                </List.Item>
+                <List.Item className='movie-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingReleaseDates}
                     mih={20}
@@ -106,8 +108,8 @@ export default function MoviePage() {
                       {releaseDates?.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3)?.certification}
                     </Text>
                   </Skeleton>
-                </li>
-                <li className='movie-page__title-info-item'>
+                </List.Item>
+                <List.Item className='movie-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingMovie}
                     height={20}
@@ -117,8 +119,8 @@ export default function MoviePage() {
                       {movie?.runtime && `${Math.floor(movie?.runtime / 60)}h ${movie?.runtime % 60}m`}
                     </Text>
                   </Skeleton>
-                </li>
-              </ul>
+                </List.Item>
+              </List>
               <Skeleton
                 visible={isLoadingMovie}
                 mih={30}
@@ -136,8 +138,6 @@ export default function MoviePage() {
                     <Skeleton
                       key={genre.id}
                       visible={isLoadingMovie}
-                      // mih={45}
-                      // miw={100}
                       width='auto'
                     >
                       <Button

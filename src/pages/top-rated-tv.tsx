@@ -1,25 +1,30 @@
 import '@mantine/carousel/styles.css';
 import { Box, Chip, Container, Flex, Image, NativeSelect, NumberInput, Pagination, Paper, RangeSlider, Text, Title } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTop } from '../api';
 import requestMaker from '../functions/requestMaker';
-import useLoading from '../hooks/use-loading';
-import dayjs from 'dayjs';
+import TopRatedCard from '../components/blocks/top-rated-card';
+
+interface iGenreData {
+  id: number,
+  name: string,
+}
 
 export default function TopRatedTvShows() {
   const [page, setPage] = useState(1);
-  const [popular, setPopular] = useState([]);
-  const [fetchPopular, isLoadingPopular] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${selectValue}&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&without_genres=99,10755&vote_count.gte=1000&primary_release_date.gte=${dayjs(minYear).format('YYYY-MM-DD')}&primary_release_date.lte=${dayjs(maxYear).format('YYYY-MM-DD')}}${genreValue.length !== 0 ? `&with_genres=${genreValue.join('|')}` : ''}&with_runtime.gte=${minRuntime}&with_runtime.lte=${maxRuntime}`,setPopular));
   const [minRating, setMinRating] = useState(7);
   const [maxRating, setMaxRating] = useState(10);
   const [minYear, setMinYear] = useState(new Date('1-1-1950'));
   const [maxYear, setMaxYear] = useState(new Date());
   const [minRuntime, setMinRuntime] = useState(0);
   const [maxRuntime, setMaxRuntime] = useState(360);
-  const [genreList, setGenreList] = useState([]);
-  const [genreValue, setGenreValue] = useState([]);
+  const [genreList, setGenreList] = useState<iGenreData[]>([]);
+  const [genreValue, setGenreValue] = useState<iGenreData[]>([]);
   const [selectValue, setSelectValue] = useState('vote_average.desc');
+  const [popular, isLoadingPopular] = useTop({creationType: 'tv', page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
+
   const navigate = useNavigate();
   const marks = [
     { value: 60, label: '1h' },
@@ -29,21 +34,17 @@ export default function TopRatedTvShows() {
   ];
 
   useEffect(() => {
-    requestMaker('https://api.themoviedb.org/3/genre/tv/list?language=en', setGenreList)
+    requestMaker('https://api.themoviedb.org/3/genre/tv/list?language=en', setGenreList, 'genres')
   },[])
-
-  useEffect(() => {
-    fetchPopular();
-  },[minRating, maxRating, minYear, maxYear, page, genreValue, selectValue, minRuntime, maxRuntime])
-
+console.log(popular)
   return (
     <Container
       w={'100%'}
       py={30}
-      className='pidor'
+      px={0}
       size={1366}
     >
-      <Title order={1} mb={'md'}>Top rated movies</Title>
+      <Title order={1} mb={'md'}>Top rated TV Shows</Title>
       <Box display='grid' w='100%' style={{gridTemplateColumns: '300px 1fr'}} mb={30}>
         <Paper
           withBorder
@@ -107,7 +108,7 @@ export default function TopRatedTvShows() {
             </Flex>
           </Box>
           <Box mb={15}>
-            <Title order={3}>Year</Title>
+            <Title order={3} mb={10}>Year</Title>
             <DatePickerInput
               label='From:'
               clearable
@@ -122,10 +123,10 @@ export default function TopRatedTvShows() {
             />
           </Box>
           <Box mb={15}>
-            <Title order={3}>Genres</Title>
+            <Title order={3} mb={10}>Genres</Title>
             <Chip.Group multiple value={genreValue} onChange={setGenreValue}>
               <Flex wrap='wrap' gap={10}>
-              {genreList?.genres?.map((item) =>
+              {genreList?.map((item) =>
                 <Chip key={item.id} value={String(item.id)} >{item.name}</Chip>
               )}
               </Flex>
@@ -147,27 +148,27 @@ export default function TopRatedTvShows() {
           </Box>
         </Paper>
         <Flex wrap={'wrap'} gap={20}>
-          {popular?.results?.map((item) =>
-            <Paper
-              withBorder
-              shadow='md'
-              p={10}
-              key={item.id}
-              maw={220}
-              onClick={() => navigate(`/tv/${item.id}`)}
-            >
-              <Image
-                w={200}
-                h={'auto'}
-                src={`https://www.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}`}
-              />
-              <Title
-                ta='center'
-                order={2}
-                textWrap='wrap'
-              >{item.name}</Title>
-              <Text>{item.release_date}</Text>
-            </Paper>
+          {popular?.results.map((item) => <TopRatedCard key={item.id} id={item.id}  creationType='tv'/>
+            // <Paper
+            //   withBorder
+            //   shadow='md'
+            //   p={10}
+            //   key={item.id}
+            //   maw={220}
+            //   onClick={() => navigate(`/tv/${item.id}`)}
+            // >
+            //   <Image
+            //     w={200}
+            //     h={'auto'}
+            //     src={`https://www.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}`}
+            //   />
+            //   <Title
+            //     ta='center'
+            //     order={2}
+            //     textWrap='wrap'
+            //   >{item.name}</Title>
+            //   <Text>{item.release_date}</Text>
+            // </Paper>
           )}
         </Flex>
       </Box>
