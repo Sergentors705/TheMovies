@@ -1,4 +1,4 @@
-import { Flex, Image, Paper, Text, Title } from '@mantine/core';
+import { Flex, Image, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
 import { useTopDetails } from '../../api';
 
@@ -16,39 +16,53 @@ export default function TopRatedCard({ creationType, id }: iTopRatedCardProps) {
       to={`/${creationType}/${info?.id}`}
       style={{textDecoration: 'none'}}
     >
-      <Paper
+      <Skeleton
+        visible={isLoadingInfo}
         h='100%'
-        withBorder
-        shadow='lg'
-        p={10}
-        maw={220}
       >
-        <Image
-          mb={10}
-          w={200}
-          h={'auto'}
-          src={`https://www.themoviedb.org/t/p/w220_and_h330_face${info?.poster_path}`}
-        />
-        <Title
-          order={3}
-          textWrap='wrap'
-          c='black'
-        >{info?.title || info?.name}</Title>
-        <Flex gap={15}>
-          <Text
-            c='dimmed'
-            fz={'textSmall'}
-          >
-            {info?.release_date && new Date(info?.release_date)?.getFullYear()}
-          </Text>
-          <Text
-            c='dimmed'
-            fz={'textSmall'}
-          >
-            {(info?.runtime || info?.episode_run_time) && Math.floor((info?.runtime || info?.episode_run_time) / 60)}h {(info?.runtime || info?.episode_run_time) && (info?.runtime || info?.episode_run_time) % 60}m
-          </Text>
-        </Flex>
-      </Paper>
+        <Paper
+          h='100%'
+          withBorder
+          shadow='lg'
+          p={10}
+          maw={220}
+          mih={350}
+        >
+          <Image
+            mb={10}
+            w={200}
+            h={'auto'}
+            src={`https://www.themoviedb.org/t/p/w220_and_h330_face${info?.poster_path}`}
+          />
+          <Title
+            order={4}
+            textWrap='wrap'
+            c='black'
+          >{info?.title || info?.name}</Title>
+          <Flex gap={15}>
+            <Text
+              c='dimmed'
+              fz={'textSmall'}
+            >
+              {
+                creationType === 'movie'
+                ? info?.release_date && new Date(info?.release_date)?.getFullYear()
+                : `${info?.first_air_date && new Date(info?.first_air_date)?.getFullYear()} - ${info?.last_air_date && new Date(info?.last_air_date)?.getFullYear()}`
+              }
+            </Text>
+            {
+              creationType === 'movie'
+              ? <Text
+                  c='dimmed'
+                  fz={'textSmall'}
+                >
+                  {info?.runtime && Math.floor(info?.runtime / 60)}h {info?.runtime && info?.runtime % 60}m
+                </Text>
+              : <></>
+            }
+          </Flex>
+        </Paper>
+      </Skeleton>
     </Link>
   )
 }

@@ -1,41 +1,32 @@
 import '@mantine/carousel/styles.css';
-import { Box, Chip, Container, Flex, NativeSelect, NumberInput, Pagination, Paper, RangeSlider, Title } from '@mantine/core';
-import { DatePickerInput } from '@mantine/dates';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Box, Container, Flex, Pagination, Title } from '@mantine/core';
+import { useState } from 'react';
 import { useTop } from '../api';
 import TopRatedCard from '../components/blocks/top-rated-card';
-import requestMaker from '../functions/requestMaker';
+import Filter from '../components/filter';
 
 interface iGenreData {
   id: number,
   name: string,
 }
 
-export default function TopRatedMovies() {
+interface iTopPageProps {
+  creationType: string,
+}
+
+export default function TopRatedPage({ creationType }: iTopPageProps) {
   const [page, setPage] = useState(1);
-  const [popularId, setPopularId] = useState('');
   const [minRating, setMinRating] = useState<number>(7);
   const [maxRating, setMaxRating] = useState<number>(10);
   const [minYear, setMinYear] = useState(new Date('1-1-1950'));
   const [maxYear, setMaxYear] = useState(new Date());
   const [minRuntime, setMinRuntime] = useState<number>(0);
   const [maxRuntime, setMaxRuntime] = useState<number>(360);
-  const [genreList, setGenreList] = useState<iGenreData[]>([]);
   const [genreValue, setGenreValue] = useState<iGenreData[]>([]);
   const [selectValue, setSelectValue] = useState('vote_average.desc');
-  const navigate = useNavigate();
-  const marks = [
-    { value: 60, label: '1h' },
-    { value: 120, label: '2h' },
-    { value: 180, label: '3h' },
-    { value: 360, label: '5h' },
-  ];
+
   const [popular, isLoadingPopular] = useTop({creationType: 'movie', page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
 
-  useEffect(() => {
-    requestMaker('https://api.themoviedb.org/3/genre/movie/list?language=en', setGenreList, 'genres')
-  },[])
 
   return (
     <Container
@@ -51,106 +42,15 @@ export default function TopRatedMovies() {
         mb={30}
         style={{gridTemplateColumns: '300px 1fr'}}
       >
-        <Paper p={20} mr={30}>
-          <Title order={3} mb={10}>Sort by</Title>
-          <NativeSelect
-            mb={15}
-            value={selectValue}
-            onChange={(event) => setSelectValue(event.currentTarget.value)}
-            data={[
-              // {label: 'Original title', value: 'original_title.asc'},
-              // {label: 'Original title', value: 'original_title.desc'},
-              {label: 'Vote average descending', value: 'vote_average.desc'},
-              {label: 'Popularity ascending', value: 'popularity.asc'},
-              {label: 'Popularity descending', value: 'popularity.desc'},
-              {label: 'Revenue ascending', value: 'revenue.asc'},
-              {label: 'Revenue descending', value: 'revenue.desc'},
-              {label: 'Release date ascending', value: 'primary_release_date.asc'},
-              {label: 'Release date descending', value: 'primary_release_date.desc'},
-              {label: 'Title (A-Z)', value: 'title.asc'},
-              {label: 'Title (A-Z)', value: 'title.desc'},
-              {label: 'Vote average ascending', value: 'vote_average.asc'},
-              {label: 'Vote count ascending', value: 'vote_count.asc'},
-              {label: 'Vote count descending', value: 'vote_count.desc'},
-            ]}
-          />
-          <Box mb={15}>
-            <Title order={3} mb={10}>User rating</Title>
-            <RangeSlider
-              minRange={0}
-              mb={10}
-              min={0}
-              max={10}
-              step={0.1}
-              value={[minRating, maxRating]}
-              defaultValue={[minRating, maxRating]}
-              onChangeEnd={(value) => {setMaxRating(value[1]); setMinRating(value[0])}}
-            />
-            <Flex align='center' gap={10}>
-              <NumberInput
-                value={minRating}
-                onChange={setMinRating}
-                defaultValue={minRating}
-                decimalScale={1}
-                min={0}
-                max={10}
-              />
-              to
-              <NumberInput
-                value={maxRating}
-                onChange={setMaxRating}
-                defaultValue={maxRating}
-                decimalScale={1}
-                min={0}
-                max={10}
-              />
-            </Flex>
-          </Box>
-          <Box mb={15}>
-            <Title order={3} mb={10}>Year</Title>
-            <DatePickerInput
-              label='From:'
-              clearable
-              value={minYear}
-              onChange={value => setMinYear(value)}
-            />
-            <DatePickerInput
-              label='To:'
-              clearable
-              value={maxYear}
-              onChange={value => setMaxYear(value)}
-            />
-          </Box>
-          <Box mb={15}>
-            <Title order={3} mb={10}>Genres</Title>
-            <Chip.Group multiple value={genreValue} onChange={setGenreValue}>
-              <Flex wrap='wrap' gap={10}>
-              {genreList?.map((item) =>
-                <Chip key={item.id} value={String(item.id)} >{item.name}</Chip>
-              )}
-              </Flex>
-            </Chip.Group>
-          </Box>
-          <Box>
-            <Title order={3} mb={10}>Runtime</Title>
-            <RangeSlider
-              minRange={15}
-              mb={10}
-              min={0}
-              max={360}
-              step={15}
-              value={[minRuntime, maxRuntime]}
-              defaultValue={[minRuntime, maxRuntime]}
-              onChangeEnd={(value) => {setMinRuntime(value[0]); setMaxRuntime(value[1])}}
-              marks={marks}
-            />
-          </Box>
-        </Paper>
+        <Filter
+          creationType={creationType} selectValue={selectValue} minRating={minRating} maxRating={maxRating} minYear={minYear} maxYear={maxYear} minRuntime={minRuntime} maxRuntime={maxRuntime}
+          setSelectValue={setSelectValue} setMinRating={setMinRating} setMaxRating={setMaxRating} setMinYear={setMinYear} setMaxYear={setMaxYear} setMinRuntime={setMinRuntime} setMaxRuntime={setMaxRuntime}
+        />
         <Flex  wrap={'wrap'} gap={20}>
-          {popular?.results?.map(item => <TopRatedCard key={item.id} id={item.id}  creationType='movie'/>)}
+          {popular?.results?.map(item => <TopRatedCard key={item.id} id={item.id}  creationType={creationType} />)}
         </Flex>
       </Box>
-      <Pagination value={page} onChange={setPage} total={popular?.total_pages}  withEdges/>
+      <Pagination value={page} onChange={setPage} total={popular?.total_pages || 0}  withEdges/>
     </Container>
   )
 }

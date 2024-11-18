@@ -167,6 +167,17 @@ export default function MoviePage() {
         <Box p={20}>
           <Box mb={15}>
             <Skeleton visible={isLoadingMovie} mih={28}>
+              <Title order={3}>Original title</Title>
+            </Skeleton>
+              <Skeleton
+                visible={isLoadingMovie}
+                height={28}
+              >
+                <Text>{movie?.original_title}</Text>
+              </Skeleton>
+          </Box>
+          <Box mb={15}>
+            <Skeleton visible={isLoadingMovie} mih={28}>
               <Title order={3}>The Movie Rating</Title>
             </Skeleton>
             <Box>

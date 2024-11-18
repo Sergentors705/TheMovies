@@ -24,6 +24,7 @@ interface iCreationData {
   genre_ids: number[]
   popularity: number,
   first_air_date?: string,
+  last_air_date?: string,
   vote_average: number,
   vote_count: number,
   origin_country?: string[],
@@ -52,6 +53,7 @@ interface iMovieData {
   runtime: number,
   tagline: string,
   genres: iGenresData[],
+  original_title: string,
   overview: string,
   vote_average: number,
   vote_count: number,
@@ -190,7 +192,7 @@ export function useCredits({creationType}: iUseCreditsOptions) {
 
   useEffect(() => {
     fetchData()
-  }, [movieId])
+  }, [movieId, tvId])
 
   return [data, isLoading] as const
 }
@@ -258,13 +260,13 @@ interface iTopOptions {
   creationType: string,
   page: number,
   selectValue: string,
-  minRating: number,
-  maxRating: number,
+  minRating: string | number,
+  maxRating: string | number,
   minYear: Date,
   maxYear: Date,
   genreValue: iGenreData[],
-  minRuntime: number,
-  maxRuntime: number,
+  minRuntime: string | number,
+  maxRuntime: string | number,
 }
 
 interface iCreationData {
