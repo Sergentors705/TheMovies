@@ -12,9 +12,10 @@ interface iGenreData {
 
 interface iTopPageProps {
   creationType: string,
+  sortingOrder: string,
 }
 
-export default function TopRatedPage({ creationType }: iTopPageProps) {
+export default function TopRatedPage({ creationType, sortingOrder }: iTopPageProps) {
   const [page, setPage] = useState(1);
   const [minRating, setMinRating] = useState<number>(7);
   const [maxRating, setMaxRating] = useState<number>(10);
@@ -23,9 +24,9 @@ export default function TopRatedPage({ creationType }: iTopPageProps) {
   const [minRuntime, setMinRuntime] = useState<number>(0);
   const [maxRuntime, setMaxRuntime] = useState<number>(360);
   const [genreValue, setGenreValue] = useState<iGenreData[]>([]);
-  const [selectValue, setSelectValue] = useState('vote_average.desc');
+  const [selectValue, setSelectValue] = useState(sortingOrder);
 
-  const [popular, isLoadingPopular] = useTop({creationType: 'movie', page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
+  const [popular, isLoadingPopular] = useTop({creationType: creationType, page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
 
 
   return (
@@ -35,7 +36,7 @@ export default function TopRatedPage({ creationType }: iTopPageProps) {
       px={0}
       size={1366}
     >
-      <Title order={1} mb={'md'}>Top rated movies</Title>
+      <Title order={1} mb={'md'}>Top rated {creationType === 'movie' ? 'movies' : 'TV shows'}</Title>
       <Box
         display='grid'
         w='100%'

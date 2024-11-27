@@ -80,7 +80,7 @@ export default function Filter({ creationType, selectValue, minRating, maxRating
             <Flex align='center' gap={10}>
               <NumberInput
                 value={minRating}
-                onChange={setMinRating}
+                onChange={(value) => setMinRating(Number(value))}
                 defaultValue={minRating}
                 decimalScale={1}
                 min={0}
@@ -89,7 +89,7 @@ export default function Filter({ creationType, selectValue, minRating, maxRating
               to
               <NumberInput
                 value={maxRating}
-                onChange={setMaxRating}
+                onChange={(value) => setMaxRating(Number(value))}
                 defaultValue={maxRating}
                 decimalScale={1}
                 min={0}

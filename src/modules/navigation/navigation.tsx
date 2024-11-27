@@ -21,7 +21,7 @@ export default function Navigation() {
             <Menu.Item onClick={() => navigate('/top-rated-movies')}>
               Top Rated
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item onClick={() => navigate('/popular-movies')}>
               Popular
             </Menu.Item>
           </Menu.Dropdown>
@@ -34,7 +34,7 @@ export default function Navigation() {
             <Menu.Item onClick={() => navigate('/top-rated-tvs')}>
               Top Rated
             </Menu.Item>
-            <Menu.Item>
+            <Menu.Item onClick={() => navigate('/popular-tvs')}>
               Popular
             </Menu.Item>
           </Menu.Dropdown>

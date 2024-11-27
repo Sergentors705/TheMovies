@@ -33,8 +33,10 @@ function App() {
           <Route path='all-movies/:personId' element={<AllMovies />} />
           <Route path='all-cast/:type/:creationId' element={<AllCast />} />
           <Route path='/' element={<StartPage />} />
-          <Route path='top-rated-movies' element={<TopRatedPage  creationType='movie'/>} />
-          <Route path='top-rated-tvs' element={<TopRatedPage creationType='tv' />} />
+          <Route path='top-rated-movies' element={<TopRatedPage  creationType='movie' sortingOrder='vote_average.desc'/>} />
+          <Route path='top-rated-tvs' element={<TopRatedPage creationType='tv' sortingOrder='vote_average.desc'/>} />
+          <Route path='popular-movies' element={<TopRatedPage  creationType='movie' sortingOrder='popularity.desc'/>} />
+          <Route path='popular-tvs' element={<TopRatedPage creationType='tv' sortingOrder='popularity.desc'/>} />
           <Route path=':creationType/keyword/:keywordId' element={<SearchPage />} />
           <Route path=':creationType/genre/:genreId' element={<SearchPage />} />
           <Route path=':creationType/companie/:companieId' element={<SearchPage />} />
