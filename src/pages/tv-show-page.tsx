@@ -12,6 +12,7 @@ import Posters from '../components/blocks/posters/posters';
 import Keywords from '../components/ui/keywords';
 import Companies from '../components/blocks/companies';
 import Similar from '../components/blocks/similar';
+import Genres from '../components/blocks/genres';
 
 export default function TvShowPage() {
   const {tvId} = useParams();
@@ -124,25 +125,7 @@ console.log(tvShow)
               >
                 <p className='movie-page__tagline'>{tvShow?.tagline}</p>
               </Skeleton>
-              <div className='genres'>
-                {
-                  tvShow?.genres.map(genre => {
-                    return (
-                      <Skeleton
-                        key={genre.id}
-                        visible={isLoadingTvShow}
-                        mih={45}
-                        miw={100}
-                        width='auto'
-                      >
-                        <Button
-                              key={genre.id}
-                              onClick={() => navigate(`/tv/genre/${genre.id}`)}
-                            >{genre.name}</Button>
-                      </Skeleton>
-                  )})
-                }
-              </div>
+              <Genres creationType='tv' genresArray={tvShow?.genres || []} isVisible={isLoadingTvShow}/>
               <Skeleton visible={isLoadingTvShow} width='70%'>
                 <p className='movie-page__overview'>{tvShow?.overview}</p>
               </Skeleton>

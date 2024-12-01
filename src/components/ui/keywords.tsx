@@ -19,7 +19,7 @@ export default function Keywords({creationType}: iKeywordsProps) {
             <Link
               key={item.id}
               to={`/${creationType}/keyword/${item.id}`}
-              style={{}}
+              style={{ textDecoration: 'none'}}
             >
               <Badge variant="light" color="rgba(0, 0, 0, 1)" size="lg" radius="xs" onClick={() => navigate(`/keyword/${item.id}`)}>{item.name}</Badge>
             </Link>

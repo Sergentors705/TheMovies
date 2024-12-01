@@ -13,6 +13,7 @@ import useLoading from '../hooks/use-loading';
 import TvRecomendations from './tv-recomendations';
 import Crew from '../modules/crew/crew';
 import Similar from '../components/blocks/similar';
+import Genres from '../components/blocks/genres';
 
 interface iCrewMemberData {
   id: number,
@@ -31,7 +32,6 @@ export default function MoviePage() {
   useAnimationOffsetEffect(embla, 200);
   const [opened, { open, close }] = useDisclosure(false);
   const [path, setPath] = useState<string>('');
-  const navigate = useNavigate();
 
   const [movie, isLoadingMovie] = useMovie({movieId: movieId || ''})
   const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId || ''})
@@ -129,24 +129,7 @@ export default function MoviePage() {
               >
                 <p className='movie-page__tagline'>{movie?.tagline}</p>
               </Skeleton>
-              <Flex
-                gap='sm'
-                wrap='wrap'
-              >
-                {
-                  movie?.genres.map(genre =>
-                    <Skeleton
-                      key={genre.id}
-                      visible={isLoadingMovie}
-                      width='auto'
-                    >
-                      <Button
-                        key={genre.id}
-                        onClick={() => navigate(`/movie/genre/${genre.id}`)}
-                      >{genre.name}</Button>
-                    </Skeleton>
-                  )}
-              </Flex>
+              <Genres creationType='movie' genresArray={movie?.genres || []} isVisible={isLoadingMovie} />
               <Skeleton visible={isLoadingMovie} mih={8} miw='70%'>
                 <p className='movie-page__overview'>{movie?.overview}</p>
               </Skeleton>
