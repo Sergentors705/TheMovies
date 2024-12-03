@@ -197,6 +197,28 @@ export function useCredits({creationType}: iUseCreditsOptions) {
   return [data, isLoading] as const
 }
 
+// COMBINED CREDITS
+
+interface iUseCombinedCreditsOptions {
+  personId: string,
+}
+
+interface iCombinedCredits {
+  cast: iCreationData[],
+  crew: iCreationData[],
+}
+
+export function useCombinedCredits({personId}: iUseCombinedCreditsOptions) {
+  const [data, setData] = useState<iCombinedCredits | null>(null)
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setData))
+
+  useEffect(() => {
+    fetchData()
+  }, [personId])
+
+  return [data, isLoading] as const
+}
+
 // KEYWORDS
 
 interface iKeywordsOptions {
@@ -289,6 +311,40 @@ export function useTop({creationType, page, selectValue, minRating, maxRating, m
   useEffect(() => {
     fetchData()
   }, [creationType, page, selectValue, minRating, maxRating, minYear, maxYear, genreValue, minRuntime, maxRuntime])
+
+  return [data, isLoading] as const
+}
+
+// PEOPLE
+
+interface iPersonData {
+  adult: boolean,
+  also_known_as: string[],
+  biography: string,
+  birthday: string,
+  deathday: string,
+  gender: number,
+  homepage: string,
+  id: number,
+  imdb_id: string,
+  known_for_department: string,
+  name: string,
+  place_of_birth: string,
+  popularity: number,
+  profile_path: string,
+}
+
+interface iPersonOptions {
+  id: string,
+}
+
+export function usePerson({id}: iPersonOptions) {
+  const [data, setData] = useState<iPersonData>()
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${id}`, setData));
+
+  useEffect(() => {
+    fetchData()
+  }, [id])
 
   return [data, isLoading] as const
 }

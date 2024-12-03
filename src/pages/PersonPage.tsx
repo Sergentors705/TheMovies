@@ -1,28 +1,37 @@
-import React from 'react';
+import { Box, Image, Paper, Skeleton, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import useLoading from '../hooks/use-loading';
+import { useCombinedCredits, usePerson } from '../api';
 import requestMaker from '../functions/requestMaker';
-import { Title } from '@mantine/core';
+import useLoading from '../hooks/use-loading';
+import { Carousel } from '@mantine/carousel';
+
+interface iPersonData {
+  adult: boolean,
+  also_known_as: string[],
+  biography: string,
+  birthday: string,
+  deathday: string,
+  gender: number,
+  homepage: string,
+  id: number,
+  imdb_id: string,
+  known_for_department: string,
+  name: string,
+  place_of_birth: string,
+  popularity: number,
+  profile_path: string,
+}
 
 export default function PersonPage() {
-  const [person, setPerson] = useState(null);
-  const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
   const {personId} = useParams();
-  const [credits, setCredits] = useState([]);
-  const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
-  const [cast, setCast] = useState([]);
-  const [crew, setCrew] = useState([]);
+  const [person, isLoadingPerson] = usePerson({id: personId || ''});
+  const [credits, isLoadingCredits] = useCombinedCredits({personId: personId || ''});
 
-  const getMonthName = (monthNumber) => {
+  const getMonthName = (monthNumber: number) => {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     return monthNames[monthNumber];
   }
-console.log(person)
-  useEffect(() => {
-    fetchPerson();
-    fetchCredits();
-  }, [personId])
 
   // useEffect(() => {
   //     setCast(credits?.cast?.sort((a, b) => a.vote_average - b.vote_average).reverse());
@@ -37,7 +46,7 @@ console.log(person)
           <img className='person-page__image' width={300} height={450} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} alt=''/>
           <div className='person-page__birthday'>
             <span className='person-page__birthday-title'>Birthday:</span>
-            <p className='person-page__birthday-date'>{new Date(person?.birthday).getDate()} {getMonthName(new Date(person?.birthday).getMonth())} {new Date(person?.birthday).getFullYear()}</p>
+            <p className='person-page__birthday-date'>{person?.birthday && new Date(person?.birthday).getDate()} {person?.birthday && getMonthName(new Date(person?.birthday).getMonth())} {person?.birthday && new Date(person?.birthday).getFullYear()}</p>
           </div>
           <div className='person-page__birthplace'>
             <span className='person-page__birthplace-title'>Birthplace:</span>
@@ -58,6 +67,57 @@ console.log(person)
             <p className='person-page__biography'>{person?.biography}</p>
         </div>
       </div>
+      <Box>
+        <Title mb={10}>Known for</Title>
+        <Carousel
+          dragFree
+          slideSize='25%'
+          align='start'
+          slideGap='md'
+          containScroll='trimSnaps'
+        >
+          {credits && []?.concat(credits?.cast, credits?.crew).filter(item => item).sort((a, b) => a.vote_average - b.vote_average).reverse().filter(item => !item?.genre_ids.includes(10767) && !item?.genre_ids.includes(10763) && item?.vote_count >= 500).slice(0, 9).map((item) =>
+            <Carousel.Slide
+              key={item.id}
+              mb={40}
+            >
+              <Link
+                to={`/movie/${item.id}`}
+                style={{textDecoration: 'none'}}
+              >
+                <Paper
+                  h='100%'
+                  withBorder
+                  shadow='lg'
+                  p='sm'
+                >
+                  <Skeleton
+                    visible={isLoadingCredits}
+                    mih={130}
+                    miw={150}
+                    mb={10}
+                  >
+                    <Image
+                      w='100%'
+                      h='auto'
+                      fit='contain'
+                      radius='md'
+                      src={`https://media.themoviedb.org/t/p/w533_and_h300_bestv2/${item.poster_path}`}
+                    />
+                  </Skeleton>
+                  <Skeleton
+                    visible={isLoadingCredits}
+                    mih={20}
+                    mb={6}
+                  >
+                  <Title order={3} c={'black'}>{item.title}</Title>
+                  </Skeleton>
+                </Paper>
+              </Link>
+            </Carousel.Slide>
+          )}
+        </Carousel>
+      </Box>
       <ul className='person-page__popular-movies'>
         {
           // person?.known_for_department === 'Acting' : 1 ? 0
