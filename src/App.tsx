@@ -21,7 +21,7 @@ function App() {
       <Navigation />
       <Flex
         px={50}
-        style={{flexGrow: '1'}}
+        h='auto'
         justify='center'
         bg='gray.1'
       >

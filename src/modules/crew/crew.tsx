@@ -24,7 +24,7 @@ interface iCastData {
 }
 
 export default function Crew({creature}: iCrewProps) {
-  
+
   const [starring, setStarring] = useState<iCastData[]>([]);
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);

@@ -1,6 +1,8 @@
 #root {
+  min-height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   max-width: 1366px;
-  height: 100%;
   width: 100%;
   margin: 0 auto;
 }

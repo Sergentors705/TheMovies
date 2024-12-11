@@ -1,7 +1,8 @@
-import { Carousel } from '@mantine/carousel';
+import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import { Box, Flex, Image, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { Link, useParams } from 'react-router-dom';
 import { useCombinedCredits, usePerson } from '../api';
+import { useState } from 'react';
 
 interface iCreditsData {
   id: number,
@@ -40,6 +41,8 @@ export default function PersonPage() {
     const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
     return monthNames[monthNumber];
   }
+  const [embla, setEmbla] = useState(null);
+  useAnimationOffsetEffect(embla, 200);
 
   return (
     <Flex
@@ -68,67 +71,65 @@ export default function PersonPage() {
             : <></>
           }
         </Flex>
-        <Flex
-          direction='column'
-          gap={10}
+        <Box
+          // direction='column'
+          // gap={10}
           >
           <Title order={1}>{person?.name}</Title>
           <Title order={3}>About</Title>
           <Text>{person?.biography}</Text>
-        </Flex>
-      </Flex>
-      <Box>
-        <Title mb={10}>Known for</Title>
-        <Carousel
-          dragFree
-          slideSize='10%'
-          align='start'
-          slideGap='md'
-          containScroll='trimSnaps'
-        >
-          {credits && arrr.concat(credits?.cast, credits?.crew).filter(item => item).sort((a, b) => a.vote_average - b.vote_average).reverse().filter(item => !item?.genre_ids.includes(10767) && !item?.genre_ids.includes(10763) && item?.vote_count >= 500).slice(0, 9).map((item) =>
-            <Carousel.Slide
-              key={item.id}
-              mb={40}
-            >
-              <Link
-                to={`/${item.media_type}/${item.id}`}
-                style={{textDecoration: 'none'}}
+          <Title mb={10}>Known for</Title>
+          <Carousel
+            dragFree
+            slideSize='10%'
+            getEmblaApi={setEmbla}
+            align='start'
+            slideGap='md'
+            containScroll='trimSnaps'
+          >
+            {credits && arrr.concat(credits?.cast, credits?.crew).filter(item => item).sort((a, b) => a.vote_average - b.vote_average).reverse().filter(item => !item?.genre_ids.includes(10767) && !item?.genre_ids.includes(10763) && item?.vote_count >= 500).slice(0, 9).map((item) =>
+              <Carousel.Slide
+                key={item.id}
+                mb={40}
               >
-                <Paper
-                  h='100%'
-                  withBorder
-                  shadow='lg'
-                  p='sm'
+                <Link
+                  to={`/${item.media_type}/${item.id}`}
+                  style={{textDecoration: 'none'}}
                 >
-                  <Skeleton
-                    visible={isLoadingCredits}
-                    mih={130}
-                    miw={150}
-                    mb={10}
+                  <Paper
+                    h='100%'
+                    withBorder
+                    shadow='md'
+                    p='md'
                   >
-                    <Image
-                      w='100%'
-                      h='auto'
-                      fit='contain'
-                      radius='md'
-                      src={`https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${item.poster_path}`}
-                    />
-                  </Skeleton>
-                  <Skeleton
-                    visible={isLoadingCredits}
-                    mih={20}
-                    mb={6}
-                  >
-                  <Title order={3} c={'black'}>{item.title || item.name }</Title>
-                  <Title order={4} c={'dimmed'}>{item.job || `As ${item.character}`}</Title>
-                  </Skeleton>
-                </Paper>
-              </Link>
-            </Carousel.Slide>
-          )}
-        </Carousel>
-      </Box>
+                    <Skeleton
+                      visible={isLoadingCredits}
+                      mih={225}
+                      miw={150}
+                      mb={10}
+                    >
+                      <Image
+                          w={150}
+                          h={225}
+                          radius='md'
+                        src={`https://media.themoviedb.org/t/p/w300_and_h450_bestv2/${item.poster_path}`}
+                      />
+                    </Skeleton>
+                    <Skeleton
+                      visible={isLoadingCredits}
+                      mih={20}
+                      mb={6}
+                    >
+                    <Title order={3} c={'black'}>{item.title || item.name }</Title>
+                    <Title order={4} c={'dimmed'}>{item.job || `As ${item.character}`}</Title>
+                    </Skeleton>
+                  </Paper>
+                </Link>
+              </Carousel.Slide>
+            )}
+          </Carousel>
+        </Box>
+      </Flex>
     </Flex>
   )
 }
