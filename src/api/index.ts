@@ -30,9 +30,27 @@ interface iCreationData {
   origin_country?: string[],
   title?: string,
   original_title?: string,
+  production_companies: iCompaniesData[],
   runtime: number,
   release_date?: string,
+  revenue: number,
+  seasons?: iSeasonData[],
+  status?: string,
   video?: string[],
+}
+
+interface iSeasonData {
+  id: number,
+  season_number: number,
+  poster_path: string,
+  name: string,
+  overview: string,
+}
+
+interface iCompaniesData {
+  id: number,
+  name: string,
+  logo_path?: string,
 }
 
 interface iGenresData {
@@ -159,7 +177,7 @@ export function useDetails({ creationType }: iUseDetailsOptions) {
 // TOP CARD DETAILS
 
 interface iUseTopDetailsOptions {
-  id: number,
+  id: string,
   creationType: string,
 }
 

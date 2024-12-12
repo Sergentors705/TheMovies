@@ -1,44 +1,37 @@
-import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
+import { useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Box, Button, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import Companies from '../components/blocks/companies';
+import Genres from '../components/blocks/genres';
+import Posters from '../components/blocks/posters/posters';
+import Similar from '../components/blocks/similar';
+import Keywords from '../components/ui/keywords';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-import TvRecomendations from './tv-recomendations';
 import Crew from '../modules/crew/crew';
-import Posters from '../components/blocks/posters/posters';
-import Keywords from '../components/ui/keywords';
-import Companies from '../components/blocks/companies';
-import Similar from '../components/blocks/similar';
-import Genres from '../components/blocks/genres';
+import TvRecomendations from './tv-recomendations';
+import { useCredits, useTopDetails } from '../api';
 
 export default function TvShowPage() {
   const {tvId} = useParams();
-  const [tvShow, setTvShow] = useState(null);
-  const [crew, setCrew] = useState(null);
+  const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''});
+  const [crew, isLoadingTvshowCredits] = useCredits({creationType: 'tv'});
   const [path, setPath] = useState('');
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const navigate = useNavigate();
+
   const [contentRating, setContentRating] = useState(null);
   const [fetchContentRating, isLoadingContentRating] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}}/content_ratings`, setContentRating));
   const [opened, { open, close }] = useDisclosure(false);
-  const [posters, setPosters] = useState([]);
-  const [starring, setStarring] = useState([]);
-  const [fetchTvShow, isLoadingTvShow] = useLoading(async() => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}`, setTvShow));
-  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/images`, setPosters));
-  const [fetchTvShowCredits, isLoadingTvshowCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/credits`, setCrew));
 
   useEffect(() => {
-    fetchTvShow();
-    fetchImages();
-    fetchTvShowCredits();
     fetchContentRating();
   }, [tvId])
 
-  useEffect(() => setStarring(crew?.cast.slice(0, 9)), [crew]);
 console.log(tvShow)
   return (
     <>
@@ -62,7 +55,7 @@ console.log(tvShow)
                 h={450}
                 radius="md"
                 src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${tvShow?.poster_path}`}
-                onClick={() =>{open(); setPath(tvShow?.poster_path)}}
+                onClick={() =>{open(); setPath(tvShow?.poster_path || '')}}
                 alt=''
                 style={{cursor: 'pointer'}}
               />
@@ -85,9 +78,9 @@ console.log(tvShow)
                     miw={50}
                   >
                     <Text c='dimmed'>
-                      {new Date(tvShow?.first_air_date)?.getFullYear()}
+                      {tvShow?.first_air_date && new Date(tvShow?.first_air_date)?.getFullYear()}
                       -
-                      {new Date(tvShow?.last_air_date)?.getFullYear()}
+                      {tvShow?.last_air_date && new Date( tvShow?.last_air_date)?.getFullYear()}
                     </Text>
                   </Skeleton>
                 </li>
@@ -214,13 +207,13 @@ console.log(tvShow)
               </Skeleton>
             </div>
           </Box>
-          <Companies creationType='tv' companies={tvShow?.production_companies} />
+          <Companies creationType='tv' companies={tvShow?.production_companies || []} />
           <Keywords creationType='tv' />
           <TvRecomendations creationType='tv'/>
         </Box>
       </SimpleGrid>
-      <Modal opened={opened} onClose={close} size='75%' children={Image}>
-        <Image w='100%' h='auto' fit='cover' position='center' src={`https://www.themoviedb.org/t/p/original/${path}`} />
+      <Modal opened={opened} onClose={close} size='75%' >
+        <Image w='100%' h='auto' fit='cover'  src={`https://www.themoviedb.org/t/p/original/${path}`} />
       </Modal>
     </>
   )
