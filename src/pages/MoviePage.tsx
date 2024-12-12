@@ -1,19 +1,19 @@
-import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
+import { useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Box, Button, Flex, Image, List, Modal, NumberFormatter, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Flex, Image, List, Modal, NumberFormatter, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useCredits, useMovie, useMovieReleaseDates } from '../api';
 import Companies from '../components/blocks/companies';
+import Genres from '../components/blocks/genres';
 import Posters from '../components/blocks/posters/posters';
+import Similar from '../components/blocks/similar';
 import Keywords from '../components/ui/keywords';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-import TvRecomendations from './tv-recomendations';
 import Crew from '../modules/crew/crew';
-import Similar from '../components/blocks/similar';
-import Genres from '../components/blocks/genres';
+import TvRecomendations from './tv-recomendations';
 
 interface iCrewMemberData {
   id: number,
@@ -216,7 +216,10 @@ export default function MoviePage() {
           <TvRecomendations creationType='movie' />
         </Box>
       </SimpleGrid>
-      <Modal opened={opened} onClose={close} fullScreen children={<Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} />}/>
+      <Modal opened={opened} onClose={close} >
+        {/* <Box miw={100} mih={100} bg='tomato'/> */}
+      {/* <Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} /> */}
+      </Modal>
     </>
   )
 }

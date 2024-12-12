@@ -26,7 +26,7 @@ export default function Similar({creationType}: iSimilarProps) {
             mb={40}
           >
             <Link
-              to={`/movie/${item.id}`}
+              to={`/${creationType}/${item.id}`}
               style={{textDecoration: 'none'}}
             >
               <Paper
@@ -54,7 +54,7 @@ export default function Similar({creationType}: iSimilarProps) {
                   mih={20}
                   mb={6}
                 >
-                <Title order={3} c={'black'}>{item.title}</Title>
+                <Title order={3} c={'black'}>{item.title || item.name}</Title>
                 </Skeleton>
               </Paper>
             </Link>
