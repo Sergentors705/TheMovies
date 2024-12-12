@@ -13,6 +13,7 @@ import TopRatedPage from './pages/top-rated-page';
 import TvEpisodePage from './pages/tv-episode-page';
 import TvSeasonPage from './pages/tv-season-page';
 import TvShowPage from './pages/tv-show-page';
+import Demo from './pages/demo';
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Route path=':creationType/companie/:companieId' element={<SearchPage />} />
           <Route path='tv/:tvId/tv-season/:seasonId' element={<TvSeasonPage />} />
           <Route path='tv/:tvId/tv-season/:seasonId/tv-episode/:episodeId' element={<TvEpisodePage />} />
+          <Route path='demo' element={<Demo />} />
         </Routes>
       </Flex>
       <Footer />
