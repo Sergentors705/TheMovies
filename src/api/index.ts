@@ -11,7 +11,7 @@ export interface iUseTrendingOptions {
 
 interface iCreationData {
   id: number,
-  episode_run_time: number,
+  episode_run_time: number[],
   media_type: string,
   name?: string,
   original_name?: string,
@@ -360,6 +360,29 @@ export function usePerson({id}: iPersonOptions) {
   useEffect(() => {
     fetchData()
   }, [id])
+
+  return [data, isLoading] as const
+}
+
+// CONTENT RATING
+
+interface iContentRatingOptions{
+  id: string,
+  creationType: string,
+}
+
+interface iContentRatingData {
+  iso_3166_1: string,
+  rating: string,
+}
+
+export function useContentRating({creationType, id}: iContentRatingOptions) {
+  const [data, setData] = useState<iContentRatingData[]>()
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${id}}/content_ratings`, setData));
+
+  useEffect(() => {
+    fetchData()
+  }, [creationType, id])
 
   return [data, isLoading] as const
 }

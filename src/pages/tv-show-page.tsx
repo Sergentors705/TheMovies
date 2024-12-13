@@ -1,36 +1,25 @@
-import { useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
 import { Box, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useContentRating, useTopDetails } from '../api';
 import Companies from '../components/blocks/companies';
 import Genres from '../components/blocks/genres';
 import Posters from '../components/blocks/posters/posters';
 import Similar from '../components/blocks/similar';
 import Keywords from '../components/ui/keywords';
-import requestMaker from '../functions/requestMaker';
-import useLoading from '../hooks/use-loading';
 import Crew from '../modules/crew/crew';
 import TvRecomendations from './tv-recomendations';
-import { useCredits, useTopDetails } from '../api';
 
 export default function TvShowPage() {
   const {tvId} = useParams();
   const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''});
-  const [crew, isLoadingTvshowCredits] = useCredits({creationType: 'tv'});
   const [path, setPath] = useState('');
-  const [embla, setEmbla] = useState(null);
-  useAnimationOffsetEffect(embla, 200);
-  const navigate = useNavigate();
-
-  const [contentRating, setContentRating] = useState(null);
-  const [fetchContentRating, isLoadingContentRating] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}}/content_ratings`, setContentRating));
+  const [contentRating, isLoadingContentRating] = useContentRating({creationType: 'tv', id: tvId || ''})
   const [opened, { open, close }] = useDisclosure(false);
 
-  useEffect(() => {
-    fetchContentRating();
-  }, [tvId])
+
 
 console.log(tvShow)
   return (
@@ -91,7 +80,7 @@ console.log(tvShow)
                     width={50}
                   >
                     <Text c='dimmed'>
-                      {contentRating?.results?.find(item => item.iso_3166_1 === 'US')?.rating}
+                      {contentRating?.find(item => item.iso_3166_1 === 'US')?.rating}
                     </Text>
                   </Skeleton>
                 </li>
