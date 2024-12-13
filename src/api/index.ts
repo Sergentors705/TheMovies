@@ -21,7 +21,7 @@ interface iCreationData {
   profile_path?: string,
   adult: boolean,
   original_language: string,
-  genre_ids: number[]
+  genres: iGenresData[],
   popularity: number,
   first_air_date?: string,
   last_air_date?: string,
@@ -36,6 +36,7 @@ interface iCreationData {
   revenue: number,
   seasons?: iSeasonData[],
   status?: string,
+  tagline?: string,
   video?: string[],
 }
 
@@ -292,11 +293,6 @@ export function useSimilar({creationType}: iSimilarOptions) {
 
 // TOP
 
-interface iGenreData {
-  id: number,
-  name: string,
-}
-
 interface iTopOptions {
   creationType: string,
   page: number,
@@ -305,7 +301,7 @@ interface iTopOptions {
   maxRating: string | number,
   minYear: Date,
   maxYear: Date,
-  genreValue: iGenreData[],
+  genreValue: iGenresData[],
   minRuntime: string | number,
   maxRuntime: string | number,
 }
