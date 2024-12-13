@@ -1,11 +1,10 @@
 import '@mantine/carousel/styles.css';
-import { Box, Chip, Container, Flex, Image, NativeSelect, NumberInput, Pagination, Paper, RangeSlider, Text, Title } from '@mantine/core';
+import { Box, Chip, Container, Flex, NativeSelect, NumberInput, Pagination, Paper, RangeSlider, Title } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTop } from '../api';
-import requestMaker from '../functions/requestMaker';
 import TopRatedCard from '../components/blocks/top-rated-card';
+import requestMaker from '../functions/requestMaker';
 
 interface iGenreData {
   id: number,
@@ -14,18 +13,17 @@ interface iGenreData {
 
 export default function TopRatedTvShows() {
   const [page, setPage] = useState(1);
-  const [minRating, setMinRating] = useState(7);
-  const [maxRating, setMaxRating] = useState(10);
+  const [minRating, setMinRating] = useState<string | number>(7);
+  const [maxRating, setMaxRating] = useState<string | number>(10);
   const [minYear, setMinYear] = useState(new Date('1-1-1950'));
   const [maxYear, setMaxYear] = useState(new Date());
-  const [minRuntime, setMinRuntime] = useState(0);
-  const [maxRuntime, setMaxRuntime] = useState(360);
+  const [minRuntime, setMinRuntime] = useState<number>(0);
+  const [maxRuntime, setMaxRuntime] = useState<number>(360);
   const [genreList, setGenreList] = useState<iGenreData[]>([]);
-  const [genreValue, setGenreValue] = useState<iGenreData[]>([]);
+  const [genreValue, setGenreValue] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState('vote_average.desc');
   const [popular, isLoadingPopular] = useTop({creationType: 'tv', page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
 
-  const navigate = useNavigate();
   const marks = [
     { value: 60, label: '1h' },
     { value: 120, label: '2h' },
@@ -83,8 +81,8 @@ console.log(popular)
               min={0}
               max={10}
               step={0.1}
-              value={[minRating, maxRating]}
-              defaultValue={[minRating, maxRating]}
+              value={[Number(minRating), Number(maxRating)]}
+              defaultValue={[Number(minRating), Number(maxRating)]}
               onChangeEnd={(value) => {setMaxRating(value[1]); setMinRating(value[0])}}
             />
             <Flex align='center' gap={10}>
@@ -113,13 +111,13 @@ console.log(popular)
               label='From:'
               clearable
               value={minYear}
-              onChange={value => setMinYear(value)}
+              onChange={value => setMinYear(value || minYear)}
             />
             <DatePickerInput
               label='To:'
               clearable
               value={maxYear}
-              onChange={value => setMaxYear(value)}
+              onChange={value => setMaxYear(value || maxYear)}
             />
           </Box>
           <Box mb={15}>
@@ -172,7 +170,7 @@ console.log(popular)
           )}
         </Flex>
       </Box>
-      <Pagination value={page} onChange={setPage} total={popular?.total_pages}  withEdges/>
+      <Pagination value={page} onChange={setPage} total={popular?.total_pages || 1}  withEdges/>
     </Container>
   )
 }

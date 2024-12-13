@@ -301,7 +301,7 @@ interface iTopOptions {
   maxRating: string | number,
   minYear: Date,
   maxYear: Date,
-  genreValue: iGenresData[],
+  genreValue: string[],
   minRuntime: string | number,
   maxRuntime: string | number,
 }
