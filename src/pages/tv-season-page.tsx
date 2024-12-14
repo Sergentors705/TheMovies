@@ -1,25 +1,16 @@
-import { Box, Flex, Image, Pagination, Paper, Text, Title, useMantineTheme } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
+import { Box, Flex, Image, Pagination, Paper, Text, Title } from '@mantine/core';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import requestMaker from '../functions/requestMaker';
-import useLoading from '../hooks/use-loading';
+import { useTopDetails, useTvSeasons } from '../api';
 import TvRecomendations from './tv-recomendations';
 
 
 export default function TvSeasonPage() {
   const {tvId, seasonId} = useParams();
-  const [seasonNumber, setSeasonNumber] = useState(seasonId);
-  const [tvSeason, setTvSeason] = useState(null);
-  const [tvShow, setTvShow] = useState(null);
-  const [fetchSeason, isLoadingTvSeason] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonNumber}`, setTvSeason));
-  const theme = useMantineTheme();
+  const [seasonNumber, setSeasonNumber] = useState<number>(Number(seasonId));
+  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: seasonNumber || 1})
+  const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''})
 
-  useEffect(()=>{
-    fetchSeason();
-    requestMaker(`https://api.themoviedb.org/3/tv/${tvId}`, setTvShow);
-  },[seasonNumber])
-
-  console.log(tvSeason)
   return (
     <Flex
       w={'100%'}
@@ -49,7 +40,7 @@ export default function TvSeasonPage() {
         mb={30}
         value={seasonNumber}
         onChange={setSeasonNumber}
-        total={tvShow?.number_of_seasons}
+        total={tvShow?.number_of_seasons || 1}
       />
       <Box style={{display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '50px'}}>
         <Flex

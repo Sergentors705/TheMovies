@@ -10,34 +10,36 @@ export interface iUseTrendingOptions {
 }
 
 interface iCreationData {
-  id: number,
+  adult: boolean,
+  backdrop_path?: string,
   episode_run_time: number[],
+  episodes?: iEpisodeData[],
+  first_air_date?: string,
+  genres: iGenresData[],
+  id: number,
+  last_air_date?: string,
   media_type: string,
   name?: string,
-  original_name?: string,
-  overview: string,
-  poster_path?: string,
-  backdrop_path?: string,
-  profile_path?: string,
-  adult: boolean,
-  original_language: string,
-  genres: iGenresData[],
-  popularity: number,
-  first_air_date?: string,
-  last_air_date?: string,
-  vote_average: number,
-  vote_count: number,
+  number_of_seasons?: number,
   origin_country?: string[],
-  title?: string,
+  original_language: string,
+  original_name?: string,
   original_title?: string,
+  overview: string,
+  popularity: number,
+  poster_path?: string,
+  profile_path?: string,
   production_companies: iCompaniesData[],
   runtime: number,
   release_date?: string,
   revenue: number,
   seasons?: iSeasonData[],
   status?: string,
+  title?: string,
   tagline?: string,
   video?: string[],
+  vote_average: number,
+  vote_count: number,
 }
 
 interface iSeasonData {
@@ -46,6 +48,22 @@ interface iSeasonData {
   poster_path: string,
   name: string,
   overview: string,
+}
+
+interface iEpisodeData {
+  air_date: string,
+  episode_number: number,
+  id: number,
+  name: string,
+  overview: string,
+  runtime: number,
+  season_number: number,
+  show_id: number,
+  still_path: string,
+  vote_average: number,
+  vote_count: number,
+  crew: [],
+  guest_stars: [],
 }
 
 interface iCompaniesData {
@@ -164,13 +182,31 @@ interface iUseDetailsOptions {
 }
 
 export function useDetails({ creationType }: iUseDetailsOptions) {
-  const [data, setData] = useState<iCreationData[]>([])
+  const [data, setData] = useState<iCreationData | null>(null)
   const {movieId, tvId} = useParams()
   const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}`, setData, 'results'))
 
   useEffect(() => {
     fetchData()
   }, [movieId, tvId, creationType])
+
+  return [data, isLoading] as const
+}
+
+// TV SEASONS
+
+interface iUseTvSeasonsOptions{
+  id: string,
+  seasonNumber: number,
+}
+
+export function useTvSeasons({id, seasonNumber }: iUseTvSeasonsOptions) {
+  const [data, setData] = useState<iCreationData | null>(null)
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}`, setData, ))
+
+  useEffect(() => {
+    fetchData()
+  }, [id, seasonNumber])
 
   return [data, isLoading] as const
 }
@@ -378,7 +414,7 @@ interface iContentRatingData {
 
 export function useContentRating({creationType, id}: iContentRatingOptions) {
   const [data, setData] = useState<iContentRatingData[]>()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${id}}/content_ratings`, setData));
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${id}}/content_ratings`, setData, 'results'));
 
   useEffect(() => {
     fetchData()
