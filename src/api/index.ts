@@ -461,3 +461,22 @@ export function useCountries() {
 
   return [data, isLoading] as const
 }
+
+
+// RECOMENDATIONS
+
+interface iRecomendationsOptions{
+  id: number,
+  creationType: string,
+}
+
+export function useRecomendations({id, creationType}: iRecomendationsOptions) {
+  const [data, setData] = useState<iCreationData[]>()
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${id}/recommendations`, setData, 'results'));
+
+  useEffect(() => {
+    fetchData()
+  }, [id, creationType])
+
+  return [data, isLoading] as const
+}

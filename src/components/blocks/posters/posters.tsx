@@ -2,7 +2,7 @@ import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
 import { Flex, Image, Modal, SegmentedControl, Skeleton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import requestMaker from '../../../functions/requestMaker';
 import useLoading from '../../../hooks/use-loading';

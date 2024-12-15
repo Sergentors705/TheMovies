@@ -1,6 +1,5 @@
-import { Button, Center, Collapse, Flex, Image, Paper, Text, Title } from '@mantine/core';
+import { Button, Collapse, Flex, Image, Paper, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface iCreationData {

@@ -2,9 +2,9 @@ import { Box, Flex, Image, Modal, SimpleGrid, Skeleton, Text, Title } from '@man
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import CreationListCreator from '../functions/creationListCreator';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-import CreationListCreator from '../functions/creationListCreator';
 
 interface iCreditsData {
   cast: iCastData[],
@@ -91,7 +91,7 @@ interface iCrewData {
 
 interface iPersonData {
   adult: boolean,
-  also_known_as: string[],  
+  also_known_as: string[],
   biography: string,
   birthday: string,
   deathday?: string,
@@ -120,7 +120,7 @@ export default function AllMovies() {
   const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}`, setCreation));
   const [fetchCreationCrew, isLoadingCreationCrew] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}/credits`, setCreationCrew));
   const [credits, setCredits] = useState<iCreditsData | null>(null);
-  const [fetchCredits, isLoadingCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
+  const [fetchCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
   const [person, setPerson] = useState<iPersonData | null>(null);
   const [creation, setCreation] = useState<iCreationData | null>(null);
   const [creationCrew, setCreationCrew] = useState<iCreationCrewData | null>(null);
@@ -176,10 +176,12 @@ export default function AllMovies() {
       <>
       <Flex maw={1366} w={'100%'} direction={'column'}>
         <div className='all-cast__header'>
-          <Link to={`/person/${person?.id}`}>
-            <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} width={100} height={150} />
-            Back to {person?.name}
-          </Link>
+          <Skeleton visible={isLoadingPerson}>
+            <Link to={`/person/${person?.id}`}>
+              <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} width={100} height={150} />
+              Back to {person?.name}
+            </Link>
+          </Skeleton>
         </div>
         <SimpleGrid style={{gridTemplateColumns: '1fr 1fr', gap: '50px', justifyContent: 'center'}}>
           <CreationListCreator array={cast} title='Cast' modalOpen={open} setModalDate={setModalDate} />
@@ -238,7 +240,9 @@ export default function AllMovies() {
                 </Flex>
               </Box>
             </Flex>
-            <Text>Director: {creationCrew?.crew?.find(item => item.job === 'Director')?.name}</Text>
+            <Skeleton visible={isLoadingCreationCrew}>
+              <Text>Director: {creationCrew?.crew?.find(item => item.job === 'Director')?.name}</Text>
+            </Skeleton>
             <Text>{creation?.overview}</Text>
           </Modal.Body>
         </Modal.Content>

@@ -1,4 +1,3 @@
-import { useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
 import { Box, Flex, Image, List, Modal, NumberFormatter, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -10,8 +9,6 @@ import Genres from '../components/blocks/genres';
 import Posters from '../components/blocks/posters/posters';
 import Similar from '../components/blocks/similar';
 import Keywords from '../components/ui/keywords';
-import requestMaker from '../functions/requestMaker';
-import useLoading from '../hooks/use-loading';
 import Crew from '../modules/crew/crew';
 import TvRecomendations from './tv-recomendations';
 
@@ -23,25 +20,21 @@ interface iCrewMemberData {
 }
 
 export default function MoviePage() {
-  const [videos, setVideos] = useState(null);
-  const [recomendations, setRecomendations] = useState(null)
+  // const [videos, setVideos] = useState(null);
   const [director, setDirector] = useState<iCrewMemberData[]>([]);
   const [writter, setWritter] = useState<iCrewMemberData[]>([]);
   const {movieId} = useParams();
-  const [embla, setEmbla] = useState(null);
-  useAnimationOffsetEffect(embla, 200);
   const [opened, { open, close }] = useDisclosure(false);
   const [path, setPath] = useState<string>('');
 
   const [movie, isLoadingMovie] = useMovie({movieId: movieId || ''})
   const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId || ''})
-  const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/videos`, setVideos))
+  // const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/videos`, setVideos))
   const [credits, isLoadingCredits] = useCredits({creationType: 'movie'})
 
-  useEffect(() => {
-    fetchVideos();
-    requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/recommendations`, setRecomendations)
-  }, [movieId])
+  // useEffect(() => {
+  //   fetchVideos();
+  // }, [movieId])
 
   useEffect(() => {
     setDirector(credits?.crew.filter(item => item.job === 'Director') ?? [])
@@ -217,8 +210,7 @@ export default function MoviePage() {
         </Box>
       </SimpleGrid>
       <Modal opened={opened} onClose={close} >
-        {/* <Box miw={100} mih={100} bg='tomato'/> */}
-      {/* <Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} /> */}
+        <Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} />
       </Modal>
     </>
   )

@@ -1,19 +1,14 @@
-import { Flex, Image, Modal, Paper, Skeleton, Text, Title } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
+import { Flex, Image, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { Link, useParams } from 'react-router-dom';
-import requestMaker from '../functions/requestMaker';
-import useLoading from '../hooks/use-loading';
-import { useDisclosure } from '@mantine/hooks';
+import { useRecomendations } from '../api';
 
-export default function TvRecomendations({creationType}) {
+interface iRecomendationsProps {
+  creationType: string,
+}
+
+export default function TvRecomendations({creationType}: iRecomendationsProps) {
   const {tvId, movieId} = useParams();
-  const [opened, { open, close }] = useDisclosure(false);
-  const [tvRecomendations, setTvRecomendations] = useState(null);
-  const [fetchTvRecomendations, isLoadingTvRecomendations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${tvId || movieId}/recommendations`, setTvRecomendations));
-
-  useEffect(() => {
-    fetchTvRecomendations();
-  },[tvId, movieId])
+  const [tvRecomendations, isLoadingTvRecomendations] = useRecomendations({id: Number(tvId || movieId), creationType: creationType})
 
   return (
     <>
@@ -21,7 +16,7 @@ export default function TvRecomendations({creationType}) {
         <Skeleton visible={isLoadingTvRecomendations}>
           <Title order={3} ta={'center'} fz={'secondaryTitle'}>Recomendations</Title>
         </Skeleton>
-        {tvRecomendations?.results?.map(item =>
+        {tvRecomendations?.map(item =>
           <Link key={item.id} to={`/${creationType}/${item.id}`} style={{textDecoration: 'none'}}>
             <Paper
               shadow='md'
@@ -54,9 +49,6 @@ export default function TvRecomendations({creationType}) {
           </Link>
         )}
       </Flex>
-      <Modal opened={opened} onClose={close} title="Authentication" centered>
-          {/* Modal content */}
-      </Modal>
     </>
   )
 }
