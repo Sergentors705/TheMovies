@@ -1,5 +1,5 @@
 import '@mantine/carousel/styles.css';
-import { Box, Chip, Container, Flex, NativeSelect, NumberInput, Pagination, Paper, RangeSlider, Title } from '@mantine/core';
+import { Box, Chip, Container, Flex, NativeSelect, NumberInput, Pagination, Paper, RangeSlider, Skeleton, Title } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useEffect, useState } from 'react';
 import { useTop } from '../api';
@@ -34,7 +34,7 @@ export default function TopRatedTvShows() {
   useEffect(() => {
     requestMaker('https://api.themoviedb.org/3/genre/tv/list?language=en', setGenreList, 'genres')
   },[])
-console.log(popular)
+
   return (
     <Container
       w={'100%'}
@@ -146,27 +146,10 @@ console.log(popular)
           </Box>
         </Paper>
         <Flex wrap={'wrap'} gap={20}>
-          {popular?.results.map((item) => <TopRatedCard key={item.id} id={item.id}  creationType='tv'/>
-            // <Paper
-            //   withBorder
-            //   shadow='md'
-            //   p={10}
-            //   key={item.id}
-            //   maw={220}
-            //   onClick={() => navigate(`/tv/${item.id}`)}
-            // >
-            //   <Image
-            //     w={200}
-            //     h={'auto'}
-            //     src={`https://www.themoviedb.org/t/p/w220_and_h330_face${item.poster_path}`}
-            //   />
-            //   <Title
-            //     ta='center'
-            //     order={2}
-            //     textWrap='wrap'
-            //   >{item.name}</Title>
-            //   <Text>{item.release_date}</Text>
-            // </Paper>
+          {popular?.results.map((item) =>
+            <Skeleton visible={isLoadingPopular}>
+              <TopRatedCard key={item.id} id={item.id}  creationType='tv'/>
+            </Skeleton>
           )}
         </Flex>
       </Box>

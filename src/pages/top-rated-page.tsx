@@ -1,5 +1,5 @@
 import '@mantine/carousel/styles.css';
-import { Box, Container, Flex, Pagination, Title } from '@mantine/core';
+import { Box, Container, Flex, Pagination, Skeleton, Title } from '@mantine/core';
 import { useState } from 'react';
 import { useTop } from '../api';
 import TopRatedCard from '../components/blocks/top-rated-card';
@@ -23,7 +23,7 @@ export default function TopRatedPage({ creationType, sortingOrder }: iTopPagePro
   const [maxYear, setMaxYear] = useState(new Date());
   const [minRuntime, setMinRuntime] = useState<number>(0);
   const [maxRuntime, setMaxRuntime] = useState<number>(360);
-  const [genreValue, setGenreValue] = useState<iGenreData[]>([]);
+  const [genreValue, setGenreValue] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState(sortingOrder);
 
   const [popular, isLoadingPopular] = useTop({creationType: creationType, page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
@@ -48,7 +48,11 @@ export default function TopRatedPage({ creationType, sortingOrder }: iTopPagePro
           setSelectValue={setSelectValue} setMinRating={setMinRating} setMaxRating={setMaxRating} setMinYear={setMinYear} setMaxYear={setMaxYear} setMinRuntime={setMinRuntime} setMaxRuntime={setMaxRuntime}
         />
         <Flex  wrap={'wrap'} gap={20}>
-          {popular?.results?.map(item => <TopRatedCard key={item.id} id={item.id}  creationType={creationType} />)}
+          {popular?.results?.map(item =>
+            <Skeleton visible={isLoadingPopular} maw='min-content'>
+              <TopRatedCard key={item.id} id={item.id}  creationType={creationType} />
+            </Skeleton>
+          )}
         </Flex>
       </Box>
       <Pagination value={page} onChange={setPage} total={popular?.total_pages || 0}  withEdges/>

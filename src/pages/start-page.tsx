@@ -1,15 +1,9 @@
 import { Carousel, useAnimationOffsetEffect } from '@mantine/carousel';
 import '@mantine/carousel/styles.css';
-import { Container, Image, Paper, SegmentedControl, Title } from '@mantine/core';
+import { Container, Image, Paper, SegmentedControl, Skeleton, Title } from '@mantine/core';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useTrending } from '../api';
-
-interface iRequestData {
-  page: number,
-  results: iCreationData[],
-  total_pages: number,
-}
 
 interface iCreationData {
   id: number,
@@ -35,7 +29,6 @@ interface iCreationData {
 }
 
 export default function StartPage() {
-  const [, setTrending] = useState<iRequestData | null>(null)
   const [period, setPeriod] = useState('day')
   const [trending, isLoadingTrending] = useTrending({period, type: 'all'})
   const [popularMovie, isLoadingPopularMovie] = useTrending({period, type: 'movie'})
@@ -93,27 +86,33 @@ export default function StartPage() {
       pt={30}
       pb={50}
     >
-      <Title order={1} mb={10}>
-        Featured
-        <SegmentedControl
-          value={period}
-          onChange={setPeriod}
-          size='lg'
-          radius='xl' 
-          color='blue'
-          transitionDuration={500}
-          transitionTimingFunction="linear" 
-          data={[
-            {value: 'day', label: 'Today'},
-            {value: 'week', label: 'This Week'}
-          ]}
-        />
-      </Title>
-      {trending && carouselCreator(trending)}
-      <Title order={1} mb={10}>Popular movie</Title>
-      {popularMovie && carouselCreator(popularMovie)}
-      <Title order={1} mb={10}>Popular TV shows</Title>
-      {popularTv && carouselCreator(popularTv)}
+      <Skeleton visible={isLoadingTrending}>
+        <Title order={1} mb={10}>
+          Featured
+          <SegmentedControl
+            value={period}
+            onChange={setPeriod}
+            size='lg'
+            radius='xl'
+            color='blue'
+            transitionDuration={500}
+            transitionTimingFunction="linear"
+            data={[
+              {value: 'day', label: 'Today'},
+              {value: 'week', label: 'This Week'}
+            ]}
+          />
+        </Title>
+        {trending && carouselCreator(trending)}
+      </Skeleton>
+      <Skeleton visible={isLoadingPopularMovie}>
+        <Title order={1} mb={10}>Popular movie</Title>
+        {popularMovie && carouselCreator(popularMovie)}
+      </Skeleton>
+      <Skeleton visible={isLoadingPopularTv}>
+        <Title order={1} mb={10}>Popular TV shows</Title>
+        {popularTv && carouselCreator(popularTv)}
+      </Skeleton>
     </Container>
   )
 }

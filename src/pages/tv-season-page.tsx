@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Pagination, Paper, Text, Title } from '@mantine/core';
+import { Box, Flex, Image, Pagination, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useTopDetails, useTvSeasons } from '../api';
@@ -29,13 +29,19 @@ export default function TvSeasonPage() {
           radius="md"
           src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${tvShow?.poster_path}`}
         />
-        <Title order={2} c={'gray.9'}>Back to {tvShow?.name}</Title>
+        <Skeleton visible={isLoadingTvShow}>
+          <Title order={2} c={'gray.9'}>Back to {tvShow?.name}</Title>
+        </Skeleton>
         </Paper>
       </Link>
-      <Title
-        order={1}
-        mb={50}
-      >{tvSeason?.name}</Title>
+      <Skeleton visible={isLoadingTvSeason}>
+        <Title
+          order={1}
+          mb={50}
+        >
+          {tvSeason?.name}
+        </Title>
+      </Skeleton>
       <Pagination
         mb={30}
         value={seasonNumber}

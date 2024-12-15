@@ -1,14 +1,11 @@
-import { useAnimationOffsetEffect } from "@mantine/carousel";
 import { Box, Button, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from "@mantine/core";
 import { useDisclosure } from '@mantine/hooks';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContentRating, useCountries, useTopDetails, useTvEpisode } from "../api";
 import Companies from "../components/blocks/companies";
 import Posters from "../components/blocks/posters/posters";
 import Keywords from "../components/ui/keywords";
-import requestMaker from "../functions/requestMaker";
-import useLoading from "../hooks/use-loading";
 import Actors from "../modules/actors";
 import TvRecomendations from "./tv-recomendations";
 
@@ -20,15 +17,7 @@ export default function TvEpisodePage() {
   const [contentRating, isLoadingContentRating] = useContentRating({creationType: 'tv', id: tvId || ''})
   const [countries, isLoadingCountries] = useCountries()
   const [opened, { open, close }] = useDisclosure(false);
-  const [embla, setEmbla] = useState(null);
-  useAnimationOffsetEffect(embla, 200);
   const [path, setPath] = useState('');
-  const [images, setImages] = useState([]);
-  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${tvId}/season/${seasonId}/episode/${episodeId}/images`, setImages));
-
-  useEffect(() => {
-    fetchImages();
-  }, [])
 
   return (
     <>
@@ -119,7 +108,7 @@ export default function TvEpisodePage() {
               <Title order={2} fz={'sectionTitle'}>Details</Title>
               <Box>
                 <Title order={3}>Country of origin</Title>
-                <Skeleton visible={isLoadingTvShow}>
+                <Skeleton visible={isLoadingTvShow && isLoadingCountries}>
                   <Text c={'gray.9'}>{tvShow && countries?.find(item => item.iso_3166_1 === tvShow?.origin_country[0])?.english_name}</Text>
                 </Skeleton>
               </Box>

@@ -1,6 +1,6 @@
 import { Box, Chip, Flex, NativeSelect, NumberInput, Paper, RangeSlider, Title } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import requestMaker from '../functions/requestMaker';
 
 interface iGenreData {
@@ -28,7 +28,7 @@ interface iFilterProps {
 
 export default function Filter({ creationType, selectValue, minRating, maxRating, minYear, maxYear, minRuntime, maxRuntime, setSelectValue, setMinRating, setMaxRating, setMinYear, setMaxYear, setMinRuntime, setMaxRuntime}: iFilterProps) {
   const [genreList, setGenreList] = useState<iGenreData[]>([]);
-  const [genreValue, setGenreValue] = useState<iGenreData[]>([]);
+  const [genreValue, setGenreValue] = useState<string[]>([]);
   // const [selectValue, setSelectValue] = useState('vote_average.desc');
   const marks = [
     { value: 60, label: '1h' },
@@ -103,13 +103,13 @@ export default function Filter({ creationType, selectValue, minRating, maxRating
               label='From:'
               clearable
               value={minYear}
-              onChange={value => setMinYear(value)}
+              onChange={value => setMinYear(value || new Date)}
             />
             <DatePickerInput
               label='To:'
               clearable
               value={maxYear}
-              onChange={value => setMaxYear(value)}
+              onChange={value => setMaxYear(value || new Date)}
             />
           </Box>
           <Box mb={15}>

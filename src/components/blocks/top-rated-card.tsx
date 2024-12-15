@@ -8,7 +8,7 @@ interface iTopRatedCardProps {
 }
 
 export default function TopRatedCard({ creationType, id }: iTopRatedCardProps) {
-  const [info, isLoadingInfo] = useTopDetails({creationType: creationType, id: id})
+  const [info, isLoadingInfo] = useTopDetails({creationType: creationType, id: String(id)})
 
   return (
     <Link
