@@ -11,17 +11,20 @@ export interface iUseTrendingOptions {
 
 interface iCreationData {
   adult: boolean,
+  air_date?: string,
   backdrop_path?: string,
   episode_run_time: number[],
   episodes?: iEpisodeData[],
   first_air_date?: string,
   genres: iGenresData[],
+  guest_stars?: iPersonData[],
+  homepage?: string,
   id: number,
   last_air_date?: string,
   media_type: string,
   name?: string,
   number_of_seasons?: number,
-  origin_country?: string[],
+  origin_country: string[],
   original_language: string,
   original_name?: string,
   original_title?: string,
@@ -35,6 +38,7 @@ interface iCreationData {
   revenue: number,
   seasons?: iSeasonData[],
   status?: string,
+  still_path?: string,
   title?: string,
   tagline?: string,
   video?: string[],
@@ -211,6 +215,25 @@ export function useTvSeasons({id, seasonNumber }: iUseTvSeasonsOptions) {
   return [data, isLoading] as const
 }
 
+// TV EPISODE
+
+interface iUseTvEpisodeOptions{
+  id: string,
+  seasonNumber: number,
+  episodeNumber: number,
+}
+
+export function useTvEpisode({id, seasonNumber, episodeNumber }: iUseTvEpisodeOptions) {
+  const [data, setData] = useState<iCreationData | null>(null)
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}`, setData, ))
+
+  useEffect(() => {
+    fetchData()
+  }, [id, seasonNumber, episodeNumber])
+
+  return [data, isLoading] as const
+}
+
 // TOP CARD DETAILS
 
 interface iUseTopDetailsOptions {
@@ -373,6 +396,7 @@ interface iPersonData {
   also_known_as: string[],
   biography: string,
   birthday: string,
+  character: string,
   deathday: string,
   gender: number,
   homepage: string,
@@ -410,6 +434,7 @@ interface iContentRatingOptions{
 interface iContentRatingData {
   iso_3166_1: string,
   rating: string,
+  english_name: string,
 }
 
 export function useContentRating({creationType, id}: iContentRatingOptions) {
@@ -419,6 +444,20 @@ export function useContentRating({creationType, id}: iContentRatingOptions) {
   useEffect(() => {
     fetchData()
   }, [creationType, id])
+
+  return [data, isLoading] as const
+}
+
+
+// COUNTRIES
+
+export function useCountries() {
+  const [data, setData] = useState<iContentRatingData[]>()
+  const [fetchData, isLoading] = useLoading(async () => requestMaker('https://api.themoviedb.org/3/configuration/countries?language=en-US', setData));
+
+  useEffect(() => {
+    fetchData()
+  }, [])
 
   return [data, isLoading] as const
 }

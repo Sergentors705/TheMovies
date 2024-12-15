@@ -1,9 +1,20 @@
 import { Carousel, CarouselSlide, useAnimationOffsetEffect } from '@mantine/carousel';
 import { Image, Paper, Skeleton, Text, Title } from '@mantine/core';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
-export default function Actors({array}) {
+interface iActorsProps {
+  array: iPersonData[],
+}
+
+interface iPersonData {
+  character: string,
+  id: number,
+  name: string,
+  profile_path: string,
+}
+
+export default function Actors({array}: iActorsProps) {
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
   const {tvId} = useParams()
@@ -27,8 +38,6 @@ export default function Actors({array}) {
               <CarouselSlide
               py={20}
                 key={item.id}
-                flex
-                align='center'
                 onClick={() => navigate(`/person/${item.id}`)}
               >
                 <Paper
@@ -68,7 +77,6 @@ export default function Actors({array}) {
               </CarouselSlide>
           )}
         </Carousel>
-        {/* <PrimaryButton classname='button-primary--red' text='Show all' type='button' onclick={() => navigate(`/all-cast/${movieId}`)} /> */}
     </div>
   )
 }
