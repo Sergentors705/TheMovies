@@ -17,6 +17,7 @@ interface iFilterProps {
   maxYear: Date,
   minRuntime: number,
   maxRuntime: number,
+  genreValue: string[],
   setSelectValue: (arg0: string) => void,
   setMinRating: (arg0: number) => void,
   setMaxRating: (arg0: number) => void,
@@ -24,11 +25,12 @@ interface iFilterProps {
   setMaxYear: (arg0: Date) => void,
   setMinRuntime: (arg0: number) => void,
   setMaxRuntime: (arg0: number) => void,
+  setGenreValue: (arg0: string[]) => void,
 }
 
-export default function Filter({ creationType, selectValue, minRating, maxRating, minYear, maxYear, minRuntime, maxRuntime, setSelectValue, setMinRating, setMaxRating, setMinYear, setMaxYear, setMinRuntime, setMaxRuntime}: iFilterProps) {
+export default function Filter({ creationType, selectValue, minRating, maxRating, minYear, maxYear, minRuntime, maxRuntime, genreValue, setSelectValue, setMinRating, setMaxRating, setMinYear, setMaxYear, setMinRuntime, setMaxRuntime, setGenreValue}: iFilterProps) {
   const [genreList, setGenreList] = useState<iGenreData[]>([]);
-  const [genreValue, setGenreValue] = useState<string[]>([]);
+  // const [genreValue, setGenreValue] = useState<string[]>([]);
   // const [selectValue, setSelectValue] = useState('vote_average.desc');
   const marks = [
     { value: 60, label: '1h' },
@@ -40,7 +42,7 @@ export default function Filter({ creationType, selectValue, minRating, maxRating
   useEffect(() => {
     requestMaker(`https://api.themoviedb.org/3/genre/${creationType}/list?language=en`, setGenreList, 'genres')
   },[])
-
+console.log(genreValue)
   return (
     <Paper p={20} mr={30}>
           <Title order={3} mb={10}>Sort by</Title>

@@ -5,11 +5,6 @@ import { useTop } from '../api';
 import TopRatedCard from '../components/blocks/top-rated-card';
 import Filter from '../components/filter';
 
-interface iGenreData {
-  id: number,
-  name: string,
-}
-
 interface iTopPageProps {
   creationType: string,
   sortingOrder: string,
@@ -44,13 +39,13 @@ export default function TopRatedPage({ creationType, sortingOrder }: iTopPagePro
         style={{gridTemplateColumns: '300px 1fr'}}
       >
         <Filter
-          creationType={creationType} selectValue={selectValue} minRating={minRating} maxRating={maxRating} minYear={minYear} maxYear={maxYear} minRuntime={minRuntime} maxRuntime={maxRuntime}
-          setSelectValue={setSelectValue} setMinRating={setMinRating} setMaxRating={setMaxRating} setMinYear={setMinYear} setMaxYear={setMaxYear} setMinRuntime={setMinRuntime} setMaxRuntime={setMaxRuntime}
+          creationType={creationType} selectValue={selectValue} minRating={minRating} maxRating={maxRating} minYear={minYear} maxYear={maxYear} minRuntime={minRuntime} maxRuntime={maxRuntime} genreValue={genreValue}
+          setSelectValue={setSelectValue} setMinRating={setMinRating} setMaxRating={setMaxRating} setMinYear={setMinYear} setMaxYear={setMaxYear} setMinRuntime={setMinRuntime} setMaxRuntime={setMaxRuntime} setGenreValue={setGenreValue}
         />
         <Flex  wrap={'wrap'} gap={20}>
           {popular?.results?.map(item =>
-            <Skeleton visible={isLoadingPopular} maw='min-content'>
-              <TopRatedCard key={item.id} id={item.id}  creationType={creationType} />
+            <Skeleton key={item.id} visible={isLoadingPopular} maw='min-content'>
+              <TopRatedCard id={item.id}  creationType={creationType} />
             </Skeleton>
           )}
         </Flex>
