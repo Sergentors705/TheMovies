@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 interface iCreditsData {
   id: number,
-  episode_run_time: number,
+  episode_run_time: number[],
   media_type: string,
   name?: string,
   character?: string,
@@ -18,7 +18,7 @@ interface iCreditsData {
   profile_path?: string,
   adult: boolean,
   original_language: string,
-  genre_ids: number[]
+  genre_ids: number[],
   popularity: number,
   first_air_date?: string,
   last_air_date?: string,
@@ -43,7 +43,7 @@ export default function PersonPage() {
   }
   const [embla, setEmbla] = useState(null);
   useAnimationOffsetEffect(embla, 200);
-
+console.log(credits)
   return (
     <Flex
     maw={1366}
@@ -56,11 +56,15 @@ export default function PersonPage() {
           <img  width={300} height={450} src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${person?.profile_path}`} alt=''/>
           <Box >
             <Title order={4} >Birthday:</Title>
-            <Text >{person?.birthday && new Date(person?.birthday).getDate()} {person?.birthday && getMonthName(new Date(person?.birthday).getMonth())} {person?.birthday && new Date(person?.birthday).getFullYear()}</Text>
+            <Skeleton visible={isLoadingPerson}>
+              <Text >{person?.birthday && new Date(person?.birthday).getDate()} {person?.birthday && getMonthName(new Date(person?.birthday).getMonth())} {person?.birthday && new Date(person?.birthday).getFullYear()}</Text>
+            </Skeleton>
           </Box>
           <Box >
             <Title order={4} >Birthplace:</Title>
+            <Skeleton visible={isLoadingPerson}>
             <Text >Birthplace: {person?.place_of_birth}</Text>
+            </Skeleton>
           </Box>
           {
             person?.deathday

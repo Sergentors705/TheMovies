@@ -1,12 +1,12 @@
-import { Button, Center, Collapse, Flex, Image, Paper, Text, Title } from '@mantine/core';
+import { Button, Collapse, Flex, Image, Paper, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React from 'react';
 import { Link } from 'react-router-dom';
 
 interface iData {
   credit_id: number,
   id: number,
-  media_type: string,
+  job?: string,
+  media_type?: string,
   name: string,
   buisness: string,
   profile_path: string,
@@ -14,7 +14,7 @@ interface iData {
 }
 
 interface PeopleListProps {
-  array: iData[] | [],
+  array: iData[],
   title: string,
   modalOpen: () => void,
   setModalDate?: (item: iData) => void | undefined,

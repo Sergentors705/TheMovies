@@ -1,6 +1,6 @@
 import { Box, Divider, Flex, Image, Pagination, Paper, Skeleton, Text, Title } from '@mantine/core';
-import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
 
@@ -20,7 +20,6 @@ export default function SearchPage() {
   const [creations, setCreations] = useState<ISearchResults | null>();
   const [searchResults, setSearchResults] = useState<ISearchResults | null>();
   const [page, setPage] = useState(1);
-  const navigate = useNavigate();
   const [fetchCreations, isLoadingCreations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
   const [fetchSearch, isLoadingSearch] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/search/multi?query=${searchValue}&include_adult=false&language=en-US&page=${page}`, setSearchResults))
   const [keywordTitle, setKeywordTitle] = useState<IMultiTitle | null>();
@@ -40,7 +39,7 @@ export default function SearchPage() {
   useEffect(() => {
     fetchSearch();
   }, [searchValue, page])
-  
+
   return (
     <Flex
       maw={1366}
@@ -67,7 +66,7 @@ export default function SearchPage() {
                 p={20}
               >
                   <Skeleton
-                    visible={isLoadingCreations}
+                    visible={isLoadingCreations || isLoadingSearch}
                     w='auto'
                   >
                     <Image

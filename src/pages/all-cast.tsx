@@ -1,18 +1,18 @@
-import { Flex, Image, Modal, Title } from '@mantine/core';
+import { Flex, Image, Modal, Skeleton, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import PeopleListCreator from '../functions/peopleListCreator';
 import requestMaker from '../functions/requestMaker';
 import useLoading from '../hooks/use-loading';
-import PeopleListCreator from '../functions/peopleListCreator';
 
 interface iCrewData {
   id: number,
-  department: string;
+  department?: string;
   name: string,
   credit_id: number,
   profile_path: string,
-  job: string,
+  job?: string,
 }
 
 interface iCastData {
@@ -80,10 +80,12 @@ export default function AllCast() {
     <>
       <Flex maw={1366} w={'100%'} direction={'column'}>
         <div className='all-cast__header'>
-          <Link className='all-cast__back-to-movie' to={`/${type}/${creation?.id}`}>
-            <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${creation?.poster_path}`} width={100} height={150} />
-            Back to {creation?.title}
-          </Link>
+          <Skeleton visible={isLoadingCreation || isLoadingCrew}>
+            <Link className='all-cast__back-to-movie' to={`/${type}/${creation?.id}`}>
+              <img className='all-cast__movie-image' src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2/${creation?.poster_path}`} width={100} height={150} />
+              Back to {creation?.title}
+            </Link>
+          </Skeleton>
         </div>
         <Flex
           gap={50}
@@ -95,18 +97,18 @@ export default function AllCast() {
             direction={'column'}
             gap={15}
           >
-            <PeopleListCreator array={art?.map((i) => ({...i, buisness: `${i.job}`}))} title='Art' modalOpen={open} />
-            <PeopleListCreator array={lighting?.map((i) => ({...i, buisness: `${i.job}`}))} title='Lighting' modalOpen={open} />
-            <PeopleListCreator array={sound?.map((i) => ({...i, buisness: `${i.job}`}))} title='Sound' modalOpen={open} />
-            <PeopleListCreator array={production?.map((i) => ({...i, buisness: `${i.job}`}))} title='Production' modalOpen={open} />
-            <PeopleListCreator array={actors?.map((i) => ({...i, buisness: `${i.job}`}))} title='Actors' modalOpen={open} />
-            <PeopleListCreator array={costume?.map((i) => ({...i, buisness: `${i.job}`}))} title='Costume & Make-Up' modalOpen={open} />
-            <PeopleListCreator array={directing?.map((i) => ({...i, buisness: `${i.job}`}))} title='Directing' modalOpen={open} />
-            <PeopleListCreator array={camera?.map((i) => ({...i, buisness: `${i.job}`}))} title='Camera' modalOpen={open} />
-            <PeopleListCreator array={writting?.map((i) => ({...i, buisness: `${i.job}`}))} title='Writing' modalOpen={open} />
-            <PeopleListCreator array={team?.map((i) => ({...i, buisness: `${i.job}`}))} title='Crew' modalOpen={open} />
-            <PeopleListCreator array={editing?.map((i) => ({...i, buisness: `${i.job}`}))} title='Editing' modalOpen={open} />
-            <PeopleListCreator array={visualEffects?.map((i) => ({...i, buisness: `${i.job}`}))} title='Visual Effects' modalOpen={open} />
+            <PeopleListCreator array={art?.map((i) => ({...i, buisness: `${i.job}`}))} title='Art' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={lighting?.map((i) => ({...i, buisness: `${i.job}`}))} title='Lighting' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={sound?.map((i) => ({...i, buisness: `${i.job}`}))} title='Sound' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={production?.map((i) => ({...i, buisness: `${i.job}`}))} title='Production' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={actors?.map((i) => ({...i, buisness: `${i.job}`}))} title='Actors' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={costume?.map((i) => ({...i, buisness: `${i.job}`}))} title='Costume & Make-Up' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={directing?.map((i) => ({...i, buisness: `${i.job}`}))} title='Directing' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={camera?.map((i) => ({...i, buisness: `${i.job}`}))} title='Camera' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={writting?.map((i) => ({...i, buisness: `${i.job}`}))} title='Writing' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={team?.map((i) => ({...i, buisness: `${i.job}`}))} title='Crew' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={editing?.map((i) => ({...i, buisness: `${i.job}`}))} title='Editing' modalOpen={open} setModalDate={setModalDate} />
+            <PeopleListCreator array={visualEffects?.map((i) => ({...i, buisness: `${i.job}`}))} title='Visual Effects' modalOpen={open} setModalDate={setModalDate} />
           </Flex>
         </Flex>
       </Flex>

@@ -16,6 +16,7 @@ interface iCreationData {
   episode_run_time: number[],
   episodes?: iEpisodeData[],
   first_air_date?: string,
+  genre_ids: number[],
   genres: iGenresData[],
   guest_stars?: iPersonData[],
   homepage?: string,
