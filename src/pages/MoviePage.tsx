@@ -1,6 +1,5 @@
 import '@mantine/carousel/styles.css';
 import { Box, Flex, Image, List, Modal, NumberFormatter, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useCredits, useMovie, useMovieReleaseDates } from '../api';
@@ -11,6 +10,7 @@ import Similar from '../components/blocks/similar';
 import Keywords from '../components/ui/keywords';
 import Crew from '../modules/crew/crew';
 import TvRecomendations from './tv-recomendations';
+import { useDisclosure } from '@mantine/hooks';
 
 interface iCrewMemberData {
   id: number,
@@ -209,7 +209,7 @@ export default function MoviePage() {
           <TvRecomendations creationType='movie' />
         </Box>
       </SimpleGrid>
-      <Modal opened={opened} onClose={close} >
+      <Modal opened={opened} onClose={close} fullScreen>
         <Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} />
       </Modal>
     </>
