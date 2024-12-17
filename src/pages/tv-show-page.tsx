@@ -1,5 +1,5 @@
 import '@mantine/carousel/styles.css';
-import { Box, Flex, Image, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Box, Flex, Image, List, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -59,47 +59,50 @@ console.log(tvShow)
               >
                 <Title order={1} fz={'pageTitle'}>{tvShow?.name}</Title>
               </Skeleton>
-              <ul className='movie-page__title-info-list'>
-                <li className='movie-page__title-info-item'>
+              <List
+                listStyleType='none'
+                style={{display: 'flex', gap: '10px'}}
+              >
+                <List.Item className='movie-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingTvShow}
                     mih={20}
                     miw={50}
                   >
-                    <Text c='dimmed'>
-                      {tvShow?.first_air_date && new Date(tvShow?.first_air_date)?.getFullYear()}
-                      -
-                      {tvShow?.last_air_date && new Date( tvShow?.last_air_date)?.getFullYear()}
-                    </Text>
+                  <Text c='dimmed'>
+                    {tvShow?.first_air_date && new Date(tvShow?.first_air_date)?.getFullYear()}
+                    -
+                    {tvShow?.last_air_date && new Date( tvShow?.last_air_date)?.getFullYear()}
+                  </Text>
                   </Skeleton>
-                </li>
-                <li className='movie-page__title-info-item'>
+                </List.Item>
+                <List.Item className='movie-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingContentRating}
-                    height={20}
-                    width={50}
+                    mih={20}
+                    miw={50}
                   >
-                    <Text c='dimmed'>
-                      {contentRating?.find(item => item.iso_3166_1 === 'US')?.rating}
-                    </Text>
+                  <Text c='dimmed'>
+                    {contentRating?.find(item => item.iso_3166_1 === 'US')?.rating}
+                  </Text>
                   </Skeleton>
-                </li>
-                <li className='movie-page__title-info-item'>
+                </List.Item>
+                <List.Item className='movie-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingTvShow}
                     height={20}
                     miw={50}
                   >
-                    {
-                      tvShow?.episode_run_time.length
-                      ? <Text c={'dimmed'}>
-                        {tvShow?.episode_run_time?.join('m, ')}m
-                      </Text>
-                      : <></>
-                    }
+                  {
+                    tvShow?.episode_run_time.length
+                    ? <Text c={'dimmed'}>
+                      {tvShow?.episode_run_time?.join('m, ')}m
+                    </Text>
+                    : <></>
+                  }
                   </Skeleton>
-                </li>
-              </ul>
+                </List.Item>
+              </List>
               <Skeleton
                 visible={isLoadingTvShow}
                 width='50%'

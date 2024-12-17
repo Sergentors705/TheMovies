@@ -19,7 +19,7 @@ export default function Companies({companies, creationType}: iCompaniesProps) {
       <Title order={3} mb={10}>Production</Title>
       <List listStyleType='none'>
         {companies?.map((item: iCompanieData) =>
-          <List.Item>
+          <List.Item key={item.id}>
             <Link to={`/${creationType}/companie/${item.id}`}>
               {
                 item.logo_path

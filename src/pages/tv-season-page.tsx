@@ -8,9 +8,9 @@ import TvRecomendations from './tv-recomendations';
 export default function TvSeasonPage() {
   const {tvId, seasonId} = useParams();
   const [seasonNumber, setSeasonNumber] = useState<number>(Number(seasonId));
-  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: seasonNumber || 1})
   const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''})
-
+  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: tvShow?.seasons[seasonNumber - 1].season_number || Number(seasonId) })
+console.log('pidor', seasonNumber -1)
   return (
     <Flex
       w={'100%'}
@@ -46,7 +46,7 @@ export default function TvSeasonPage() {
         mb={30}
         value={seasonNumber}
         onChange={setSeasonNumber}
-        total={tvShow?.number_of_seasons || 1}
+        total={tvShow?.seasons?.length || 1}
       />
       <Box style={{display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '50px'}}>
         <Flex

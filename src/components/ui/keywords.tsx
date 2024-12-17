@@ -16,9 +16,11 @@ export default function Keywords({creationType}: iKeywordsProps) {
       <Flex wrap='wrap' gap={5}>
         {
           (keywords?.keywords || keywords?.results)?.map(item =>
-            <Skeleton visible={isLoadingKeywords}>
+            <Skeleton
+              visible={isLoadingKeywords}
+              key={item.id}
+            >
               <Link
-                key={item.id}
                 to={`/${creationType}/keyword/${item.id}`}
                 style={{ textDecoration: 'none'}}
               >

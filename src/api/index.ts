@@ -37,7 +37,7 @@ interface iCreationData {
   runtime: number,
   release_date?: string,
   revenue: number,
-  seasons?: iSeasonData[],
+  seasons: iSeasonData[],
   status?: string,
   still_path?: string,
   title?: string,
@@ -212,7 +212,7 @@ export function useTvSeasons({id, seasonNumber }: iUseTvSeasonsOptions) {
   useEffect(() => {
     fetchData()
   }, [id, seasonNumber])
-
+console.log('zapros',seasonNumber)
   return [data, isLoading] as const
 }
 
