@@ -202,7 +202,7 @@ export function useDetails({ creationType }: iUseDetailsOptions) {
 
 interface iUseTvSeasonsOptions{
   id: string,
-  seasonNumber: number | string,
+  seasonNumber: number,
 }
 
 export function useTvSeasons({id, seasonNumber }: iUseTvSeasonsOptions) {
@@ -212,7 +212,7 @@ export function useTvSeasons({id, seasonNumber }: iUseTvSeasonsOptions) {
   useEffect(() => {
     fetchData()
   }, [id, seasonNumber])
-console.log(seasonNumber)
+
   return [data, isLoading] as const
 }
 
