@@ -212,7 +212,7 @@ export function useTvSeasons({id, seasonNumber }: iUseTvSeasonsOptions) {
   useEffect(() => {
     fetchData()
   }, [id, seasonNumber])
-
+console.log(seasonNumber)
   return [data, isLoading] as const
 }
 

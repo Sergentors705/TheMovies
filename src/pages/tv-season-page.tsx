@@ -7,9 +7,9 @@ import TvRecomendations from './tv-recomendations';
 
 export default function TvSeasonPage() {
   const {tvId, seasonId} = useParams();
-  const [seasonNumber, setSeasonNumber] = useState<number>(Number(seasonId) + 1);
+  const [seasonNumber, setSeasonNumber] = useState<number>(Number(seasonId) | 1);
   const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''})
-  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: tvShow?.seasons[seasonNumber - 1].season_number ?? Number(seasonId)})
+  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: Number(seasonId)})
   const Navigate = useNavigate()
 
   return (
