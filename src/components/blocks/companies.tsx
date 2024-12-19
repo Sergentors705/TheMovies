@@ -13,7 +13,7 @@ interface iCompanieData {
 }
 
 export default function Companies({companies, creationType}: iCompaniesProps) {
-  console.log(companies)
+
   return (
     <Box>
       <Title order={3} mb={10}>Production</Title>

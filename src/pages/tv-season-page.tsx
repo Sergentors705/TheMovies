@@ -1,6 +1,6 @@
 import { Box, Flex, Image, Pagination, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTopDetails, useTvSeasons } from '../api';
 import TvRecomendations from './tv-recomendations';
 
@@ -9,8 +9,9 @@ export default function TvSeasonPage() {
   const {tvId, seasonId} = useParams();
   const [seasonNumber, setSeasonNumber] = useState<number>(Number(seasonId));
   const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''})
-  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: tvShow?.seasons[seasonNumber - 1].season_number || Number(seasonId) })
-console.log('pidor', seasonNumber -1)
+  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: String(tvShow?.seasons[seasonNumber - 1].season_number) ?? seasonId ?? Number(seasonId)})
+  const Navigate = useNavigate()
+
   return (
     <Flex
       w={'100%'}
@@ -45,7 +46,11 @@ console.log('pidor', seasonNumber -1)
       <Pagination
         mb={30}
         value={seasonNumber}
-        onChange={setSeasonNumber}
+        onChange={(value) => {
+          setSeasonNumber(value)
+          Navigate(`/tv/${tvShow?.id}/tv-season/${value}`)
+        }
+        }
         total={tvShow?.seasons?.length || 1}
       />
       <Box style={{display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '50px'}}>

@@ -19,9 +19,6 @@ export default function TvShowPage() {
   const [contentRating, isLoadingContentRating] = useContentRating({creationType: 'tv', id: tvId || ''})
   const [opened, { open, close }] = useDisclosure(false);
 
-
-
-console.log(tvShow)
   return (
     <>
       <SimpleGrid
