@@ -2,7 +2,7 @@ import { Box, Flex, Image, Pagination, Paper, Skeleton, Text, Title } from '@man
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useTopDetails, useTvSeasons } from '../api';
-import TvRecomendations from './tv-recomendations';
+import TvRecomendations from '../components/blocks/recomendations/recomendations';
 
 
 export default function TvSeasonPage() {

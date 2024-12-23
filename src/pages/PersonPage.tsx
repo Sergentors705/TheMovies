@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useCombinedCredits, usePerson } from '../api';
 import { useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
+import Crew from '../modules/crew/crew';
 
 interface iCreditsData {
   id: number,
@@ -48,14 +49,10 @@ export default function PersonPage() {
   useAnimationOffsetEffect(embla, 200);
 console.log(credits)
   return (
-    <>
       <Flex
       maw={1366}
-      p={30}
-      direction='column'
-      align=''
-      gap={20}>
-        <Flex gap={30}>
+      py={30}
+      gap={30}>
           <Flex direction='column'>
               <Image
                 w={300}
@@ -86,18 +83,17 @@ console.log(credits)
                 </Box>
               : <></>
             }
+
           </Flex>
-          <Box
-            // direction='column'
-            // gap={10}
-            >
+          <Box>
             <Title order={1}>{person?.name}</Title>
             <Title order={3}>About</Title>
             <Text>{person?.biography}</Text>
             <Title mb={10}>Known for</Title>
             <Carousel
+              maw={936}
               dragFree
-              slideSize='10%'
+              slideSize='20%'
               getEmblaApi={setEmbla}
               align='start'
               slideGap='md'
@@ -144,12 +140,12 @@ console.log(credits)
                 </Carousel.Slide>
               )}
             </Carousel>
+
           </Box>
-        </Flex>
-      </Flex>
+
       <Modal opened={opened} onClose={close} fullScreen>
         <Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} />
       </Modal>
-    </>
+        </Flex>
   )
 }

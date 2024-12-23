@@ -20,6 +20,8 @@ function App() {
     <BrowserRouter>
       <Navigation />
       <Flex
+        className='app'
+        maw={1366}
         px={50}
         h='auto'
         justify='center'

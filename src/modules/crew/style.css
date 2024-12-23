@@ -1,0 +1,10 @@
+.person-card {
+ &:hover {
+  transform: scale(1.02);
+  box-shadow: var(--mantine-shadow-md);
+ }
+}
+
+.crew-link {
+  text-decoration: none;
+}

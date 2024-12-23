@@ -1,16 +1,16 @@
 import '@mantine/carousel/styles.css';
 import { Box, Flex, Image, List, Modal, NumberFormatter, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useCredits, useMovie, useMovieReleaseDates } from '../api';
 import Companies from '../components/blocks/companies';
 import Genres from '../components/blocks/genres';
 import Posters from '../components/blocks/posters/posters';
+import Recomendations from '../components/blocks/recomendations/recomendations';
 import Similar from '../components/blocks/similar';
 import Keywords from '../components/ui/keywords';
 import Crew from '../modules/crew/crew';
-import TvRecomendations from './tv-recomendations';
-import { useDisclosure } from '@mantine/hooks';
 
 interface iCrewMemberData {
   id: number,
@@ -37,8 +37,8 @@ export default function MoviePage() {
   // }, [movieId])
 
   useEffect(() => {
-    setDirector(credits?.crew.filter(item => item.job === 'Director') ?? [])
-    setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing') ?? [])
+    setDireаctor(credits?.crew.filter(item => item.job === 'Director') ?? [])
+    setWritter(credits.crew.filter(item => item.known_for_department === 'Writing') ?? [])
   }, [credits]);
 
   return (
@@ -51,11 +51,9 @@ export default function MoviePage() {
       >
         <Flex
           direction='column'
-          gap={30}
           miw={0}
-          p={20}
         >
-          <Flex gap={30}>
+          <Flex gap={30} mb={30}>
             <Skeleton visible={isLoadingMovie} height={450} width={300}>
               <Image
                 w={300}
@@ -206,7 +204,7 @@ export default function MoviePage() {
           </Box>
           <Companies companies={movie?.production_companies} creationType='movie' />
           <Keywords creationType='movie'/>
-          <TvRecomendations creationType='movie' />
+          <Recomendations creationType='movie' />
         </Box>
       </SimpleGrid>
       <Modal opened={opened} onClose={close} fullScreen>

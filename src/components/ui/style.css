@@ -1,0 +1,6 @@
+.keyword-badge {
+  &:hover {
+    transform: scale(1.02);
+    outline: 2px solid skyblue;
+  }
+}

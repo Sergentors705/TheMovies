@@ -7,7 +7,7 @@ import Companies from "../components/blocks/companies";
 import Posters from "../components/blocks/posters/posters";
 import Keywords from "../components/ui/keywords";
 import Actors from "../modules/actors";
-import TvRecomendations from "./tv-recomendations";
+import TvRecomendations from "../components/blocks/recomendations/recomendations";
 
 export default function TvEpisodePage() {
   const navigate = useNavigate();

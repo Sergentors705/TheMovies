@@ -10,7 +10,7 @@ import Posters from '../components/blocks/posters/posters';
 import Similar from '../components/blocks/similar';
 import Keywords from '../components/ui/keywords';
 import Crew from '../modules/crew/crew';
-import TvRecomendations from './tv-recomendations';
+import TvRecomendations from '../components/blocks/recomendations/recomendations';
 
 export default function TvShowPage() {
   const {tvId} = useParams();

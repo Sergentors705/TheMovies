@@ -3,6 +3,7 @@ import { Box, Button, Image, Paper, Skeleton, Text, Title } from '@mantine/core'
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useCredits } from '../../api';
+import './style.css';
 
 interface iCrewProps {
   creature: string,
@@ -30,7 +31,6 @@ export default function Crew({creature}: iCrewProps) {
   useAnimationOffsetEffect(embla, 200);
   const {movieId, tvId} = useParams()
   const navigate = useNavigate();
-
   const [credits, isLoadingCredits2] = useCredits({creationType: creature})
 
   useEffect(() => setStarring(credits?.cast.slice(0, 9) || []), [credits]);
@@ -48,16 +48,17 @@ export default function Crew({creature}: iCrewProps) {
           {
             starring?.map( item =>
               <CarouselSlide
+
                 key={item.id}
-                mb={30}
+                my={30}
               >
                 <Paper
+                  className='person-card'
                   h='100%'
                   withBorder
-                  shadow='md'
                   p='md'
                 >
-                  <Link to={`/person/${item.id}`} style={{textDecoration: 'none'}}>
+                  <Link className='crew-link' to={`/person/${item.id}`}>
                     <Skeleton
                       visible={isLoadingCredits2}
                       mih={225}

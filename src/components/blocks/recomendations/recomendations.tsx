@@ -1,12 +1,12 @@
 import { Flex, Image, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { Link, useParams } from 'react-router-dom';
-import { useRecomendations } from '../api';
+import { useRecomendations } from '../../../api';
 
 interface iRecomendationsProps {
   creationType: string,
 }
 
-export default function TvRecomendations({creationType}: iRecomendationsProps) {
+export default function Recomendations({creationType}: iRecomendationsProps) {
   const {tvId, movieId} = useParams();
   const [tvRecomendations, isLoadingTvRecomendations] = useRecomendations({id: Number(tvId || movieId), creationType: creationType})
 
