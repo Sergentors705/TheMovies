@@ -2,9 +2,10 @@ import { Flex, Image, Modal, Skeleton, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import PeopleListCreator from '../functions/peopleListCreator';
-import requestMaker from '../functions/requestMaker';
+import PeopleListCreator from '../functions/people-list-creator';
+import requestMaker from '../functions/request-maker';
 import useLoading from '../hooks/use-loading';
+import { API_URL } from '../const';
 
 interface iCrewData {
   id: number,
@@ -53,8 +54,8 @@ export default function AllCast() {
   const [opened, { open, close }] = useDisclosure(false);
   const [modalDate, setModalDate] = useState<iCrewData | iCastData | null>(null);
 
-  const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${type}/${creationId}`, setCreation));
-  const [fetchCrew, isLoadingCrew] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${type}/${creationId}/credits`, setCrewData));
+  const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`${API_URL}/3/${type}/${creationId}`, setCreation));
+  const [fetchCrew, isLoadingCrew] = useLoading(async () => requestMaker(`${API_URL}/3/${type}/${creationId}/credits`, setCrewData));
 
   useEffect(() => {
     fetchCreation();

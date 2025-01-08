@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import useLoading from "../hooks/use-loading";
-import requestMaker from "../functions/requestMaker";
-import { useParams } from "react-router-dom";
-import dayjs from "dayjs";
+import dayjs from "dayjs"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
+import { API_URL } from '../const'
+import requestMaker from "../functions/request-maker"
+import useLoading from "../hooks/use-loading"
 
 export interface iUseTrendingOptions {
   period: string,
@@ -149,7 +150,7 @@ interface iUseMovieOptions {
 
 export function useTrending({ period, type }: iUseTrendingOptions) {
   const [data, setData] = useState<iCreationData[]>([])
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/trending/${type}/${period}`, setData, 'results'))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/trending/${type}/${period}`, setData, 'results'))
 
   useEffect(() => {
     fetchData()
@@ -160,7 +161,7 @@ export function useTrending({ period, type }: iUseTrendingOptions) {
 
 export function useMovie({ movieId }: iUseMovieOptions) {
   const [data, setData] = useState<iMovieData | null>(null)
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}`, setData))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/movie/${movieId}`, setData))
 
   useEffect(() => {
     fetchData()
@@ -171,7 +172,7 @@ export function useMovie({ movieId }: iUseMovieOptions) {
 
 export function useMovieReleaseDates({ movieId }: iUseMovieOptions) {
   const [data, setData] = useState<iMovieReleaseData[] | null>(null)
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/release_dates`, setData, 'results'))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/movie/${movieId}/release_dates`, setData, 'results'))
 
   useEffect(() => {
     fetchData()
@@ -189,7 +190,7 @@ interface iUseDetailsOptions {
 export function useDetails({ creationType }: iUseDetailsOptions) {
   const [data, setData] = useState<iCreationData | null>(null)
   const {movieId, tvId} = useParams()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}`, setData, 'results'))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/${creationType}/${movieId || tvId}`, setData, 'results'))
 
   useEffect(() => {
     fetchData()
@@ -207,7 +208,7 @@ interface iUseTvSeasonsOptions{
 
 export function useTvSeasons({id, seasonNumber }: iUseTvSeasonsOptions) {
   const [data, setData] = useState<iCreationData | null>(null)
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}`, setData, ))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/tv/${id}/season/${seasonNumber}`, setData, ))
 
   useEffect(() => {
     fetchData()
@@ -226,7 +227,7 @@ interface iUseTvEpisodeOptions{
 
 export function useTvEpisode({id, seasonNumber, episodeNumber }: iUseTvEpisodeOptions) {
   const [data, setData] = useState<iCreationData | null>(null)
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}`, setData, ))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/tv/${id}/season/${seasonNumber}/episode/${episodeNumber}`, setData, ))
 
   useEffect(() => {
     fetchData()
@@ -244,7 +245,7 @@ interface iUseTopDetailsOptions {
 
 export function useTopDetails({ creationType, id }: iUseTopDetailsOptions) {
   const [data, setData] = useState<iCreationData>()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${id}`, setData))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/${creationType}/${id}`, setData))
 
   useEffect(() => {
     fetchData()
@@ -267,7 +268,7 @@ interface iCreditsData {
 export function useCredits({creationType}: iUseCreditsOptions) {
   const [data, setData] = useState<iCreditsData | null>(null)
   const {movieId, tvId} = useParams()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}/credits`, setData))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/${creationType}/${movieId || tvId}/credits`, setData))
 
   useEffect(() => {
     fetchData()
@@ -289,7 +290,7 @@ interface iCombinedCredits {
 
 export function useCombinedCredits({personId}: iUseCombinedCreditsOptions) {
   const [data, setData] = useState<iCombinedCredits | null>(null)
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setData))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/person/${personId}/combined_credits`, setData))
 
   useEffect(() => {
     fetchData()
@@ -317,7 +318,7 @@ interface iKeywordsData {
 export function useKeywords({creationType}: iKeywordsOptions) {
   const [data, setData] = useState<iKeywordsData>()
   const {movieId, tvId} = useParams()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}/keywords`, setData))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/${creationType}/${movieId || tvId}/keywords`, setData))
 
   useEffect(() => {
     fetchData()
@@ -342,7 +343,7 @@ interface iSimilarData {
 export function useSimilar({creationType}: iSimilarOptions) {
   const [data, setData] = useState<iSimilarData[]>()
   const {movieId, tvId} = useParams()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${movieId || tvId}/similar`, setData, 'results'))
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/${creationType}/${movieId || tvId}/similar`, setData, 'results'))
 
   useEffect(() => {
     fetchData()
@@ -381,7 +382,7 @@ interface iTopData {
 
 export function useTop({creationType, page, selectValue, minRating, maxRating, minYear, maxYear, genreValue, minRuntime, maxRuntime}: iTopOptions) {
   const [data, setData] = useState<iTopData>()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${selectValue}&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&vote_count.gte=1000&primary_release_date.gte=${dayjs(minYear).format('YYYY-MM-DD')}&primary_release_date.lte=${dayjs(maxYear).format('YYYY-MM-DD')}}${genreValue.length !== 0 ? `&with_genres=${genreValue.join('|')}` : ''}&with_runtime.gte=${minRuntime}&with_runtime.lte=${maxRuntime}`, setData));
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=${selectValue}&vote_average.gte=${minRating}&vote_average.lte=${maxRating}&vote_count.gte=1000&primary_release_date.gte=${dayjs(minYear).format('YYYY-MM-DD')}&primary_release_date.lte=${dayjs(maxYear).format('YYYY-MM-DD')}}${genreValue.length !== 0 ? `&with_genres=${genreValue.join('|')}` : ''}&with_runtime.gte=${minRuntime}&with_runtime.lte=${maxRuntime}`, setData));
 
   useEffect(() => {
     fetchData()
@@ -416,7 +417,7 @@ interface iPersonOptions {
 
 export function usePerson({id}: iPersonOptions) {
   const [data, setData] = useState<iPersonData>()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${id}`, setData));
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/person/${id}`, setData));
 
   useEffect(() => {
     fetchData()
@@ -440,7 +441,7 @@ interface iContentRatingData {
 
 export function useContentRating({creationType, id}: iContentRatingOptions) {
   const [data, setData] = useState<iContentRatingData[]>()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${id}}/content_ratings`, setData, 'results'));
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/${creationType}/${id}}/content_ratings`, setData, 'results'));
 
   useEffect(() => {
     fetchData()
@@ -454,7 +455,7 @@ export function useContentRating({creationType, id}: iContentRatingOptions) {
 
 export function useCountries() {
   const [data, setData] = useState<iContentRatingData[]>()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker('https://api.themoviedb.org/3/configuration/countries?language=en-US', setData));
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/configuration/countries?language=en-US`, setData));
 
   useEffect(() => {
     fetchData()
@@ -473,7 +474,7 @@ interface iRecomendationsOptions{
 
 export function useRecomendations({id, creationType}: iRecomendationsOptions) {
   const [data, setData] = useState<iCreationData[]>()
-  const [fetchData, isLoading] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creationType}/${id}/recommendations`, setData, 'results'));
+  const [fetchData, isLoading] = useLoading(async () => requestMaker(`${API_URL}/3/${creationType}/${id}/recommendations`, setData, 'results'));
 
   useEffect(() => {
     fetchData()

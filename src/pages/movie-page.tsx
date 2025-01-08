@@ -29,7 +29,7 @@ export default function MoviePage() {
 
   const [movie, isLoadingMovie] = useMovie({movieId: movieId || ''})
   const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId || ''})
-  // const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/movie/${movieId}/videos`, setVideos))
+  // const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`${API_URL}/3/movie/${movieId}/videos`, setVideos))
   const [credits, isLoadingCredits] = useCredits({creationType: 'movie'})
 
   // useEffect(() => {
@@ -37,8 +37,8 @@ export default function MoviePage() {
   // }, [movieId])
 
   useEffect(() => {
-    setDireаctor(credits?.crew.filter(item => item.job === 'Director') ?? [])
-    setWritter(credits.crew.filter(item => item.known_for_department === 'Writing') ?? [])
+    setDirector(credits?.crew.filter(item => item.job === 'Director') ?? [])
+    setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing') ?? [])
   }, [credits]);
 
   return (

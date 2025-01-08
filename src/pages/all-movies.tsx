@@ -2,9 +2,10 @@ import { Box, Flex, Image, Modal, SimpleGrid, Skeleton, Text, Title } from '@man
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import CreationListCreator from '../functions/creationListCreator';
-import requestMaker from '../functions/requestMaker';
+import CreationListCreator from '../functions/creation-list-creator';
+import requestMaker from '../functions/request-maker';
 import useLoading from '../hooks/use-loading';
+import { API_URL } from '../const';
 
 interface iCreditsData {
   cast: iCastData[],
@@ -116,11 +117,11 @@ interface iCreationCrewData {
 }
 
 export default function AllMovies() {
-  const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}`, setPerson));
-  const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}`, setCreation));
-  const [fetchCreationCrew, isLoadingCreationCrew] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${modalDate?.media_type}/${modalDate?.id}/credits`, setCreationCrew));
+  const [fetchPerson, isLoadingPerson] = useLoading(async () => requestMaker(`${API_URL}/3/person/${personId}`, setPerson));
+  const [fetchCreation, isLoadingCreation] = useLoading(async () => requestMaker(`${API_URL}/3/${modalDate?.media_type}/${modalDate?.id}`, setCreation));
+  const [fetchCreationCrew, isLoadingCreationCrew] = useLoading(async () => requestMaker(`${API_URL}/3/${modalDate?.media_type}/${modalDate?.id}/credits`, setCreationCrew));
   const [credits, setCredits] = useState<iCreditsData | null>(null);
-  const [fetchCredits] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/person/${personId}/combined_credits`, setCredits));
+  const [fetchCredits] = useLoading(async () => requestMaker(`${API_URL}/3/person/${personId}/combined_credits`, setCredits));
   const [person, setPerson] = useState<iPersonData | null>(null);
   const [creation, setCreation] = useState<iCreationData | null>(null);
   const [creationCrew, setCreationCrew] = useState<iCreationCrewData | null>(null);

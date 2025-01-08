@@ -1,8 +1,9 @@
 import { Box, Divider, Flex, Image, Pagination, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import requestMaker from '../functions/requestMaker';
+import requestMaker from '../functions/request-maker';
 import useLoading from '../hooks/use-loading';
+import { API_URL } from '../const';
 
 interface IMultiTitle {
   name: string,
@@ -20,16 +21,16 @@ export default function SearchPage() {
   const [creations, setCreations] = useState<ISearchResults | null>();
   const [searchResults, setSearchResults] = useState<ISearchResults | null>();
   const [page, setPage] = useState(1);
-  const [fetchCreations, isLoadingCreations] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
-  const [fetchSearch, isLoadingSearch] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/search/multi?query=${searchValue}&include_adult=false&language=en-US&page=${page}`, setSearchResults))
+  const [fetchCreations, isLoadingCreations] = useLoading(async () => requestMaker(`${API_URL}/3/discover/${creationType}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_keywords=${keywordId || ''}&with_genres=${genreId || ''}&with_companies=${companieId || ''}`, setCreations))
+  const [fetchSearch, isLoadingSearch] = useLoading(async () => requestMaker(`${API_URL}/3/search/multi?query=${searchValue}&include_adult=false&language=en-US&page=${page}`, setSearchResults))
   const [keywordTitle, setKeywordTitle] = useState<IMultiTitle | null>();
   const [genreTitle, setGenreTitle] = useState<IMultiTitle | null>();
   const [companieName, setCompanieName] = useState<IMultiTitle | null>();
 
   useEffect(() => {
-    requestMaker(`https://api.themoviedb.org/3/keyword/${keywordId}`, setKeywordTitle);
-    requestMaker(`https://api.themoviedb.org/3/genre/${genreId}`, setGenreTitle);
-    requestMaker(`https://api.themoviedb.org/3/company/${companieId}`, setCompanieName);
+    requestMaker(`${API_URL}/3/keyword/${keywordId}`, setKeywordTitle);
+    requestMaker(`${API_URL}/3/genre/${genreId}`, setGenreTitle);
+    requestMaker(`${API_URL}/3/company/${companieId}`, setCompanieName);
   }, [keywordId, genreId, companieId])
 
   useEffect(() => {

@@ -14,19 +14,19 @@ export default function TopRatedPage({ creationType, sortingOrder }: iTopPagePro
   const [page, setPage] = useState(1);
   const [minRating, setMinRating] = useState<number>(7);
   const [maxRating, setMaxRating] = useState<number>(10);
-  const [minYear, setMinYear] = useState(new Date('1-1-1950'));
+  const [minYear, setMinYear] = useState(new Date('1950-01-01'));
   const [maxYear, setMaxYear] = useState(new Date());
   const [minRuntime, setMinRuntime] = useState<number>(0);
   const [maxRuntime, setMaxRuntime] = useState<number>(360);
   const [genreValue, setGenreValue] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState(sortingOrder);
 
-  const [popular, isLoadingPopular] = useTop({creationType: creationType, page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
+  const [popular, isLoadingPopular] = useTop({creationType, page, selectValue, minRating, maxRating, minYear, maxYear, genreValue, minRuntime, maxRuntime})
 
 
   return (
     <Container
-      w={'100%'}
+      w='100%'
       py={30}
       px={0}
       size={1366}

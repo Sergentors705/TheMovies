@@ -1,7 +1,8 @@
 import { Box, Chip, Flex, NativeSelect, NumberInput, Paper, RangeSlider, Title } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useEffect, useState } from 'react'
-import requestMaker from '../functions/requestMaker';
+import requestMaker from '../functions/request-maker';
+import { API_URL } from '../const';
 
 interface iGenreData {
   id: number,
@@ -40,7 +41,7 @@ export default function Filter({ creationType, selectValue, minRating, maxRating
   ];
 
   useEffect(() => {
-    requestMaker(`https://api.themoviedb.org/3/genre/${creationType}/list?language=en`, setGenreList, 'genres')
+    requestMaker(`${API_URL}/3/genre/${creationType}/list?language=en`, setGenreList, 'genres')
   },[])
 console.log(genreValue)
   return (

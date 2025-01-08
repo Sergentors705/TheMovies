@@ -10,7 +10,7 @@ export default function Search() {
   const [searchResults, setSearchResults] = useState([]);
   const [{searchParams}] = useParams();
   const [searchValue, setSearchValue] = useState(searchParams);
-  const [fetchSearchResults, isLoadingSearchResults] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/search/multi?query=${searchValue}`, setSearchResults));
+  const [fetchSearchResults, isLoadingSearchResults] = useLoading(async () => requestMaker(`${API_URL}/3/search/multi?query=${searchValue}`, setSearchResults));
 
   return (
     <>

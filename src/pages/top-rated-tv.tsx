@@ -4,7 +4,8 @@ import { DatePickerInput } from '@mantine/dates';
 import { useEffect, useState } from 'react';
 import { useTop } from '../api';
 import TopRatedCard from '../components/blocks/top-rated-card';
-import requestMaker from '../functions/requestMaker';
+import requestMaker from '../functions/request-maker';
+import API_URL from '../const';
 
 interface iGenreData {
   id: number,
@@ -15,14 +16,14 @@ export default function TopRatedTvShows() {
   const [page, setPage] = useState(1);
   const [minRating, setMinRating] = useState<string | number>(7);
   const [maxRating, setMaxRating] = useState<string | number>(10);
-  const [minYear, setMinYear] = useState(new Date('1-1-1950'));
+  const [minYear, setMinYear] = useState(new Date('1950-01-01'));
   const [maxYear, setMaxYear] = useState(new Date());
-  const [minRuntime, setMinRuntime] = useState<number>(0);
-  const [maxRuntime, setMaxRuntime] = useState<number>(360);
+  const [minRuntime, setMinRuntime] = useState(0);
+  const [maxRuntime, setMaxRuntime] = useState(360);
   const [genreList, setGenreList] = useState<iGenreData[]>([]);
   const [genreValue, setGenreValue] = useState<string[]>([]);
   const [selectValue, setSelectValue] = useState('vote_average.desc');
-  const [popular, isLoadingPopular] = useTop({creationType: 'tv', page: page, selectValue: selectValue, minRating: minRating, maxRating: maxRating, minYear: minYear, maxYear: maxYear, genreValue: genreValue, minRuntime: minRuntime, maxRuntime: maxRuntime})
+  const [popular, isLoadingPopular] = useTop({creationType: 'tv', page, selectValue, minRating, maxRating, minYear, maxYear, genreValue, minRuntime, maxRuntime})
 
   const marks = [
     { value: 60, label: '1h' },
@@ -32,7 +33,7 @@ export default function TopRatedTvShows() {
   ];
 
   useEffect(() => {
-    requestMaker('https://api.themoviedb.org/3/genre/tv/list?language=en', setGenreList, 'genres')
+    requestMaker(`${API_URL}/3/genre/tv/list?language=en`, setGenreList, 'genres')
   },[])
 
   return (

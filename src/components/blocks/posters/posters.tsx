@@ -4,7 +4,7 @@ import { Flex, Image, Modal, SegmentedControl, Skeleton } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import requestMaker from '../../../functions/requestMaker';
+import requestMaker from '../../../functions/request-maker';
 import useLoading from '../../../hooks/use-loading';
 
 interface iPostersProps {
@@ -29,7 +29,7 @@ export default function Posters({creature}: iPostersProps) {
   const [path, setPath] = useState('');
   const [imageType, setImageType] = useState<string>('posters');
   const {movieId, tvId} = useParams()
-  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`https://api.themoviedb.org/3/${creature}/${movieId || tvId}/images`, setImages))
+  const [fetchImages, isLoadingImages] = useLoading(async () => requestMaker(`${API_URL}/3/${creature}/${movieId || tvId}/images`, setImages))
 
   useEffect(() => {
     fetchImages();
