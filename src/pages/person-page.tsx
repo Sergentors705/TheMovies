@@ -4,7 +4,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useCombinedCredits, usePerson } from '../api';
 import { useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
-import Crew from '../modules/crew/crew';
 
 interface iCreditsData {
   id: number,

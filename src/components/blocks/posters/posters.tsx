@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import requestMaker from '../../../functions/request-maker';
 import useLoading from '../../../hooks/use-loading';
+import { API_URL } from '../../../const';
 
 interface iPostersProps {
   creature: string,

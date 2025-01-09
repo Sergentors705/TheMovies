@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import { useTop } from '../api';
 import TopRatedCard from '../components/blocks/top-rated-card';
 import requestMaker from '../functions/request-maker';
-import API_URL from '../const';
+import { API_URL } from '../const';
+
 
 interface iGenreData {
   id: number,
