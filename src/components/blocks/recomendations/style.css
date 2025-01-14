@@ -1,7 +1,7 @@
-.keyword-badge {
+.recomendations__item {
   &:hover {
     transform: scale(1.02);
-    outline: 2px solid skyblue;
+    box-shadow: var(--mantine-shadow-md);
   }
   &:focus {
     transform: scale(1.02);

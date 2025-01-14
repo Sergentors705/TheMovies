@@ -103,6 +103,7 @@ interface iMovieData {
   budget: number,
   revenue: number,
   production_companies: iProductionCompanies[],
+  origin_country: string[],
 }
 
 interface iMovieReleaseData {

@@ -18,6 +18,7 @@ export default function Keywords({creationType}: iKeywordsProps) {
         {
           (keywords?.keywords || keywords?.results)?.map(item =>
             <Skeleton
+              w='fit-content'
               visible={isLoadingKeywords}
               key={item.id}
             >

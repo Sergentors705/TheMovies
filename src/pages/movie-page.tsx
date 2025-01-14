@@ -3,7 +3,7 @@ import { Box, Flex, Image, List, Modal, NumberFormatter, SimpleGrid, Skeleton, T
 import { useDisclosure } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useCredits, useMovie, useMovieReleaseDates } from '../api';
+import { useCountries, useCredits, useMovie, useMovieReleaseDates } from '../api';
 import Companies from '../components/blocks/companies';
 import Genres from '../components/blocks/genres';
 import Posters from '../components/blocks/posters/posters';
@@ -26,7 +26,7 @@ export default function MoviePage() {
   const {movieId} = useParams();
   const [opened, { open, close }] = useDisclosure(false);
   const [path, setPath] = useState<string>('');
-
+  const [countries, isLoadingCountries] = useCountries()
   const [movie, isLoadingMovie] = useMovie({movieId: movieId || ''})
   const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId || ''})
   // const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`${API_URL}/3/movie/${movieId}/videos`, setVideos))
@@ -40,7 +40,7 @@ export default function MoviePage() {
     setDirector(credits?.crew.filter(item => item.job === 'Director') ?? [])
     setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing') ?? [])
   }, [credits]);
-
+console.log(movie)
   return (
     <>
       <SimpleGrid
@@ -203,6 +203,12 @@ export default function MoviePage() {
             </Skeleton>
           </Box>
           <Companies companies={movie?.production_companies} creationType='movie' />
+          <Box>
+            <Title order={3}>Country of origin</Title>
+            <Skeleton visible={isLoadingMovie && isLoadingCountries}>
+              <Text c={'gray.9'}>{movie && countries?.find(item => item.iso_3166_1 === movie?.origin_country[0])?.english_name}</Text>
+            </Skeleton>
+          </Box>
           <Keywords creationType='movie'/>
           <Recomendations creationType='movie' />
         </Box>

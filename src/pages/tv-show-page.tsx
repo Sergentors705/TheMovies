@@ -18,7 +18,7 @@ export default function TvShowPage() {
   const [path, setPath] = useState('');
   const [contentRating, isLoadingContentRating] = useContentRating({creationType: 'tv', id: tvId || ''})
   const [opened, { open, close }] = useDisclosure(false);
-
+console.log(tvShow)
   return (
     <>
       <SimpleGrid
@@ -60,7 +60,7 @@ export default function TvShowPage() {
                 listStyleType='none'
                 style={{display: 'flex', gap: '10px'}}
               >
-                <List.Item className='movie-page__title-info-item'>
+                <List.Item className='tv-show-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingTvShow}
                     mih={20}
@@ -73,7 +73,7 @@ export default function TvShowPage() {
                   </Text>
                   </Skeleton>
                 </List.Item>
-                <List.Item className='movie-page__title-info-item'>
+                <List.Item className='tv-show-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingContentRating}
                     mih={20}
@@ -84,7 +84,7 @@ export default function TvShowPage() {
                   </Text>
                   </Skeleton>
                 </List.Item>
-                <List.Item className='movie-page__title-info-item'>
+                <List.Item className='tv-show-page__title-info-item'>
                   <Skeleton
                     visible={isLoadingTvShow}
                     height={20}
@@ -105,11 +105,11 @@ export default function TvShowPage() {
                 width='50%'
                 mb={8}
               >
-                <p className='movie-page__tagline'>{tvShow?.tagline}</p>
+                <p className='tv-show-page__tagline'>{tvShow?.tagline}</p>
               </Skeleton>
               <Genres creationType='tv' genresArray={tvShow?.genres || []} isVisible={isLoadingTvShow}/>
               <Skeleton visible={isLoadingTvShow} width='70%'>
-                <p className='movie-page__overview'>{tvShow?.overview}</p>
+                <p className='tv-show-page__overview'>{tvShow?.overview}</p>
               </Skeleton>
             </div>
           </Flex>
@@ -144,62 +144,36 @@ export default function TvShowPage() {
           <Similar creationType='tv' />
         </Flex>
         {/* SECOND COLUMN */}
-        <Box p={20}>
+        <Flex direction='column' gap={10} py={20}>
           {/* RATING SECTION */}
-          <Box>
-            <div className='movie-page__rating'>
-              <Skeleton visible={isLoadingTvShow} mih={28}>
-                <Title order={3}>The Movie Rating</Title>
+            <Box className='tv-show-page__rating'>
+              <Skeleton visible={isLoadingTvShow}>
+                <Title order={4}>The Movie Rating</Title>
               </Skeleton>
-              <div className='movie-page__rating-container'>
-                <Skeleton
-                  visible={isLoadingTvShow}
-                  height={28}
-                  mb={15}
-                >
-                  <p className='movie-page__rating-value'>
+              <div className='tv-show-page__rating-container'>
+                <Skeleton visible={isLoadingTvShow}>
+                  <Flex>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
                       <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
                     </svg>
-                    {tvShow?.vote_average.toFixed(1)}/10
-                  </p>
-                </Skeleton>
-                <Skeleton
-                  visible={isLoadingTvShow}
-                  height={25}
-                >
-                  <p className='movie-page__rating-count'>{tvShow?.vote_count} Votes</p>
+                    <Text>{tvShow?.vote_average.toFixed(1)}/10 {tvShow?.vote_count} Votes</Text>
+                  </Flex>
                 </Skeleton>
               </div>
+            </Box>
+            <div className='tv-show-page__status'>
+              <Skeleton visible={isLoadingTvShow}>
+                <Title order={4}>Status</Title>
+              </Skeleton>
+              <Skeleton visible={isLoadingTvShow}>
+                <Text>{tvShow?.status}</Text>
+              </Skeleton>
+
             </div>
-            <div className='movie-page__cash'>
-              <Skeleton
-                height={10}
-                visible={isLoadingTvShow}
-                mt={6}
-              >
-                <p className='movie-page__cash-title'>Status</p>
-              </Skeleton>
-              <Skeleton
-                height={10}
-                visible={isLoadingTvShow}
-                mt={6}
-              >
-                <p className='movie-page__cash-value'>{tvShow?.status}</p>
-              </Skeleton>
-              <Skeleton
-                height={10}
-                visible={isLoadingTvShow}
-                mt={6}
-              >
-                <p className='movie-page__cash-value'>${tvShow?.revenue}</p>
-              </Skeleton>
-            </div>
-          </Box>
           <Companies creationType='tv' companies={tvShow?.production_companies || []} />
           <Keywords creationType='tv' />
           <TvRecomendations creationType='tv'/>
-        </Box>
+        </Flex>
       </SimpleGrid>
       <Modal opened={opened} onClose={close} size='75%' >
         <Image w='100%' h='auto' fit='cover'  src={`https://www.themoviedb.org/t/p/original/${path}`} />

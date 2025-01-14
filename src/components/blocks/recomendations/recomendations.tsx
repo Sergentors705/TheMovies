@@ -1,6 +1,7 @@
 import { Flex, Image, Paper, Skeleton, Text, Title } from '@mantine/core';
 import { Link, useParams } from 'react-router-dom';
 import { useRecomendations } from '../../../api';
+import './style.css'
 
 interface iRecomendationsProps {
   creationType: string,
@@ -12,14 +13,14 @@ export default function Recomendations({creationType}: iRecomendationsProps) {
 
   return (
     <>
-      <Flex direction={'column'} gap={30}>
+      <Flex direction={'column'} gap={20}>
         <Skeleton visible={isLoadingTvRecomendations}>
           <Title order={3} ta={'center'} fz={'secondaryTitle'}>Recomendations</Title>
         </Skeleton>
         {tvRecomendations?.map(item =>
           <Link key={item.id} to={`/${creationType}/${item.id}`} style={{textDecoration: 'none'}}>
             <Paper
-              shadow='md'
+              className='recomendations__item'
               withBorder
               p={10}
               style={{display: 'flex', gap: '10px'}}
