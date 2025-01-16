@@ -3,14 +3,15 @@ import { Box, Flex, Image, List, Modal, Paper, SimpleGrid, Skeleton, Text, Title
 import { useDisclosure } from '@mantine/hooks';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { useContentRating, useTopDetails } from '../api';
-import Companies from '../components/blocks/companies';
-import Genres from '../components/blocks/genres';
-import Posters from '../components/blocks/posters/posters';
-import Similar from '../components/blocks/similar';
-import Keywords from '../components/ui/keywords';
-import Crew from '../modules/crew/crew';
-import TvRecomendations from '../components/blocks/recomendations/recomendations';
+import { useContentRating, useTopDetails } from '../../api';
+import Companies from '../../components/blocks/companies';
+import Genres from '../../components/blocks/genres';
+import Posters from '../../components/blocks/posters/posters';
+import Similar from '../../components/blocks/similar';
+import Keywords from '../../components/ui/keywords';
+import Crew from '../../modules/crew/crew';
+import TvRecomendations from '../../components/blocks/recomendations/recomendations';
+import './style.css'
 
 export default function TvShowPage() {
   const {tvId} = useParams();
@@ -125,9 +126,9 @@ console.log(tvShow)
               tvShow?.seasons?.map(item =>
                 <Link to={`tv-season/${item.season_number}`} style={{textDecoration: 'none'}} key={item.id}>
                   <Paper
+                    className='tv-show-page__season-item'
                     p={30}
                     withBorder
-                    shadow='lg'
                     style={{display: 'flex', gap: '20px'}}
                   >
                     <Image src={`https://media.themoviedb.org/t/p/w130_and_h195_bestv2/${item.poster_path}`} w={100} h={150} alt='' radius='md'/>

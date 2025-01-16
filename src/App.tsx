@@ -12,7 +12,7 @@ import StartPage from './pages/start-page';
 import TopRatedPage from './pages/top-rated-page';
 import TvEpisodePage from './pages/tv-episode-page';
 import TvSeasonPage from './pages/tv-season-page';
-import TvShowPage from './pages/tv-show-page';
+import TvShowPage from './pages/tv-show-page/tv-show-page';
 
 function App() {
 

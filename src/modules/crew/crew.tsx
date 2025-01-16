@@ -52,13 +52,13 @@ export default function Crew({creature}: iCrewProps) {
                 key={item.id}
                 my={30}
               >
+                  <Link className='crew-link' to={`/person/${item.id}`}>
                 <Paper
                   className='person-card'
                   h='100%'
                   withBorder
                   p='md'
                 >
-                  <Link className='crew-link' to={`/person/${item.id}`}>
                     <Skeleton
                       visible={isLoadingCredits2}
                       mih={225}
@@ -86,8 +86,8 @@ export default function Crew({creature}: iCrewProps) {
                     >
                       <Text size='md' c='dimmed'>As {item.character}</Text>
                     </Skeleton>
-                  </Link>
                 </Paper>
+                </Link>
               </CarouselSlide>
           )}
         </Carousel>

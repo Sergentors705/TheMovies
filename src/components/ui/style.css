@@ -1,4 +1,4 @@
-.keyword-badge {
+.keyword__badge {
   &:hover {
     transform: scale(1.02);
     outline: 2px solid skyblue;
@@ -7,4 +7,11 @@
     transform: scale(1.02);
     outline: 2px solid skyblue;
   }
+}
+
+
+.keyword__link:focus .keyword__badge {
+  transform: scale(1.02);
+  outline: 2px solid skyblue;
+  border: none;
 }
