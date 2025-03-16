@@ -1,0 +1,96 @@
+import { Box, Flex, Image, Pagination, Paper, Skeleton, Text, Title } from '@mantine/core';
+import { useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useTopDetails, useTvSeasons } from '../api';
+import TvRecomendations from '../components/blocks/recomendations/recomendations';
+
+
+export default function TvSeasonPage() {
+  const {tvId, seasonId} = useParams();
+  const [seasonNumber, setSeasonNumber] = useState<number>(Number(seasonId) | 1);
+  const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''})
+  const [tvSeason, isLoadingTvSeason] = useTvSeasons({id: tvId || '', seasonNumber: Number(seasonId)})
+  const Navigate = useNavigate()
+
+  return (
+    <Flex
+      w={'100%'}
+      maw={1366}
+      direction={'column'}
+      pt={50}
+    >
+      <Link to={`/tv/${tvId}`} style={{textDecoration: 'none'}}>
+        <Paper
+          p={20}
+          style={{display: 'flex', gap: '30px'}}
+        >
+        <Image
+          w={100}
+          h={150}
+          radius="md"
+          src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${tvShow?.poster_path}`}
+        />
+        <Skeleton visible={isLoadingTvShow}>
+          <Title order={2} c={'gray.9'}>Back to {tvShow?.name}</Title>
+        </Skeleton>
+        </Paper>
+      </Link>
+      <Skeleton visible={isLoadingTvSeason}>
+        <Title
+          order={1}
+          mb={50}
+        >
+          {tvSeason?.name}
+        </Title>
+      </Skeleton>
+      <Pagination
+        mb={30}
+        value={seasonNumber}
+        onChange={(value) => {
+          setSeasonNumber(value)
+          Navigate(`/tv/${tvShow?.id}/tv-season/${tvShow?.seasons[value - 1].season_number}`)
+        }
+        }
+        total={tvShow?.seasons?.length || 1}
+      />
+      <Box style={{display: 'grid', gridTemplateColumns: '3fr 1fr', gap: '50px'}}>
+        <Flex
+          direction={'column'}
+          gap={30}
+        >
+          {tvSeason?.episodes?.map(item =>
+              <Link to={`/tv/${item.show_id}/tv-season/${item.season_number}/tv-episode/${item.episode_number}`} style={{textDecoration: 'none'}} key={item.id}>
+                <Paper
+                  shadow='md'
+                  withBorder
+                  p={20}
+                  style={{display: 'flex', gap: '30px'}}
+                >
+                  <Image src={`https://media.themoviedb.org/t/p/w130_and_h195_bestv2/${item.still_path}`} w={100} h={150} alt='' radius='md'/>
+                  <Flex direction={'column'}>
+                    <Flex justify={'space-between'}>
+                      <Title
+                        c={'black'}
+                        order={3}
+                      >
+                        S{item.season_number}.E{item.episode_number} - {item.name}
+                      </Title>
+                      <Text c={'gray.6'}>{item.air_date}</Text>
+                    </Flex>
+                    <Text c={'gray.9'}>{item.overview}</Text>
+                    <Flex>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
+                        <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                      </svg>
+                      <Text c={'black'}>{item.vote_average}/10 ({item.vote_count})</Text>
+                    </Flex>
+                  </Flex>
+                </Paper>
+              </Link>
+          )}
+        </Flex>
+        <TvRecomendations creationType='tv' />
+      </Box>
+    </Flex>
+  )
+}

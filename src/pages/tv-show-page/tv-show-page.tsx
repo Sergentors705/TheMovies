@@ -1,0 +1,184 @@
+import '@mantine/carousel/styles.css';
+import { Box, Flex, Image, List, Modal, Paper, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useContentRating, useTopDetails } from '../../api';
+import Companies from '../../components/blocks/companies';
+import Genres from '../../components/blocks/genres';
+import Posters from '../../components/blocks/posters/posters';
+import Similar from '../../components/blocks/similar';
+import Keywords from '../../components/ui/keywords';
+import Crew from '../../modules/crew/crew';
+import TvRecomendations from '../../components/blocks/recomendations/recomendations';
+import './style.css'
+
+export default function TvShowPage() {
+  const {tvId} = useParams();
+  const [tvShow, isLoadingTvShow] = useTopDetails({creationType: 'tv', id: tvId || ''});
+  const [path, setPath] = useState('');
+  const [contentRating, isLoadingContentRating] = useContentRating({creationType: 'tv', id: tvId || ''})
+  const [opened, { open, close }] = useDisclosure(false);
+console.log(tvShow)
+  return (
+    <>
+      <SimpleGrid
+        maw='1366px'
+        pt={30}
+        pb={50}
+        style={{flexGrow: '1', gridTemplateColumns: '4fr 1fr'}}
+      >
+        <Flex
+          direction='column'
+          gap={30}
+          miw={0}
+          p={20}
+        >
+          <Flex gap={30}>
+            <div>
+              <Skeleton visible={isLoadingTvShow} height={450}>
+              <Image
+                w={300}
+                h={450}
+                radius="md"
+                src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${tvShow?.poster_path}`}
+                onClick={() =>{open(); setPath(tvShow?.poster_path || '')}}
+                alt=''
+                style={{cursor: 'pointer'}}
+              />
+              </Skeleton>
+            </div>
+            <div>
+              <Skeleton
+                visible={isLoadingTvShow}
+                mih={60}
+                miw={300}
+                mb={10}
+              >
+                <Title order={1} fz={'pageTitle'}>{tvShow?.name}</Title>
+              </Skeleton>
+              <List
+                listStyleType='none'
+                style={{display: 'flex', gap: '10px'}}
+              >
+                <List.Item className='tv-show-page__title-info-item'>
+                  <Skeleton
+                    visible={isLoadingTvShow}
+                    mih={20}
+                    miw={50}
+                  >
+                  <Text c='dimmed'>
+                    {tvShow?.first_air_date && new Date(tvShow?.first_air_date)?.getFullYear()}
+                    -
+                    {tvShow?.last_air_date && new Date( tvShow?.last_air_date)?.getFullYear()}
+                  </Text>
+                  </Skeleton>
+                </List.Item>
+                <List.Item className='tv-show-page__title-info-item'>
+                  <Skeleton
+                    visible={isLoadingContentRating}
+                    mih={20}
+                    miw={50}
+                  >
+                  <Text c='dimmed'>
+                    {contentRating?.find(item => item.iso_3166_1 === 'US')?.rating}
+                  </Text>
+                  </Skeleton>
+                </List.Item>
+                <List.Item className='tv-show-page__title-info-item'>
+                  <Skeleton
+                    visible={isLoadingTvShow}
+                    height={20}
+                    miw={50}
+                  >
+                  {
+                    tvShow?.episode_run_time.length
+                    ? <Text c={'dimmed'}>
+                      {tvShow?.episode_run_time?.join('m, ')}m
+                    </Text>
+                    : <></>
+                  }
+                  </Skeleton>
+                </List.Item>
+              </List>
+              <Skeleton
+                visible={isLoadingTvShow}
+                width='50%'
+                mb={8}
+              >
+                <p className='tv-show-page__tagline'>{tvShow?.tagline}</p>
+              </Skeleton>
+              <Genres creationType='tv' genresArray={tvShow?.genres || []} isVisible={isLoadingTvShow}/>
+              <Skeleton visible={isLoadingTvShow} width='70%'>
+                <p className='tv-show-page__overview'>{tvShow?.overview}</p>
+              </Skeleton>
+            </div>
+          </Flex>
+          <Crew creature='tv' />
+
+          {/* Seasons section */}
+          <Flex
+            mb={50}
+            direction={'column'}
+            gap={20}
+          >
+            {
+              tvShow?.seasons?.map(item =>
+                <Link to={`tv-season/${item.season_number}`} style={{textDecoration: 'none'}} key={item.id}>
+                  <Paper
+                    className='tv-show-page__season-item'
+                    p={30}
+                    withBorder
+                    style={{display: 'flex', gap: '20px'}}
+                  >
+                    <Image src={`https://media.themoviedb.org/t/p/w130_and_h195_bestv2/${item.poster_path}`} w={100} h={150} alt='' radius='md'/>
+                    <Box>
+                      <Title order={3} c={'black'}>{item.name}</Title>
+                      <Text c={'gray.9'}>{item.overview}</Text>
+                    </Box>
+                  </Paper>
+                </Link>
+              )
+            }
+          </Flex>
+          <Posters creature='tv' />
+          <Similar creationType='tv' />
+        </Flex>
+        {/* SECOND COLUMN */}
+        <Flex direction='column' gap={10} py={20}>
+          {/* RATING SECTION */}
+            <Box className='tv-show-page__rating'>
+              <Skeleton visible={isLoadingTvShow}>
+                <Title order={4}>The Movie Rating</Title>
+              </Skeleton>
+              <div className='tv-show-page__rating-container'>
+                <Skeleton visible={isLoadingTvShow}>
+                  <Flex>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
+                      <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                    </svg>
+                    <Text>{tvShow?.vote_average.toFixed(1)}/10 {tvShow?.vote_count} Votes</Text>
+                  </Flex>
+                </Skeleton>
+              </div>
+            </Box>
+            <div className='tv-show-page__status'>
+              <Skeleton visible={isLoadingTvShow}>
+                <Title order={4}>Status</Title>
+              </Skeleton>
+              <Skeleton visible={isLoadingTvShow}>
+                <Text>{tvShow?.status}</Text>
+              </Skeleton>
+
+            </div>
+          <Companies creationType='tv' companies={tvShow?.production_companies || []} />
+          <Keywords creationType='tv' />
+          <TvRecomendations creationType='tv'/>
+        </Flex>
+      </SimpleGrid>
+      <Modal opened={opened} onClose={close} size='75%' >
+        <Image w='100%' h='auto' fit='cover'  src={`https://www.themoviedb.org/t/p/original/${path}`} />
+      </Modal>
+    </>
+  )
+}

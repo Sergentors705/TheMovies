@@ -1,0 +1,20 @@
+.person-card {
+ &:hover {
+  transform: scale(1.02);
+  box-shadow: var(--mantine-shadow-md);
+ }
+}
+
+.crew-link {
+  text-decoration: none;
+  &:focus {
+    transform: scale(1.02);
+    outline: 2px solid skyblue;
+  }
+}
+
+.crew-link:focus .person-card {
+  transform: scale(1.02);
+  outline: 2px solid skyblue;
+
+}

@@ -1,0 +1,221 @@
+import '@mantine/carousel/styles.css';
+import { Box, Flex, Image, List, Modal, NumberFormatter, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import { useCountries, useCredits, useMovie, useMovieReleaseDates } from '../api';
+import Companies from '../components/blocks/companies';
+import Genres from '../components/blocks/genres';
+import Posters from '../components/blocks/posters/posters';
+import Recomendations from '../components/blocks/recomendations/recomendations';
+import Similar from '../components/blocks/similar';
+import Keywords from '../components/ui/keywords';
+import Crew from '../modules/crew/crew';
+
+interface iCrewMemberData {
+  id: number,
+  job: string,
+  known_for_department: string,
+  name: string,
+}
+
+export default function MoviePage() {
+  // const [videos, setVideos] = useState(null);
+  const [director, setDirector] = useState<iCrewMemberData[]>([]);
+  const [writter, setWritter] = useState<iCrewMemberData[]>([]);
+  const {movieId} = useParams();
+  const [opened, { open, close }] = useDisclosure(false);
+  const [path, setPath] = useState<string>('');
+  const [countries, isLoadingCountries] = useCountries()
+  const [movie, isLoadingMovie] = useMovie({movieId: movieId || ''})
+  const [releaseDates, isLoadingReleaseDates] = useMovieReleaseDates({movieId: movieId || ''})
+  // const [fetchVideos, isLoadingVideos] = useLoading(async () => requestMaker(`${API_URL}/3/movie/${movieId}/videos`, setVideos))
+  const [credits, isLoadingCredits] = useCredits({creationType: 'movie'})
+
+  // useEffect(() => {
+  //   fetchVideos();
+  // }, [movieId])
+
+  useEffect(() => {
+    setDirector(credits?.crew.filter(item => item.job === 'Director') ?? [])
+    setWritter(credits?.crew.filter(item => item.known_for_department === 'Writing') ?? [])
+  }, [credits]);
+console.log(movie)
+  return (
+    <>
+      <SimpleGrid
+        maw='1366px'
+        pt={30}
+        pb={50}
+        style={{flexGrow: '1', gridTemplateColumns: '4fr 1fr'}}
+      >
+        <Flex
+          direction='column'
+          miw={0}
+        >
+          <Flex gap={30} mb={30}>
+            <Skeleton visible={isLoadingMovie} height={450} width={300}>
+              <Image
+                w={300}
+                h={450}
+                radius="md"
+                src={`https://www.themoviedb.org/t/p/w300_and_h450_bestv2${movie?.poster_path}`}
+                onClick={() =>{open(); setPath(movie?.poster_path ?? '')}}
+                alt=''
+                style={{cursor: 'pointer'}}
+              />
+            </Skeleton>
+            <div>
+              <Skeleton
+                visible={isLoadingMovie}
+                mih={60}
+                miw={300}
+                mb={10}
+              >
+                <Title order={1} fz={48}>{movie?.title}</Title>
+              </Skeleton>
+              <List
+                listStyleType='none'
+                style={{display: 'flex'}}
+              >
+                <List.Item className='movie-page__title-info-item'>
+                  <Skeleton
+                    visible={isLoadingMovie}
+                    mih={20}
+                    miw={50}
+                  >
+                    <Text c={'dimmed'}>
+                      {movie?.release_date && new Date(movie?.release_date)?.getFullYear()}
+                    </Text>
+                  </Skeleton>
+                </List.Item>
+                <List.Item className='movie-page__title-info-item'>
+                  <Skeleton
+                    visible={isLoadingReleaseDates}
+                    mih={20}
+                    miw={50}
+                  >
+                    <Text c={'dimmed'}>
+                      {releaseDates?.find(item => item.iso_3166_1 === 'US')?.release_dates.find(item => item.type === 3)?.certification}
+                    </Text>
+                  </Skeleton>
+                </List.Item>
+                <List.Item className='movie-page__title-info-item'>
+                  <Skeleton
+                    visible={isLoadingMovie}
+                    height={20}
+                    miw={50}
+                  >
+                    <Text c={'dimmed'}>
+                      {movie?.runtime && `${Math.floor(movie?.runtime / 60)}h ${movie?.runtime % 60}m`}
+                    </Text>
+                  </Skeleton>
+                </List.Item>
+              </List>
+              <Skeleton
+                visible={isLoadingMovie}
+                mih={30}
+                width='50%'
+                mb={8}
+              >
+                <p className='movie-page__tagline'>{movie?.tagline}</p>
+              </Skeleton>
+              <Genres creationType='movie' genresArray={movie?.genres || []} isVisible={isLoadingMovie} />
+              <Skeleton visible={isLoadingMovie} mih={8} miw='70%'>
+                <p className='movie-page__overview'>{movie?.overview}</p>
+              </Skeleton>
+              <Skeleton visible={isLoadingCredits} mih={16} width='70%'>
+                <Text>{(director?.length > 1) ? `Director's: ` : 'Director: ' }{director?.map(item => <Link to={`/person/${item.id}`}>{item.name}</Link>)}</Text>
+                <Text>{(writter?.length > 1) ? `Writter's: ` : 'Writter: ' }{writter?.map(item => <Link to={`/person/${item.id}`}>{item.name}</Link>)}</Text>
+              </Skeleton>
+            </div>
+          </Flex>
+          <Title order={2} fz={32}>Top cast</Title>
+          <Crew creature='movie'/>
+          <Posters creature='movie' />
+
+          {/* SIMILAR SECTION */}
+          <Similar creationType='movie'/>
+
+        </Flex>
+        <Box p={20}>
+          <Box mb={15}>
+            <Skeleton visible={isLoadingMovie} mih={28}>
+              <Title order={3}>Original title</Title>
+            </Skeleton>
+              <Skeleton
+                visible={isLoadingMovie}
+                height={28}
+              >
+                <Text>{movie?.original_title}</Text>
+              </Skeleton>
+          </Box>
+          <Box mb={15}>
+            <Skeleton visible={isLoadingMovie} mih={28}>
+              <Title order={3}>The Movie Rating</Title>
+            </Skeleton>
+            <Box>
+              <Skeleton
+                visible={isLoadingMovie}
+                height={28}
+              >
+                <Flex>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#ffc700" role="presentation">
+                    <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                  </svg>
+                  {movie?.vote_average.toFixed(1)}/10
+                </Flex>
+              </Skeleton>
+              <Skeleton
+                visible={isLoadingMovie}
+                mih={10}
+              >
+                <Text>{movie?.vote_count} Votes</Text>
+              </Skeleton>
+            </Box>
+          </Box>
+          <Box mb={15}>
+            <Skeleton
+              mih={10}
+              visible={isLoadingMovie}
+            >
+              <Title order={3}>Budget</Title>
+            </Skeleton>
+            <Skeleton
+              mih={10}
+              visible={isLoadingMovie}
+            >
+              <NumberFormatter prefix='$'value={movie?.budget} thousandSeparator/>
+            </Skeleton>
+          </Box>
+          <Box mb={15}>
+            <Skeleton
+              mih={10}
+              visible={isLoadingMovie}
+            >
+              <Title order={3}>Revenue</Title>
+            </Skeleton>
+            <Skeleton
+              mih={10}
+              visible={isLoadingMovie}
+            >
+              <NumberFormatter prefix='$'value={movie?.revenue} thousandSeparator/>
+            </Skeleton>
+          </Box>
+          <Companies companies={movie?.production_companies} creationType='movie' />
+          <Box>
+            <Title order={3}>Country of origin</Title>
+            <Skeleton visible={isLoadingMovie && isLoadingCountries}>
+              <Text c={'gray.9'}>{movie && countries?.find(item => item.iso_3166_1 === movie?.origin_country[0])?.english_name}</Text>
+            </Skeleton>
+          </Box>
+          <Keywords creationType='movie'/>
+          <Recomendations creationType='movie' />
+        </Box>
+      </SimpleGrid>
+      <Modal opened={opened} onClose={close} fullScreen>
+        <Image w='100%' h='90vh' fit='contain' src={`https://www.themoviedb.org/t/p/original/${path}`} />
+      </Modal>
+    </>
+  )
+}
